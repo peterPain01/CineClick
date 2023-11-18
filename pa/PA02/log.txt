@@ -1,0 +1,6 @@
+Software Development Plan:
+- No changes
+
+Vision Document:
+- Add Admin role
+- Rewrite Revision History
