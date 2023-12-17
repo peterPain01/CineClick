@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form class="mb-5" action="http://localhost:13123/auth/login" method="POST" onsubmit="submit_login(event)">
+        <input class="form-control" placeholder="username" name="username" type="text"/>
+        <input class="form-control" placeholder="password" name="password" type="password"/>
+        <input class="form-control-checkbox" name="remember" type="checkbox" value="true"/>
+        <button class="d-block btn btn-secondary border border-2" type="submit">Submit</button>
+        <a class="w-100 btn btn-secondary" href="http://localhost:13123/auth/google"><strong>GOOGLE</strong></a>
+    </form>
+    <h1>Register</h1>
+    <form class="mb-5" action="http://localhost:13123/auth/register" method="POST" onsubmit="submit_register(event)">
+        <input class="form-control" placeholder="username" name="username" type="text"/>
+        <input class="form-control" placeholder="password" name="password" type="password"/>
+        <input class="form-control" placeholder="email" name="email" type="email"/>
+        <button class="btn btn-secondary border border-2" type="submit">Submit</button>
+    </form>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <h1>Upload movie</h1>
+    <form class="mb-5" action="http://localhost:13123/admin/upload-movie" method="post" enctype="multipart/form-data">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <input name="title" class="form-control" type="text">
+        <select name="type">
+            <option value="free" selected>free</option>
+            <option value="premium">premium</option>
+            <option value="paid">paid</option>
+        </select>
+        <input name="file" class="form-control" type="file" id="form_file">
+    </form>
+    <button class="btn btn-secondary d-inline" onclick="list_movie()">list</button>
+    <video id="video" class="d-block" style="margin: auto auto; background-color: black; width: 500px; height: auto" controls></video>
+    <ul id="movies">
+    </ul>
+    <script>
+        function play_video(id) {
+            const src = `http://localhost:13123/viewer/watch/${id}/part.m3u8`;
+            var video = document.getElementById('video');
+            var hls = new Hls();
+            hls.loadSource(src);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.muted = true;
+                video.play();
+                video.muted = false;
+            });
+        }
+        function make_item(id) {
+            let li = document.createElement("li");
+            let button = document.createElement("button");
+            button.innerText = id;
+            button.classList.add("btn");
+            button.classList.add("btn-secondary");
+            button.onclick = () => {
+                play_video(id);
+            };
+            li.appendChild(button);
+            return li;
+        }
+        async function list_movie() {
+            const result = await fetch("http://localhost:13123/viewer/list-movies")
+            if (result.status == 200 && result.headers.get("Content-Type")?.includes("application/json")) {
+                const movies = await result.json();
+                let list = document.getElementById("movies");
+                list.innerText = "";
+                for (const mv of movies) {
+                    list.appendChild(make_item(mv.id));
+                }
+
+            } else alert(await result.text());
+        }
+        async function post(url, body) {
+            return await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(body),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }).then(async data => {
+                if (data.status == 200) {
+                    console.log("OK");
+                } else alert(await data.text());
+            }).catch(err => alert(err));
+        }
+        async function submit_login(event) {
+            event.preventDefault();
+            console.log("JIOEQJOIERQW");
+            const data = new FormData(event.target);
+            const value = Object.fromEntries(data.entries());
+            await post("http://localhost:13123/auth/login", value);
+        }
+        async function submit_register(event) {
+            event.preventDefault();
+            const data = new FormData(event.target);
+            const value = Object.fromEntries(data.entries());
+            await post("http://localhost:13123/auth/register", value);
+        }
+    </script>
+</body>
+</html>
+
