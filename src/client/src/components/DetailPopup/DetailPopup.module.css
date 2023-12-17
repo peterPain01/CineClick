@@ -1,0 +1,142 @@
+.previewModal {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    margin: auto;
+    z-index: 10;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    /* opacity: 0;
+    visibility: hidden;
+    scale: 0; 
+   */
+    transition: all 0.5s;
+}
+
+.previewModalOpen {
+    /* opacity: 1; */
+    /* visibility: visible; */
+    /* scale: 1; */
+}
+
+.overlay {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.685);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 9;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.previewModalContent {
+    width: calc(100% - 400px);
+    max-width: 1000px;
+    min-height: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 50px);
+    border-radius: 6px;
+    background-color: #181818;
+    overflow: auto;
+}
+
+.previewVideo video {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+}
+
+.closeModal div {
+    position: absolute;
+    width: 36px;
+    top: 0px;
+    right: 15px;
+    padding: 8px;
+}
+
+.actionModal {
+    position: absolute;
+    top: 300px;
+    left: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.playBtnBox {
+}
+
+.previewInfo {
+    padding: 4px 30px;
+}
+.textInfo {
+    width: 100%;
+    display: flex;
+}
+
+.previewInfoRight {
+    width: 70%;
+}
+.previewInfoRight span:not(:first-child) {
+    padding-left: 10px;
+    color: #bcbcbc;
+}
+
+.matchScore {
+    font-weight: 700;
+    color: #46d369;
+}
+
+.maturityNumber {
+    margin-top: 10px;
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid #bcbcbc;
+    padding: 2px 6px;
+    font-weight: 700;
+    color: #bcbcbc;
+}
+.desc {
+    color: white;
+    line-height: 1.5;
+}
+
+.previewInfoLeft {
+}
+
+.tagLabel {
+    color: #bcbcbc;
+}
+.tagLabel ~ a {
+    color: #fff;
+    padding: 0px 3px;
+}
+.tagLabel ~ a:hover {
+    text-decoration: underline;
+}
+
+.previewModalTags:not(:first-child) {
+    margin-top: 20px;
+}
+
+.moreLikeHeading {
+    color: #fff;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.moreLikeHeading::before {
+    display: block;
+    content: "";
+    border: 1px solid #bcbcbc;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    .previewModalContent {
+        width: calc(100%);
+    }
+}

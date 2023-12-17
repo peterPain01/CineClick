@@ -1,0 +1,98 @@
+.container {
+    width: 100vw;
+    position: relative;
+    padding: 0px;
+    padding-left: 60px;
+    margin-bottom: 46px;
+    z-index: 1;
+}
+
+.heading {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: 4px;
+}
+.heading h1 {
+    color: white;
+    font-size: 1.2vw;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+/* color: #54b9c5; */
+
+.wrapper {
+    position: relative;
+}
+
+.wrapper .leftSection,
+.wrapper .rightSection {
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.leftSection {
+    left: 0;
+}
+
+.rightSection {
+    right: 0;
+}
+.wrapper .left,
+.wrapper .right {
+    position: absolute;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.left {
+    left: 15px;
+}
+
+.right {
+    right: 20px;
+}
+
+.wrapper .carousel {
+    /* Mat khoang trang o giua cac phan tu */
+    position: relative;
+    font-size: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    scroll-behavior: smooth;
+}
+
+.carousel img {
+    margin-left: 6px;
+    border-radius: 6px;
+    height: 100%;
+    width: calc(100% / 6);
+    object-fit: cover;
+    transition: all 0.2s ease-in-out;
+}
+
+.carousel img:first-child {
+    margin-left: 0px;
+}
+
+
+@media screen and (max-width: 900px) {
+    .carousel img {
+        width: calc(100% / 4);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .carousel img {
+        width: calc(100% / 2);
+    }
+}

@@ -1,0 +1,188 @@
+.centeredDiv {
+    display: flex;
+    min-width: 100vw;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #141414;
+}
+
+.profileMain {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.profileMain h1 {
+    position: relative;
+    display: block;
+    width: 100%;
+    font-size: 4vw;
+    color: #fff;
+    font-weight: 400;
+    font-family: sans-serif;
+}
+
+.profileMain h1::after,
+.maturity::after,
+.maturity::before, 
+.balanceData::after{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: "";
+    display: inline-block;
+    background: #cfc8c8;
+    width: 100%;
+    height: 0.006vw;
+
+}
+
+.profileEntry {
+    width: 100%;
+    padding: 20px 0px;
+
+}
+
+.profileAvatar {
+    min-width: 30%;
+    float: left;
+}
+
+.profileData {
+    min-width: 70%;
+    float: right;
+}
+
+.profileAvatar {
+    position: relative;
+}
+
+.profileAvatar img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.editButton {
+    position: absolute;
+    border: none;
+    bottom: 10px;
+    left: 10px;
+    background-color: black;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.editForm input {
+    width: 100%;
+    height: 50px;
+    background-color: #666;
+    color: #fff;
+    font-size: 1.3vw;
+    border: none;
+    padding: 6px 16px;
+}
+
+.balanceData{ 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: baseline;
+    position: relative;
+}
+
+.balanceInfo{ 
+    display: flex;
+    margin-top: 20px;   
+    width: 100%;
+    gap: 12px;
+    align-items: baseline;
+}
+.balanceInfo p{ 
+    display: inline;
+    color: white;
+    font-size: 30px;
+    font-weight: 500; 
+}
+
+.language h2, .balanceInfo h2, .maturity h2 {
+    margin-top: 52px;
+    margin-bottom: 12px;
+    color: rgb(204, 204, 204);
+    font-size: 22px;
+}
+.balanceInfo h2{ 
+    display: inline-block;
+    margin-top: 0;
+}
+
+.maturity {
+    position: relative;
+}
+
+.maturity::before {
+    top: -20px;
+}
+.maturity::after, .balanceData::after {
+    bottom: -30px;
+}
+
+.maturityInfo {
+    width: 100px;
+    height: 20px;
+    background-color: #333333;
+    padding: 10px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.maturity .desc {
+    margin-top: 40px;
+    color: white;
+}
+
+.editMaturityButton,
+.saveButton,
+.cancelButton,
+.topUpBtn {
+    min-width: 100px;
+    margin-top: 12px;
+    height: 40px;
+    font-size: 18px;
+    background-color: transparent;
+    border: 1px solid #808080;
+    color: #808080;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.editMaturityButton:hover,
+.cancelButton:hover,
+.topUpBtn:hover,
+.saveButton:hover {
+    color: white;
+    border: none;
+    background-color: #c00;
+}
+
+.boxButton {
+    margin-top: 60px;
+}
+.saveButton,
+.cancelButton {
+    margin-top: 0;
+    margin-right: 20px;
+    min-width: 120px;
+    height: 40px;
+}
+
+.saveButton {
+    color: #000;
+    background-color: #fff;
+}

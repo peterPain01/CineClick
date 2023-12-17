@@ -1,0 +1,53 @@
+.centeredDiv{ 
+    width: 100vw;
+    height: 100vh;
+    padding: 60px;
+}
+
+.headerWrapper{ 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.headerText{ 
+    font-size: 36px;
+    color: #fff;
+    font-weight: 400;
+}
+
+.headerAction{ 
+
+}
+
+.MovieGrid{ 
+    margin-top: 100px;
+    display: grid; 
+    grid-template-columns: repeat(6, auto);
+    column-gap: 12px;
+    row-gap: 60px;
+}
+
+.image{ 
+    width: 100%;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.pagination{ 
+    width: 100%;
+    margin-top: 60px;
+    text-align: center;
+}
+.paginationItem{
+    color: #fff;
+    padding: 10px;
+    margin-left: 12px;
+    background-color: rgb(229, 9, 20, 0.5);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.paginationItem:hover{ 
+    background-color: #e50914;
+
+}

@@ -1,0 +1,76 @@
+.card {
+    width: 100%;
+    height: 100%;
+    background-color: #2f2f2f;
+    border-radius: 6px;
+}
+
+.thumb {
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+}
+
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.thumb span {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    background-color: #000000;
+    opacity: 0.1;
+    width: 100%;
+    height: 20px;
+}
+.cardMetadata {
+    padding: 16px 12px;
+    user-select: none;
+}
+.topCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.matchScore {
+    font-weight: 700;
+    color: #46d369;
+}
+.moreInfo {
+    margin-top: 10px;
+}
+
+.desc {
+    margin-top: 12px;
+    color: #bebebe;
+    line-height: 1.5;
+}
+
+
+
+.maturityNumber {
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid #bcbcbc;
+    padding: 2px 6px;
+    font-weight: 700;
+    color: #bcbcbc;
+}
+.year {
+    color: #bcbcbc;
+    padding-left: 5px;
+    font-size: 18px;
+}
+

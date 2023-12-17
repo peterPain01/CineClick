@@ -1,0 +1,56 @@
+.action{ 
+    position: relative;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.textButton{ 
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.button:hover ~ .desc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.desc {
+    display: none;
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateY(0) translateX(-50%);
+    width: 170px;
+    height: 30px;
+    background: #fff;
+    border-radius: 6px;
+    z-index:  2;
+}
+
+.desc::after {
+    position: absolute;
+    content: "";
+    display: block;
+    top: 25px;
+    border: 10px solid;
+    border-color: #fff transparent transparent transparent;
+    
+}
+
+.desc span {
+    font-weight: 600;
+    font-size: 20px;
+}

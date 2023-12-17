@@ -1,0 +1,45 @@
+.choiceDropdown {
+    position: relative;
+    display: inline-block;
+    min-width: 100px;
+    height: 30px;
+    background: #000;
+    border: 1px solid #fff;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.choiceDropdown span {
+    position: absolute;
+    top: 6px;
+    left: 4px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.choiceDropdown i {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+}
+
+.choiceDropdown .dropDownContent {
+    min-width: 120px;
+    min-height: 100px;
+    display: none;
+    background-color: rgba(2, 2, 2, 0.9);
+    padding: 12px;
+    position: absolute;
+    top: 105%;
+    flex-direction: column;
+    border: 0.05px solid #bebebe;
+    z-index: 1;
+}
+
+.contentItem {
+    display: block;
+    color: #fff;
+    padding-top: 8px;
+    font-size: 14px;
+}

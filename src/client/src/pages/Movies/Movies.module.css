@@ -1,0 +1,17 @@
+.centeredDiv {
+    width: 100vw;
+    height: 100vh;
+    padding: 60px;
+}
+
+.headerWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerText {
+    font-size: 36px;
+    color: #fff;
+    font-weight: 400;
+}

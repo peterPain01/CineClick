@@ -1,0 +1,281 @@
+.navbar {
+    display: flex;
+    padding: 10px 50px;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    transition: all 0.6s;
+    z-index: 10;
+}
+
+.navbarFixed {
+    background-color: rgba(0, 0, 0, 1) !important
+}
+
+.direct {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.mainMenu {
+    position: relative;
+}
+
+.mainMenu:hover > .subMenu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.subMenu {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    color: white;
+    background-color: black;
+    border: 1px solid #b3b3b3;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s, visibility .2s;
+}
+
+.subMenu .subMenu { 
+    top: 0;
+    left: 100%;
+}
+.subMenu li {
+    padding: 12px;
+}
+
+.subMenu li:hover{ 
+    color: #e50914; 
+}
+.logo {
+    width: 130px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.link {
+    display: flex;
+    list-style-type: none;
+    font-size: 16px;
+    font-weight: 500;
+    gap: 15px;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.link li a:hover {
+    color: #b3b3b3;
+}
+
+.link li a {
+    color: white;
+    transition: 0.3s;
+}
+
+.li_active {
+}
+
+/* Search input */
+.action {
+    display: flex;
+    align-items: center;
+}
+
+.searchBox {
+    width: 270px;
+    /* overflow-x   : hidden; */
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchField {
+    position: absolute;
+    left: 200px;
+    opacity: 0;
+    transition: opacity 0.3s, left 0.3s;
+}
+
+.searchField input {
+    margin-left: 5px;
+    border: none;
+    width: 250px;
+    height: 36px;
+}
+.searchFieldInput {
+    background-color: black;
+    padding-left: 30px;
+    color: #fff;
+}
+
+.searchField input:focus {
+    outline: 1px solid white;
+}
+.searchIconField {
+    position: absolute;
+    top: 25%;
+    left: 10px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 245px;
+    cursor: pointer;
+    margin-left: -20px;
+    z-index: 1;
+}
+
+.searching {
+    opacity: 1;
+    left: 0px;
+}
+
+.infoBox,
+.avatarBox {
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.avatar {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.opacityForm {
+    opacity: 0;
+}
+
+/* Handle Expand Event */
+.notifyBox,
+.cardBox {
+    position: relative;
+}
+
+.cartNumber {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    background-color: red;
+}
+.notifyExpand,
+.Boxlist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    border-radius: 6px;
+    top: 40px;
+    right: -5px;
+    min-width: 400px;
+    min-height: 200px;
+    opacity: 0;
+    visibility: hidden;
+    scale: 0;
+    transition: opacity 0.3s, visibility 0.3s, scale 0.3s;
+    transform-origin: 93% top;
+    background-color: rgba(0, 0, 0, 0.8);
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+    border-top: 3px solid white;
+    color: #fff;
+}
+
+.Boxlist {
+    display: flex;
+    padding-right: 12px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 220px;
+    min-height: 150px;
+    top: 68px;
+    right: 80px;
+}
+
+.Boxlist::before {
+    content: "";
+    position: absolute;
+    top: -22px;
+    right: 4px;
+    border: 10px solid;
+    border-color: transparent transparent #fff;
+}
+
+.Boxlist a {
+    display: inline-block;
+    height: 24px;
+    margin-top: 12px;
+    padding: 5px;
+    color: white;
+}
+
+.Boxlist a:last-child {
+    padding: 12px 20px;
+}
+
+.Boxlist a i {
+    display: inline-block;
+    width: 40px;
+    padding: 0px 10px;
+}
+.notifyBox:hover .notifyExpand {
+    opacity: 1;
+    visibility: visible;
+    scale: 1;
+}
+.avatarBox:hover .Boxlist {
+    opacity: 1;
+    visibility: visible;
+    scale: 1;
+}
+
+.notifyExpand::before {
+    content: "";
+    position: absolute;
+    top: -21px;
+    right: 4px;
+    border: 10px solid;
+    border-color: transparent transparent #fff;
+}
+
+.infoBox {
+    display: flex;
+}
+
+.Boxlist a:hover {
+    text-decoration: underline;
+}
+
+.breakLine {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.breakLine::after {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: auto;
+    display: inline-block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: #fff;
+}

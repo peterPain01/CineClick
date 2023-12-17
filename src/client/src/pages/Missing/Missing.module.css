@@ -1,0 +1,49 @@
+.main{ 
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./img/missing.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.debugInfo h1{ 
+    margin: 0;
+    font-size: 62px;
+    text-align: center;
+    font-weight: 600;
+    color: white;
+}
+
+.debugInfo { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.debugInfo p{ 
+    color: #fff;
+    font-size: 24px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+}
+
+.debugInfo button{ 
+    border-radius: 6px;
+    background-color: #e50914;
+    color: #fff;
+    padding: 12px;
+    width: 140px;
+    height: 50px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.debugInfo button a{ 
+    color: white;
+}

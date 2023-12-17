@@ -1,0 +1,107 @@
+.Trailer {
+    position: relative;
+}
+
+.imageThumb {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.video {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    display: none;
+}
+
+.action {
+    width: 36vw; 
+    position: absolute;
+    top: 20%;
+    left: 60px;
+    gap: 10px;
+}
+
+.movieThumb {
+    width: 100%;
+    object-fit: contain;
+}
+
+.trailerDesc {
+    width: 100%;
+    padding-top: 0px;
+    margin: 6px 0px;
+    letter-spacing: 0;
+    line-height: 1.5;
+    color: white;
+    font-size: 1.3vw;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.playBtnBox, .detailBtnBox{ 
+    width: 20%;
+    margin-top: 12px;
+    display: inline-block;
+}
+.detailBtnBox{ 
+    width: 30%;
+}
+.videoAction {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    position: absolute;
+    top: 70%;
+    right: 0;
+}
+
+.videoAction .volume {
+    
+}
+
+.btnVolume {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid white;
+    padding: 12px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.btnVolume svg {
+    color: white;
+}
+.videoAction .btnVolume img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+    text-align: center;
+}
+
+.maturity {
+    flex-grow: 1;
+    width: 80px;
+    height: 30px;
+    background-color: rgba(51, 51, 51, 0.6);
+    border: 3px #dcdcdc;
+    border-left-style: solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.maturityNumber {
+    color: white;
+    font-size: 1.2vw;
+}
+
+
+@media screen and (max-width: 768px) {
+    .imageThumb {
+        width:100vw;
+        height: 400px;
+        object-fit: cover;
+    }
+}

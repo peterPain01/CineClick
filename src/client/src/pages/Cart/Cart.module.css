@@ -1,0 +1,175 @@
+.centeredDiv {
+    display: flex;
+    min-width: 100vw;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    /* REMOVE WHEN BUILDED  */
+    padding-top: 80px;
+}
+
+.cartWrapper {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+}
+
+.cartInfo {
+    max-width: 500px;
+    width: 50%;
+    padding: 20px 40px;
+}
+
+.cartCheckOut {
+    width: 50%;
+}
+
+.cartInfoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.itemNumber {
+    font-weight: 600;
+    font-size: 22px;
+}
+
+.productDetails {
+    max-width: 978px;
+}
+.productTable {
+    width: 100%;
+}
+
+.productRow {
+    min-height: 60px;
+}
+
+.productRow .tdata {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 20px 0px;
+}
+.productCol1,
+.productCol2 {
+    width: 50%;
+}
+
+.productCol2 {
+    text-align: end;
+}
+
+.productImage {
+    width: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    scale: 1;
+    cursor: pointer;
+    transition: scale 0.3s;
+}
+
+.productImage:hover {
+    scale: 1.1;
+}
+
+.removeButton {
+    width: fit-content;
+    color: #e50914;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.removeIcon{ 
+    padding: 0 8px;
+}
+.productPrice {
+    text-align: end;
+}
+
+.tdata {
+    border-bottom: 1px solid #ccc;
+}
+
+.cartCheckOut {
+    max-width: 500px;
+    width: 50%;
+    padding: 20px 40px;
+}
+.subDetailWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.promoWrapper {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.promoText {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.promoInput {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+.applyButton,
+.checkOutButton {
+    width: 200px;
+    height: 50px;
+    padding: 18px;
+    background-color: #f77474;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    color: white;
+}
+
+.applyButton:hover {
+    background-color: #e50914;
+}
+
+.totalWrapper::before {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    position: absolute;
+    top: -30px;
+    left: 0;
+}
+.totalWrapper {
+    position: relative;
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.totalText,
+.totalPrice {
+    font-weight: 600;
+    font-size: 16px;
+}
+.checkOutButton {
+    margin-top: 20px;
+    color: #fff;
+    width: 100%;
+    background-color: #5c51db;
+    scale: 1;
+    transition: scale 0.5s;
+}
+
+.checkOutButton:hover {
+    scale: 1.05;
+}

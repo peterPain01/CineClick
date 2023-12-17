@@ -1,0 +1,43 @@
+.footer{ 
+    position: relative;
+}
+
+.footer::after{ 
+    position: absolute;
+    content: '';
+    display: inline-block;
+    background-color: #b3b3b3;
+    top: 0px;
+    width: 100%;
+    height: 1px;
+}
+.footerContent{ 
+    padding: 30px 0px; 
+    margin-left: 200px; 
+}
+.footerHelperText:hover{ 
+    text-decoration: underline;
+}
+.footerHelperText, .column a{ 
+    color: #b3b3b3;
+
+}
+.footerColumns{     
+    margin-top: 20px; 
+    display: flex;
+    flex-direction: row;    
+}
+
+.column:not(:first-child){ 
+    margin-left: 100px;
+}
+
+.column{ 
+    display: flex;
+    flex-direction: column  ;
+}
+
+.column a{ 
+    font-size: 13px;
+    margin-top: 20px;
+}

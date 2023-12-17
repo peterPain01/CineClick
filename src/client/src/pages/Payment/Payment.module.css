@@ -1,0 +1,128 @@
+.centered {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.paymentContent {
+    max-width: 968px;
+    margin: 0 auto 15px;
+    padding-top: 120px;
+    padding-bottom: 20px;
+}
+.stepHeaderContainer {
+    margin-bottom: 20px;
+}
+.stepIndicator {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stepTitle {
+    color: #333;
+    font-size: 20px;
+}
+
+.checkMarkItemText {
+    font-size: 16px;
+    margin-left: 10px;
+    margin-top: 2px;
+}
+
+.paymentHeader {
+    margin-left: 35%;
+    display: flex;
+}
+
+.planOption {
+    pointer-events: none;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.label {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 120px;
+    background-color: #e50914;
+    opacity: 0.6;
+    margin: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.labelAfter {
+    display: none;
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    content: "";
+    border: 10px solid;
+    border-color: #e50914 transparent transparent transparent;
+}
+.tablePlan {
+    width: 100%;
+    text-align: center;
+}
+
+.tableRow {
+    border-bottom: 1px solid #ccc;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.tableHeader {
+    width: 35%;
+    display: inline-block;
+    font-weight: 400;
+    text-align: start;
+}
+
+.tableHeader,
+.tableData {
+    font-size: 16px;
+}
+
+.tableData {
+    width: 16.25%;
+    color: #737373;
+}
+
+.informationText {
+    color: #737373;
+    display: block;
+    font-size: 13px;
+    padding: 16px;
+}
+
+.submitButtonBox {
+    display: flex;
+    justify-content: center;
+}
+
+.submitButton {
+    width: 400px;
+    min-width: 20px;
+    height: 50px;
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+}
+
+@media screen and (max-width: 768px) {
+    .paymentHeader {
+        margin-left: 0;
+    }
+    .tableHeader {
+        display: none;
+    }
+    .tableData {
+        width: 25%;
+    }
+}

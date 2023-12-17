@@ -1,0 +1,20 @@
+.home {
+    position: relative;
+}
+.boxMovieHover {
+    position: absolute;
+    background-color: red;
+    display: block !important;
+    z-index: 100 !important;
+    border-radius: 6px;
+    opacity: 0;
+    scale: 0;
+    visibility: hidden;
+    transition: all 0.5s;
+    transition-delay: 0.2s;
+}
+
+.boxMovieHover video {
+    width: 100%;
+    object-fit: cover;
+}
