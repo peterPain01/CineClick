@@ -2,8 +2,10 @@ import styles from "./Auth.module.css";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import {useCookies} from "react-cookie";
 
 export function Auth() {
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
     const { setAuth } = useAuth();
 
     const [account, setAccount] = useState({ username: "", password: "" });
@@ -56,7 +58,7 @@ export function Auth() {
     // Sign in with Google
     function handleSignINGoogle(event) {
         event.preventDefault();
-        const googleLoginURL = "http://localhost:8000/auth/google";
+        const googleLoginURL = "http://localhost:13123/auth/google";
         createPopupWin(googleLoginURL, 500, 600);
 
         // axios
@@ -69,10 +71,28 @@ export function Auth() {
     function handleSignIn(event) {
         event.preventDefault();
         if (validUserName && validPwd) {
+            const data = new FormData(event.target);
+            const value = Object.fromEntries(data);
             axios
-                .post("http://localhost:8000/auth/login", { account })
-                .then((response) => console.log(response))
-                .catch((err) => console.log(err));
+                .post("http://localhost:13123/auth/login", JSON.stringify(value), {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then((response) => {
+                    console.log(response.data)
+                    if (response.status == 200) {
+                        setCookie("login", true, {
+                            maxAge: response.data.age || undefined,
+                        });
+                        window.open(document.location, "_self");
+                    }
+                })
+                .catch((err) => {
+                    removeCookie("login");
+                    alert(err.response.data);
+                });
         }
         if (!validUserName || account.username === '') 
             setValidUserName(false)
@@ -181,6 +201,7 @@ export function Auth() {
                                 <div className={styles.remember}>
                                     <input
                                         type="checkbox"
+                                        value="true"
                                         name="remember"
                                         id="remember"
                                     />{" "}

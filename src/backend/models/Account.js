@@ -8,12 +8,11 @@ module.exports = {
         return true;
     },
     AccountInfo: class {
-        constructor(email, username, password, type) {
-            if (!email && !username) {
-                throw new Error("Either 'email' or 'username' must be present for an account");
+        constructor(email, password, type) {
+            if (!email) {
+                throw new Error("'email' must be present for an account");
             }
             this.email = email;
-            this.username = username;
             this.password = password;
             if (!module.exports.is_valid_type(type)) {
                 throw new Error(`Invalid account type ${type}`);
@@ -21,12 +20,11 @@ module.exports = {
             this.type = type;
         }
     },
-    // NOTE: Required either 'username' or 'email'
     // NOTE: 'type' is optional
-    async get(username, email, type) {
+    async get(email, type) {
         let condition = "";
-        if (username) condition += ` username = '${username}'`;
         if (email) condition += ` email = '${email}'`;
+        else throw new Error("Email is missing");
         if (type) {
             if (!this.is_valid_type(type)) {
                 throw new Error(`Unregconized type '${type}'`);
@@ -35,8 +33,10 @@ module.exports = {
         }
         let result = await db.get("Account", condition);
         if (result == null) return null;
-        const {email: n_email, username: n_username, password, type: n_type} = result;
-        return new this.AccountInfo(n_email, n_username, password, n_type);
+        {
+            const {email, password, type} = result;
+            return new this.AccountInfo(email, password, type);
+        }
     },
     async insert(acc_info) {
         if (!(acc_info instanceof this.AccountInfo)) {

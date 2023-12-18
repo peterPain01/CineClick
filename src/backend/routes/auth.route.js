@@ -33,6 +33,19 @@ router.post("/login", passport.authenticate("local", {
 });
 
 router.post("/register", AccountController.create);
+router.get("/logout", (req, res, next) => {
+    if (req.user === undefined) {
+        res.status(400).send("User is not logged in");
+    } else {
+        req.logout({}, (err) => {
+            if (err) {
+                next(err);
+            } else {
+                res.status(200).send("OK");
+            }
+        });
+    }
+});
 
 router.get("/login_fail", (req, res, next) => {
     // TODO: Handle login failure properly
