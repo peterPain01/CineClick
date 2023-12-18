@@ -1,4 +1,5 @@
 const fs = require("fs");
+const data = require("../data.json");
 const pgp = require("pg-promise")({
     capSQL: true,
 });
@@ -32,6 +33,35 @@ module.exports = {
                 await conn.done();
                 conn = await cineclick_db.connect();
                 await conn.none(fs.readFileSync("./init.sql", {encoding: "utf-8"}));
+                data.Movies.forEach(mv => {
+                    conn.tx(async t => {
+                        const directors = mv.directorList?.map(y => {
+                            return data.Names.find(z => z.id === y)?.name || null;
+                        }).filter(y => y !== null);
+                        const actors = mv.actorList?.map(y => {
+                            return data.Names.find(z => z.id === y.id)?.name || null;
+                        }).filter(y => y !== null);
+                        const rand = Math.random();
+                        const movie = {
+                            title: mv.title?.trim() || "",
+                            image: mv.image?.trim() || "",
+                            release: mv.releaseDate,
+                            length: mv.runtimeStr?.trim() || "",
+                            imdb: Number(mv.imDbRating) || 0,
+                            summary: mv.plot?.trim() || "",
+                            directors: directors?.join(", ") || "",
+                            actors: actors?.join(", ") || "",
+                            type: rand > 0.5 ? "free" : "premium",
+                            restrict_age: rand <= 1/3 ? "18+" : rand <= 2/3 ? "13+" : "9+",
+                            year: mv.year || "",
+                        };
+                        const sql = pgp.helpers.insert(movie, null, "Movie") + " RETURNING id"
+                        const id = await t.one(sql, null, c => +c.id);
+                        for (const g of mv.genreList || []) {
+                            await t.proc('add_genre', [id, g.trim()]);
+                        }
+                    });
+                });
             } else {
                 console.log("[INFO] Database 'cineclick' found");
             }
@@ -53,10 +83,11 @@ module.exports = {
         }
     },
     async all(tb_name) {
-        return this.exec(`select * from ${tb_name}`);
+        return this.exec(`select * from "${tb_name}"`);
     },
     async find(tb_name, condition) {
-        return this.exec(`select * from ${tb_name} where ${condition}`);
+        condition = condition.trim();
+        return this.exec(`select * from "${tb_name}" ${condition === "" ? "" : "where " + condition}`);
     },
     async helper_insert(tb_name, obj) {
         this.exec(pgp.helpers.insert(obj, null, tb_name));
@@ -65,7 +96,7 @@ module.exports = {
         let conn = null;
         try {
             conn = await cineclick_db.connect();
-            return await conn.oneOrNone(`select * from ${tb_name} where ${condition}`);
+            return await conn.oneOrNone(`select * from "${tb_name}" where ${condition}`);
         } catch (err) {
             throw err;
         } finally {

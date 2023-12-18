@@ -33,15 +33,15 @@ module.exports = {
             }
             condition += ` type = '${type}'`;
         }
-        let result = await db.get("account", condition);
+        let result = await db.get("Account", condition);
         if (result == null) return null;
         const {email: n_email, username: n_username, password, type: n_type} = result;
         return new this.AccountInfo(n_email, n_username, password, n_type);
     },
     async insert(acc_info) {
         if (!(acc_info instanceof this.AccountInfo)) {
-            throw new Error("Can't insert object of different type than AccountInfo to 'account' table");
+            throw new Error("Can't insert object of different type than AccountInfo to 'Account' table");
         }
-        await db.helper_insert("account", acc_info);
+        await db.helper_insert("Account", acc_info);
     }
 };

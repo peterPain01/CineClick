@@ -8,7 +8,7 @@ router.get("/google", passport.authenticate("google", {
     failureMessage: true,
     scope: ["profile", "email"],
 }), (req, res) => {
-    res.status(200).send("Ok");
+    res.status(200).send({age: false, type: req.user.type});
 });
 
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
@@ -23,11 +23,13 @@ router.post("/login", passport.authenticate("local", {
 }), (req, res) => {
     if (req.body.remember === "true") {
         console.log(`[INFO] Remember ${req.user} for 10 minutes`);
-        req.session.cookie.maxAge = 10 * 60 * 1000; // remember for 10 minutes
+        const max_age = 10 * 60 * 1000;
+        req.session.cookie.maxAge = max_age; // remember for 10 minutes
+        res.status(200).send({age: max_age, type: req.user.type});
     } else {
         req.session.cookie.expires = false; // only for current client (delete when browser close)
+        res.status(200).send({age: false, type: req.user.type});
     }
-    res.status(200).send("Ok");
 });
 
 router.post("/register", AccountController.create);

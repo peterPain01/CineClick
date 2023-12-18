@@ -10,16 +10,15 @@ router.use((req, res, next) => {
     if (!req.isAuthenticated()) {
         res.status(401).send("Unauthenticated admin");
     } else if (req.user.type !== "admin") {
-        res.status(401).send("Only admin can access this route");
+        res.status(401).send("Unauthorized admin");
     } else {
         next();
     }
 });
 
 router.post("/upload-movie", uploader.single("file"), async (req, res, next) => {
-    const {title, release, imdb, directors, genres, type} = req.body;
     try {
-        const info = new MovieInfo(title, release, imdb, directors, genres, type);
+        const info = new MovieInfo(req.body);
         await MovieController.add(info, req.file?.path);
         res.status(200).send("OK");
     } catch (err) {

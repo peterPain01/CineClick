@@ -2,11 +2,12 @@ const path = require("path");
 const fs = require("fs");
 const spawn = require("child_process").spawn;
 const MovieModel = require("../models/Movie");
+const { AccountInfo } = require("../models/Account");
 module.exports = {
     async add(movie_info, raw_file_path) {
         const SEC_PER_PART = 20;
         movie_info.id = await MovieModel.get_next_id();
-        const mv_path = movie_info.get_file();
+        const mv_path = MovieModel.get_file(movie_info.id);
         if (raw_file_path === undefined || raw_file_path === null) { // only upload info without file, manually add video later
             await MovieModel.add(movie_info);
             return;
@@ -41,5 +42,24 @@ module.exports = {
         res.writeHead(206, headers);
         const videoStream = fs.createReadStream(video_path);
         videoStream.pipe(res);
+    },
+    async can_watch(account, mv_id) {
+        if (!mv_id && !email) {
+            throw new Error("'ID' and 'email' are required");
+        }
+        if (!(account instanceof AccountInfo)) {
+            throw new Error("Invalid type for account");
+        }
+        if (account.type === "admin") return true;
+        const mv_info = await MovieModel.get(mv_id);
+        if (mv_info.type === "free") {
+            return true;
+        } else if (mv_info.type === "premium") {
+            return account.type === "premium-viewer";
+        } else if (mv_info.type === "paid") {
+            return MovieModel.can_watch_paid_movie(account.email, mv_id);
+        } else {
+            throw new Error(`Unregconized type ${mv_info.type}`);
+        }
     }
 }
