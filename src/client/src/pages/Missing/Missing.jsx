@@ -1,5 +1,5 @@
 import styles from "./Missing.module.css";
-function Missing() {
+export function Missing() {
     return (
         <div className={styles.main}>
             <div className={styles.debugInfo}>
@@ -14,4 +14,3 @@ function Missing() {
     );
 }
 
-export default Missing;

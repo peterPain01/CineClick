@@ -16,6 +16,7 @@
 }
 
 .profileMain h1 {
+    margin-top: 60px;
     position: relative;
     display: block;
     width: 100%;
@@ -163,12 +164,16 @@
 }
 
 .editMaturityButton:hover,
-.cancelButton:hover,
 .topUpBtn:hover,
 .saveButton:hover {
     color: white;
     border: none;
     background-color: #c00;
+}
+
+.cancelButton:hover{ 
+    color: #fff;
+    background-color: #000;
 }
 
 .boxButton {

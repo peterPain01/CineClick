@@ -4,7 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
-function Register() {
+export function Register() {
     const [account, setAccount] = useState({
         username: "",
         password: "",
@@ -13,12 +13,12 @@ function Register() {
     const [validUserName, setValidUserName] = useState(false);
     const [validPwd, setValidPwd] = useState(false);
     const [validCPwd, setValidCPwd] = useState(false);
-    const [focusConfirmPwd, isFocusConfirmPws] = useState(false); 
+    const [focusConfirmPwd, isFocusConfirmPws] = useState(false);
 
     const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     const PHONE_REGEGX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
     const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
+    
     useEffect(() => {
         setValidUserName(EMAIL_REGEX.test(account.username));
     }, [account.username]);
@@ -28,7 +28,9 @@ function Register() {
     }, [account.password]);
 
     useEffect(() => {
-        setValidCPwd(focusConfirmPwd ? (account.password === account.Cpassword) : true);
+        setValidCPwd(
+            focusConfirmPwd ? account.password === account.Cpassword : true
+        );
     }, [account.password, account.Cpassword]);
     // Ignore user have not input
     useEffect(() => {
@@ -42,11 +44,11 @@ function Register() {
     useEffect(() => {
         setValidCPwd(true);
     }, []);
-    
+
     const logInForm = useRef(null);
-    
-    function handleConfirmPwdFocus(){ 
-        isFocusConfirmPws(true) 
+
+    function handleConfirmPwdFocus() {
+        isFocusConfirmPws(true);
     }
     function handleInput(event) {
         setAccount({ ...account, [event.target.name]: event.target.value });
@@ -122,7 +124,12 @@ function Register() {
                             </div>
                             <div className={styles.formDiv}>
                                 <input
-                                    className={styles.inputForm}
+                                    className={
+                                        styles.inputForm +
+                                        (validPwd
+                                            ? ""
+                                            : " " + styles.errForm)
+                                    }
                                     type="password"
                                     name="password"
                                     id="password"
@@ -134,13 +141,11 @@ function Register() {
                                 <p
                                     className={styles.errText}
                                     style={{
-                                        display: validPwd
-                                            ? "none"
-                                            : "block",
+                                        display: validPwd ? "none" : "block",
                                     }}
                                 >
-                                    Minimum 8 characters, at least 1
-                                    letter and 1 number
+                                    Minimum 8 characters, at least 1 letter and
+                                    1 number
                                 </p>
                                 <label
                                     className={
@@ -154,7 +159,12 @@ function Register() {
                             </div>
                             <div className={styles.formDiv}>
                                 <input
-                                    className={styles.inputForm}
+                                    className={
+                                        styles.inputForm +
+                                        (validCPwd
+                                            ? ""
+                                            : " " + styles.errForm)
+                                    }
                                     type="password"
                                     name="Cpassword"
                                     id="Cpassword"
@@ -164,12 +174,10 @@ function Register() {
                                     autoComplete="on"
                                     onFocus={handleConfirmPwdFocus}
                                 />
-                                  <p
+                                <p
                                     className={styles.errText}
                                     style={{
-                                        display: validCPwd
-                                            ? "none"
-                                            : "block",
+                                        display: validCPwd ? "none" : "block",
                                     }}
                                 >
                                     Must match the password before
@@ -195,4 +203,3 @@ function Register() {
     );
 }
 
-export default Register;

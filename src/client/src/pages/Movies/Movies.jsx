@@ -1,7 +1,7 @@
 import styles from "./Movies.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 
-function Movies() {
+export function Movies() {
   
     return (
         <div className={styles.centeredDiv}>
@@ -17,4 +17,3 @@ function Movies() {
     );
 }
 
-export default Movies;

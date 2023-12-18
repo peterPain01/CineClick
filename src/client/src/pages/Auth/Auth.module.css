@@ -68,6 +68,13 @@
     border-radius: 6px;
 }
 
+.errText{ 
+    color: #e87c03;
+    margin: 0;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
 .labelForm {
     color: white;
     position: absolute;

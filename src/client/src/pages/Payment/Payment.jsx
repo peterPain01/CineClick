@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from "react";
 
-function Payment() {
+export function Payment() {
     const [selectPlan, setSelectPlan] = useState('')
     function handleSelectedPlan(e) {
         console.log(e.target);
@@ -440,5 +440,3 @@ function Payment() {
         </div>
     );
 }
-
-export default Payment;

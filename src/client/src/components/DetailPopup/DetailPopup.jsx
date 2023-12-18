@@ -10,8 +10,8 @@ import {
 
 import MovieGrid from "../MovieGrid/MovideGrid";
 import ActionButton from "../ActionButton/ActionButton";
-
-function DetailPopup({ openModal, setOpenModal }) {
+import { useRef } from "react";
+function DetailPopup({ openModal, setOpenModal, style}) {
     const cards = [
         {
             image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABbUEHtsBjMAR4bBmJ0_a36FBPtRH-RveuuIKSwU6dlao2gANeSca7-6LvZI73BkpKqHTYEebYc4S1XgEJ5T7rInCE9MnhOuGSyo.webp?r=443",
@@ -25,13 +25,11 @@ function DetailPopup({ openModal, setOpenModal }) {
         },
     ];
     return (
-        <>
+        <> 
             <div className={styles.overlay}></div>
             <div
-                className={
-                    styles.previewModal +
-                    (openModal ? " " + styles.previewModalOpen : "")
-                }
+                className={styles.previewModal}
+                style={style}
             >
                 <div className={styles.previewModalContent}>
                     <div className={styles.previewVideo}>
@@ -75,7 +73,6 @@ function DetailPopup({ openModal, setOpenModal }) {
                                         icon={faPlus}
                                         style={{ color: "#fff" }}
                                         size="xl"
-
                                     />
                                 }
                                 type="circle"
@@ -96,7 +93,6 @@ function DetailPopup({ openModal, setOpenModal }) {
                                 paddingTopBot="10px"
                                 paddingLeftRight="6px"
                                 bgc="rgba(0,0,0,0.4)"
-
                             />
                         </div>
                     </div>

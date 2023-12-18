@@ -51,18 +51,19 @@ function MovieCarousel({
     let openMovieTimeOut = useRef(false);
 
     function handleMouseEnter(event) {
-        const box_width = 480;
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+        const box_width = 0.25 * vw;
         const box_height = 400;
         const { top, left } = getCoords(event.target);
 
         const x = left + event.target.offsetWidth / 2 - box_width / 2;
-        const y = top + event.target.offsetHeight / 2 - box_height / 2;
+        const y = top + event.target.offsetHeight / 2 - box_height / 2.5;
 
         window.setTimeout(() => {
             openMovieBox.current.style.opacity = 0;
             openMovieBox.current.style.scale = 0;
             openMovieBox.current.style.visibility = "hidden";
-        }, 300);
+        }, 100);
         window.setTimeout(() => {
             openMovieBox.current.style.left = `${x}px`;
             openMovieBox.current.style.top = `${y}px`;

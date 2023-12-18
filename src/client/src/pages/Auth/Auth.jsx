@@ -1,12 +1,35 @@
 import styles from "./Auth.module.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
-function Auth() {
+export function Auth() {
     const { setAuth } = useAuth();
 
     const [account, setAccount] = useState({ username: "", password: "" });
+
+    const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const PHONE_REGEGX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+    const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    useEffect(() => {
+        setValidUserName(EMAIL_REGEX.test(account.username));
+    }, [account.username]);
+
+    useEffect(() => {
+        setValidPwd(PWD_REGEX.test(account.password));
+    }, [account.password]);
+
+    // Ignore user have not input
+    useEffect(() => {
+        setValidUserName(true);
+    }, []);
+
+    useEffect(() => {
+        setValidPwd(true);
+    }, []);
+
+    const [validUserName, setValidUserName] = useState(false);
+    const [validPwd, setValidPwd] = useState(false);
 
     const logInForm = useRef(null);
 
@@ -15,11 +38,11 @@ function Auth() {
     }
 
     function createPopupWin(pageURL, popupWinWidth, popupWinHeight) {
-        let left = (screen.width - popupWinWidth) / 2
-        let top = (screen.height - popupWinHeight) / 4
+        let top = (screen.height - popupWinHeight) / 4;
+        let left = (screen.width - popupWinWidth) / 2;
         let myWindow = window.open(
             pageURL,
-            "_self", 
+            "_self",
             "resizable=yes, width=" +
                 popupWinWidth +
                 ", height=" +
@@ -45,10 +68,16 @@ function Auth() {
     // Sign in with system account
     function handleSignIn(event) {
         event.preventDefault();
-        axios
-            .post("http://localhost:8000/auth/login", { account })
-            .then((response) => console.log(response))
-            .catch((err) => console.log(err));
+        if (validUserName && validPwd) {
+            axios
+                .post("http://localhost:8000/auth/login", { account })
+                .then((response) => console.log(response))
+                .catch((err) => console.log(err));
+        }
+        if (!validUserName || account.username === '') 
+            setValidUserName(false)
+        if(!validPwd || account.password === '')
+            setValidPwd(false)
     }
 
     // Validate Form Function
@@ -68,13 +97,28 @@ function Auth() {
                             <h1 className={styles.heroHeading}>Sign In</h1>
                             <div className={styles.formDiv}>
                                 <input
-                                    className={styles.inputForm}
+                                    className={
+                                        styles.inputForm +
+                                        (validUserName
+                                            ? ""
+                                            : " " + styles.errForm)
+                                    }
                                     type="text"
                                     name="username"
                                     id="username"
                                     value={account.username}
                                     onChange={handleInput}
                                 />
+                                <p
+                                    className={styles.errText}
+                                    style={{
+                                        display: validUserName
+                                            ? "none"
+                                            : "block",
+                                    }}
+                                >
+                                    Please enter a valid email
+                                </p>
                                 <label
                                     className={
                                         styles.labelForm +
@@ -87,13 +131,25 @@ function Auth() {
                             </div>
                             <div className={styles.formDiv}>
                                 <input
-                                    className={styles.inputForm}
+                                    className={
+                                        styles.inputForm +
+                                        (validPwd ? "" : " " + styles.errForm)
+                                    }
                                     type="password"
                                     name="password"
                                     id="password"
                                     value={account.password}
                                     onChange={handleInput}
                                 />
+                                <p
+                                    className={styles.errText}
+                                    style={{
+                                        display: validPwd ? "none" : "block",
+                                    }}
+                                >
+                                    Minimum 8 characters, at least 1 letter and
+                                    1 number
+                                </p>
                                 <label
                                     className={
                                         styles.labelForm +
@@ -169,4 +225,4 @@ function Auth() {
     );
 }
 
-export default Auth;
+

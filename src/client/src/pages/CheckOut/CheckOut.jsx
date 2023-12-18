@@ -3,7 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import env from "react-dotenv";
 
 import styles from "./CheckOut.module.css";
-function CheckOut() {
+export function CheckOut() {
     const initialOptions = {
         "client-id":"test",
         "enable-funding": "card",
@@ -117,4 +117,4 @@ function CheckOut() {
     );
 }
 
-export default CheckOut;
+

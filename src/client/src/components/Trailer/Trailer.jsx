@@ -130,6 +130,7 @@ function Trailer({ setOpenModal }) {
                             paddingLeftRight="25px"
                             handleOpenState={setOpenModal}
                             marginLeft="20px"
+                                
                         />
                     </div>
 

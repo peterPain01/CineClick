@@ -8,17 +8,12 @@
     overflow-y: scroll;
     overflow-x: hidden;
     overscroll-behavior: none;
-    /* opacity: 0;
-    visibility: hidden;
-    scale: 0; 
-   */
-    transition: all 0.5s;
 }
 
 .previewModalOpen {
-    /* opacity: 1; */
-    /* visibility: visible; */
-    /* scale: 1; */
+    opacity: 1;
+    visibility: visible;
+    scale: 1;
 }
 
 .overlay {
@@ -140,3 +135,4 @@
         width: calc(100%);
     }
 }
+

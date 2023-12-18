@@ -5,6 +5,7 @@ import MovieCarousel from "../../components/MovieCarousel/MovieCarousel";
 import { useEffect, useRef, useState } from "react";
 import MovieCarouselItems from "../../modules/MovieCarouselItems";
 import MovieCard from "../../components/MovieCard/MovieCard";
+import { CSSTransition } from "react-transition-group";
 
 const cards = [
     {
@@ -18,8 +19,35 @@ const cards = [
         duration: "2hours 15m",
     },
 ];
-function Home() {
+
+function useDelayUnmount(isMounted, delayTime) {
+    const [shouldRender, setShouldRender] = useState(false);
+
+    useEffect(() => {
+        let timeoutId;
+        if (isMounted && !shouldRender) {
+            setShouldRender(true);
+        } else if (!isMounted && shouldRender) {
+            timeoutId = setTimeout(() => setShouldRender(false), delayTime);
+        }
+        return () => clearTimeout(timeoutId);
+    }, [isMounted, delayTime, shouldRender]);
+    return shouldRender;
+}
+
+export function Home() {
     const [openModal, setOpenModal] = useState(false);
+    const shouldRenderChild = useDelayUnmount(openModal, 500);
+
+    // const mountedStyle = { opacity: '1', visibility: 'visible', scale:' 1', transition: 'all .5s' };
+    // const unmountedStyle = { opacity: '0', visibility: "hidden", scale: '0', overflow: 'hidden' };
+
+    const mountedStyle = { animation: "inAnimation 500ms ease-in" };
+    const unmountedStyle = {
+        animation: "outAnimation 510ms ease-in",
+        overflow: "hidden",
+    };
+
     useEffect(() => {
         document.body.style.maxHeight = openModal ? "100vh" : "";
         document.body.style.overflow = openModal
@@ -37,11 +65,13 @@ function Home() {
         openMovieBox.current.style.visibility = "hidden";
         openMovieBox.current.style.scale = 0;
     }
+
     return (
         <div ref={homeDiv} className={styles.home}>
             <Trailer setOpenModal={setOpenModal} />
-            {openModal ? (
+            {shouldRenderChild ? (
                 <DetailPopup
+                    style={openModal ? mountedStyle : unmountedStyle}
                     setOpenModal={setOpenModal}
                     openModal={openModal}
                 />
@@ -55,7 +85,7 @@ function Home() {
                         carouselClass={item.carouselClass}
                         wrapperClass={item.wrapperClass}
                         heading={item.heading}
-                        marginTop={index === 0 ? -200 : 50}
+                        marginTop={index === 0 ? -150 : 50}
                         openMovieBox={openMovieBox}
                         isOpen={isOpen}
                         setOpen={setOpen}
@@ -82,4 +112,3 @@ function Home() {
     );
 }
 
-export default Home;

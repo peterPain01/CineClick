@@ -1,4 +1,4 @@
-.action{ 
+.action {
     position: relative;
 }
 
@@ -11,7 +11,7 @@
     cursor: pointer;
 }
 
-.textButton{ 
+.textButton {
     font-weight: 700;
     font-size: 20px;
     text-align: center;
@@ -37,7 +37,7 @@
     height: 30px;
     background: #fff;
     border-radius: 6px;
-    z-index:  2;
+    z-index: 2;
 }
 
 .desc::after {
@@ -47,10 +47,9 @@
     top: 25px;
     border: 10px solid;
     border-color: #fff transparent transparent transparent;
-    
 }
 
 .desc span {
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 16px;
 }

@@ -5,7 +5,7 @@ import MovieCarousel from "../../components/MovieCarousel/MovieCarousel";
 
 import { useState } from "react";
 
-function TVShow() {
+export function TVShow() {
     const [openModal, setOpenModal] = useState(false);
     return (
         <div className={styles.home}>
@@ -38,4 +38,3 @@ function TVShow() {
     );
 }
 
-export default TVShow;

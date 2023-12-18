@@ -9,7 +9,7 @@ import {
     faLock,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Account() {
+export function Account() {
     return (
         <>
             <div className={styles.centeredDiv}>
@@ -154,5 +154,3 @@ function Account() {
         </>
     );
 }
-
-export default Account;

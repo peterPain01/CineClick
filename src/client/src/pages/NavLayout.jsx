@@ -1,13 +1,20 @@
 import Navbar from "../components/Navbar/Navbar";
 import { Outlet } from "react-router-dom";
 
-function NavLayout({ children, hasFullyNavbar = false }) {
+export function FullyNavLayout({ children }) {
     return (
         <>
-            { hasFullyNavbar ? <Navbar /> : <Navbar logoOnly={true}/>}
-            <Outlet/>
+            <Navbar logoOnly={false} />
+            {children}
         </>
     );
 }
 
-export default NavLayout;
+export function NavLayout({ children }) {
+    return (
+        <>
+            <Navbar logoOnly={true}/>
+            {children}
+        </>
+    );
+}

@@ -1,7 +1,7 @@
 import styles from "./Browse.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 
-function Browse() {
+export function Browse() {
     const languages = [
         'English',
         'Spanish',
@@ -52,5 +52,3 @@ function Browse() {
         </div>
     );
 }
-
-export default Browse;

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import DropDown from "../../components/DropDown/DropDown";
 
-function Profiles() {
+export function Profiles() {
     const [name, setName] = useState("Pham Hoang Gia Huy");
     const [showLanguage, isShowLanguage] = useState(false);
     const [selectedLanguage, setSelectedLannguage] = useState("");
@@ -92,5 +92,3 @@ function Profiles() {
         </div>
     );
 }
-
-export default Profiles;
