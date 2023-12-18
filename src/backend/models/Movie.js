@@ -19,6 +19,7 @@ module.exports = {
             this.restrict_age = obj.restrict_age;
             this.year = obj.year;
             this.id = obj.id;
+            this.genres = obj.genres;
         }
     },
     get_folder(id) {
@@ -32,7 +33,7 @@ module.exports = {
     },
 
     async get_next_id() {
-        const result = await db.exec('"ELECT max(id) AS id FROM "Movie"');
+        const result = await db.exec('SELECT max(id) AS id FROM "Movie"');
         const id = Number(result[0].id || 0) + 1;
         return id;
     },
@@ -53,15 +54,12 @@ module.exports = {
         type = type?.trim();
         if (type !== undefined && type !== "") condition += ` type = '${type}'`;
         let result = await (await db.find("Movie", condition)).map(async mv => {
-            const mv_genres = (await this.list_genres(mv.id)).map(x => x.genre);;
             return {
                 ...mv,
-                genres: mv_genres,
+                genres: (await this.list_genres(mv.id)).map(x => x.genre),
             };
         });
-        await Promise.all(result).then(x => {
-            result = x;
-        });
+        result = await Promise.all(result);
         if (genres !== undefined) {
             if (isArray(genres) && genres.length >= 1) {
                 result = result.filter(mv => {
@@ -77,6 +75,13 @@ module.exports = {
     },
     async all_genres() {
         return (await db.all("Genre")).map(x => x.genre);
+    },
+    async list_similars(mv_id) {
+        return await db.exec(`
+SELECT mv.*
+FROM "Movie" mv JOIN "MovieSimilar" mvs ON mvs.similar_id = mv.id
+WHERE mvs.mv_id = ${mv_id}
+`);
     },
     async list_genres(mv_id) {
         return await db.exec(`

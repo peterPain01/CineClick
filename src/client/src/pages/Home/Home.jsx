@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import MovieCarouselItems from "../../modules/MovieCarouselItems";
 import MovieCard from "../../components/MovieCard/MovieCard";
 import { CSSTransition } from "react-transition-group";
+import axios from "axios";
+import {useCookies} from "react-cookie";
 
 const cards = [
     {
@@ -36,6 +38,8 @@ function useDelayUnmount(isMounted, delayTime) {
 }
 
 export function Home() {
+    const [popupMovie, setPopupMovie] = useState(null);
+    const [movieCard, setMovieCard] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const shouldRenderChild = useDelayUnmount(openModal, 500);
 
@@ -55,7 +59,32 @@ export function Home() {
             : "hidden";
     }, [openModal]);
 
-    const [isOpen, setOpen] = useState(false);
+    const genres = ["Action", "Comedy", "Drama"];
+    let genreList = {};
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
+    genres.forEach(genre => {
+        const [data, set] = useState([]);
+        genreList[genre] = {data, set};
+    });
+    useEffect(() => {
+        const url = new URL("http://localhost:13123/movie/list");
+        genres.forEach(genre => {
+            url.search = new URLSearchParams({genres: genre, length: 20});
+            axios.get(url.toString(), { withCredentials: true }).then(res => {
+                if (res.status === 200) {
+                    genreList[genre].set(res.data);
+                } else {
+                    alert(res.data);
+                }
+            }).catch(err => {
+                if (err?.response?.status === 401) {
+                    removeCookie("login");
+                    window.open("/", "_self");
+                }
+                console.log(err);
+            });
+        })
+    }, []);
 
     const openMovieBox = useRef(null);
     const homeDiv = useRef(null);
@@ -74,21 +103,25 @@ export function Home() {
                     style={openModal ? mountedStyle : unmountedStyle}
                     setOpenModal={setOpenModal}
                     openModal={openModal}
+                    info={popupMovie}
+                    setPopupMovie={setPopupMovie}
                 />
             ) : (
                 ""
             )}
-            {MovieCarouselItems.map((item, index) => {
+            {genres.map((item, index) => {
                 return (
                     <MovieCarousel
                         key={index}
-                        carouselClass={item.carouselClass}
-                        wrapperClass={item.wrapperClass}
-                        heading={item.heading}
+                        carouselClass={"carousel-" + item.toLowerCase()}
+                        wrapperClass={"wrapper-" + item.toLowerCase()}
+                        heading={item}
                         marginTop={index === 0 ? -150 : 50}
+                        items={genreList[item].data}
                         openMovieBox={openMovieBox}
-                        isOpen={isOpen}
-                        setOpen={setOpen}
+                        setMovieCard={setMovieCard}
+                        setOpenModal={setOpenModal}
+                        setPopupMovie={setPopupMovie}
                     />
                 );
             })}
@@ -99,16 +132,12 @@ export function Home() {
                 onMouseLeave={(e) => openMovieBoxLeave(e)}
             >
                 <MovieCard
-                    image={cards[0].image}
-                    title={cards[0].title}
-                    matchScore={cards[0].matchScore}
-                    maturityNumber={cards[0].maturityNumber}
-                    year={cards[0].year}
-                    duration={cards[0].duration}
+                    movie={movieCard}
                     addBtn={false}
+                    setPopupMovie={setPopupMovie}
+                    setOpenModal={setOpenModal}
                 />
             </div>
         </div>
     );
 }
-

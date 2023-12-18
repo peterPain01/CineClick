@@ -16,24 +16,19 @@ function Trailer({ setOpenModal }) {
     
     function handlePlay() {
         // Call API here /watch/idMovie
-        axios
-            .get("http://10.123.0.217:13123/movie/list")
-            .then((data) => {
-                console.log(data);
-                return data.data[0].src;
-            })
-            .then((src) => {
-                var hls = new Hls();
-                hls.loadSource(`http://10.123.0.217:13123/${src}`);
-                hls.attachMedia(video.current);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    video.current.muted = true;
-                    video.current.play();
-                    video.current.muted = false;
-                });
-            })
-            .then((data) => console.log(data))
-            .catch((err) => console.log(err));
+        var hls = new Hls({
+            debug: true,
+            xhrSetup: function (xhr, url) {
+                xhr.withCredentials = true; // do send cookies
+            },
+        });
+        console.log(hls);
+        hls.loadSource(`http://localhost:13123/viewer/watch/${1}/part.m3u8`);
+        hls.attachMedia(video.current);
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            video.current.play();
+        });
+        setShowVideo(true);
     }
 
     function handleMouseEnterImageThumb() {
@@ -66,18 +61,23 @@ function Trailer({ setOpenModal }) {
                         // onMouseEnter={handleMouseEnterImageThumb}
                         // onMouseLeave={handleMouseLeaveVideo}
                         className={styles.imageThumb}
+                        style={{display: showVideo ? "none" : "block"}}
                         id="imageThumbnail"
                         src="./img/Thumbnail.jpg"
                         alt=""
                         ref={imageThumb}
                     />
-                    {/* <video
+                    <video
                         id="trailerVideo"
                         ref={video}
+                        style={{display: showVideo ? "block" : "none",
+                                position: "absolute",
+                                zIndex: 100,
+                                height: "100vh"}} // TODO: change ui
                         onMouseOut={handleMouseLeaveVideo}
                         className={styles.video}
                         controls
-                    ></video> */}
+                    ></video>
                 </div>
 
                 <div className={styles.action}>
@@ -94,7 +94,8 @@ function Trailer({ setOpenModal }) {
                         </p>
                     </div>
 
-                    <div className={styles.playBtnBox}>
+                    <div className={styles.playBtnBox}
+                         onClick={handlePlay}>
                         <ActionButton
                             text="Play"
                             icon={

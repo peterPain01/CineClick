@@ -10,11 +10,13 @@ import { useEffect, useRef, useState } from "react";
 function MovieCarousel({
     carouselClass,
     wrapperClass,
+    items,
     heading,
     marginTop = 0,
     openMovieBox,
-    isOpen = false,
-    setOpen = null,
+    setMovieCard,
+    setOpenModal,
+    setPopupMovie,
 }) {
     function handleClick(e) {
         if (e.currentTarget === e.target) {
@@ -50,7 +52,7 @@ function MovieCarousel({
 
     let openMovieTimeOut = useRef(false);
 
-    function handleMouseEnter(event) {
+    function handleMouseEnter(event, mv) {
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
         const box_width = 0.25 * vw;
         const box_height = 400;
@@ -71,6 +73,7 @@ function MovieCarousel({
             // openMovieBox.current.style.height = `${box_height}px`;
         }, 500);
         openMovieTimeOut.current = window.setTimeout(() => {
+            setMovieCard(mv);
             openMovieBox.current.style.opacity = 1;
             openMovieBox.current.style.scale = 1;
             openMovieBox.current.style.visibility = "visible";
@@ -107,55 +110,21 @@ function MovieCarousel({
                     </div>
 
                     <div className={styles.carousel + ` ${carouselClass}`}>
-                        <img
-                            src="./img/img-1.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            // onMouseEnter={(event) => handleShowMovieBox(event)}
-                            src="./img/img-2.jpg"
-                            alt=""
-                        />
-                        <img
-                            src="./img/img-3.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            src="./img/img-4.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            src="./img/img-5.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            src="./img/img-6.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            src="./img/img-7.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <img
-                            src="./img/img-8.jpg"
-                            alt=""
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
+                        {(items ? items : []).map((mv, index) => 
+                            <img
+                                key={index}
+                                src={mv.image}
+                                onMouseEnter={(event) => handleMouseEnter(event, mv)}
+                                onMouseLeave={handleMouseLeave}
+                                onClick={(event) => {
+                                    setPopupMovie(mv);
+                                    if (openMovieTimeOut.current) {
+                                        window.clearTimeout(openMovieTimeOut.current);
+                                    }
+                                    setOpenModal(true);
+                                }}
+                            />
+                        )}
                     </div>
                     <div
                         className={styles.rightSection}

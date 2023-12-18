@@ -33,8 +33,9 @@ module.exports = {
                 await conn.done();
                 conn = await cineclick_db.connect();
                 await conn.none(fs.readFileSync("./init.sql", {encoding: "utf-8"}));
-                data.Movies.forEach(mv => {
-                    conn.tx(async t => {
+                const ids = {};
+                let promises= data.Movies.map(async mv => {
+                    await conn.tx(async t => {
                         const directors = mv.directorList?.map(y => {
                             return data.Names.find(z => z.id === y)?.name || null;
                         }).filter(y => y !== null);
@@ -57,11 +58,22 @@ module.exports = {
                         };
                         const sql = pgp.helpers.insert(movie, null, "Movie") + " RETURNING id"
                         const id = await t.one(sql, null, c => +c.id);
+                        ids[mv.id] = id;
                         for (const g of mv.genreList || []) {
                             await t.proc('add_genre', [id, g.trim()]);
                         }
                     });
                 });
+                await Promise.all(promises);
+                promises = data.Movies.map(async mv => {
+                    await Promise.all(mv.similars.map(async id => {
+                        if (mv.id && id && ids[mv.id] && ids[id]) {
+                            const sql = pgp.helpers.insert({mv_id: ids[mv.id], similar_id: ids[id]}, null, "MovieSimilar");
+                            await conn.none(sql);
+                        }
+                    }));
+                });
+                await Promise.all(promises);
             } else {
                 console.log("[INFO] Database 'cineclick' found");
             }

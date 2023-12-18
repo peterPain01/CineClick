@@ -18,7 +18,7 @@ passport.serializeUser((acc, done) => {
 });
 passport.deserializeUser(async (email, done) => {
     try {
-        const acc = await AccountModel.get(null, email);
+        const acc = await AccountModel.get(email);
         if (!acc) {
             done("Can't find account with email " + email, false);
         } else {
@@ -47,7 +47,7 @@ module.exports = (app) => {
             done("[ERROR] Invalid usage, required email");
         } else {
             try {
-                let acc = await AccountModel.get(null, profile.email);
+                let acc = await AccountModel.get(profile.email);
                 if (acc) {
                     done(null, acc);
                 } else {
@@ -63,16 +63,15 @@ module.exports = (app) => {
         }
     }));
 
-    passport.use(new LocalStrategy(async (username, password, done) => {
-        if (!username) username = "";
+    passport.use(new LocalStrategy(async (email, password, done) => {
+        if (!email) email = "";
         if (!password) password = "";
-        console.log("LOGIN ", username, password);
         try {
-            const acc = await AccountModel.get(username);
+            const acc = await AccountModel.get(email);
             if (acc && bcrypt.compareSync(password, acc.password)) {
                 done(null, acc);
             } else {
-                done(null, false, {message: "Invalid username or password"});
+                done(null, false, {message: "Invalid email or password"});
             }
         } catch(err) {
             console.log(err);

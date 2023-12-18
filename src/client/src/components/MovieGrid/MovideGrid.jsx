@@ -14,81 +14,18 @@ const cards = [
 ];
 
 // Nhan vao 1 list cards -> Duyet qua list
-function MovieGrid({ CardNumber = 9 }) {
+function MovieGrid({ CardNumber = 9, movies = [], setPopupMovie, setOpenModal }) {
     return (
         <div className={styles.MovieCards}>
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
-            <MovieCard
-                image={cards[0].image}
-                title={cards[0].title}
-                description={cards[0].description}
-                matchScore={cards[0].matchScore}
-                maturityNumber={cards[0].maturityNumber}
-                year={cards[0].year}
-                duration={cards[0].duration}
-            />
+            { (movies || []).map((mv, index) =>
+                <MovieCard
+                    key={index}
+                    movie={mv}
+                    addBtn={false}
+                    setOpenModal={setOpenModal}
+                    setPopupMovie={setPopupMovie}
+                />)
+            }
         </div>
     );
 }

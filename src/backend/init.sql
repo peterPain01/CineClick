@@ -1,12 +1,11 @@
--- for google account, username and password are null
+-- for google account, password is null
 create table "Account"(
     email varchar(512) not null,
-    username varchar(128) unique,
     password varchar(512),
     type varchar(16) check (type = 'admin' or type = 'free-viewer' or type = 'premium-viewer'),
     primary key(email)
 );
-insert into "Account" values('cineclick@gmail.com', 'admin', '$2b$10$LW6U2g4WSD7IMgumQ6uF9eAH6J5ZNaHeaI7WfAr8VBJn7QUxgmSqO', 'admin');
+insert into "Account" values('cineclick@gmail.com', '$2b$10$LW6U2g4WSD7IMgumQ6uF9eAH6J5ZNaHeaI7WfAr8VBJn7QUxgmSqO', 'admin');
 
 create table "UserInfo"(
     email varchar(512) not null,
@@ -74,6 +73,14 @@ create table "MovieGenre"(
     primary key(mv_id, genre_id),
     foreign key(mv_id) references "Movie"(id),
     foreign key(genre_id) references "Genre"(id)
+);
+
+create table "MovieSimilar"(
+    mv_id bigserial,
+    similar_id bigserial,
+    primary key(mv_id, similar_id),
+    foreign key(mv_id) references "Movie"(id),
+    foreign key(similar_id) references "Movie"(id)
 );
 
 create table "PaidMovie"(

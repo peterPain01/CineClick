@@ -3,8 +3,17 @@ const router = express.Router();
 const MovieModel = require("../models/Movie");
 
 router.get("/list", async (req, res) => {
+    const length = req.query.length;
     const genres = req.query.genres || [];
-    const movies = await MovieModel.list(null, genres);
+    let movies = await MovieModel.list(null, genres);
+    if (length) movies = movies.slice(0, length);
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).send(JSON.stringify(movies));
+});
+
+router.get("/list-similar", async (req, res) => {
+    const id = req.query.id || "";
+    const movies = await MovieModel.list_similars(id);
     res.setHeader("Content-Type", "application/json");
     res.status(200).send(JSON.stringify(movies));
 });
