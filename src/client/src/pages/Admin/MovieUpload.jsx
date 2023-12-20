@@ -1,25 +1,27 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Typography } from "@mui/material";
+import { Typography, Alert } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 // TODO Fetch this from Server
 const services = [
     {
-        value: "Plan",
-        label: "Plan",
+        value: "premium",
+        label: "premium",
     },
     {
-        value: "Free",
-        label: "Free",
+        value: "free",
+        label: "free",
     },
     {
-        value: "Movie",
-        label: "Movie",
+        value: "movie",
+        label: "paid",
     },
 ];
 function MovieUpload() {
+    const [message, setMessage] = useState(null);
     const [movie, setMovie] = useState({
         title: "",
         genres: "",
@@ -48,6 +50,10 @@ function MovieUpload() {
         const { name } = file;
         setImgName(name);
         console.log(file);
+        setMovie({
+            ...movie,
+            img: file,
+        });
 
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -63,6 +69,10 @@ function MovieUpload() {
         const file = e.target.files[0];
         const { name } = file;
         setVideoName(name);
+        setMovie({
+            ...movie,
+            video: file,
+        });
 
         let url = URL.createObjectURL(file);
         console.log(url);
@@ -104,11 +114,23 @@ function MovieUpload() {
         setMovie({ ...movie, [event.target.name]: event.target.value });
     }
     function handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        axios.post("http://localhost:13123/admin/upload-movie", data, {
+            withCredentials: true,
+        }).then(res => {
+            setMessage("Upload successfully");
+        }).catch(err => {
+            if (res?.response?.status === 401) {
+                window.open("/", "_self");
+            }
+        });
         // setMovie({ ...movie, [event.target.name]: event.target.value });
         // console.log(event.target.value);
     }
 
     return (
+        <form action="http://localhost:13123/admin/upload-movie" style={{position: "relative"}} method="POST" onSubmit={handleSubmit}>
         <div
             style={{
                 position: "relative",
@@ -144,25 +166,29 @@ function MovieUpload() {
                     onChange={(e) => handleInputForm(e)}
                 />
                 <TextField
+                    name="genres"
                     id="genres"
                     label="Genres"
                     variant="outlined"
                     value={movie.genres}
-                    onChange={(e) => handleSubmit(e)}
+                    onChange={(e) => handleInputForm(e)}
                 />
-                
-                <TextField id="maturity" label="Maturity" variant="outlined" />
+
+                <TextField name="restrict_age" id="maturity" label="Maturity" variant="outlined" />
                 <TextField
                     id="outlined-basic"
+                    name="year"
                     label="year"
+                    type="number"
                     onChange={(e) => handleInputForm(e)}
                     variant="outlined"
                 />
                 <TextField
                     id="select-plan"
                     select
-                    defaultValue={"Plan"}
-                    label="Type Service"
+                    defaultValue={services[0].value}
+                    name="type"
+                    label="Type"
                     onChange={(e) => handleInputForm(e)}
                     helperText="Please select type service of Movie"
                 >
@@ -180,6 +206,7 @@ function MovieUpload() {
                     multiline
                     rows={4}
                     variant="filled"
+                    name="summary"
                     fullWidth
                     onChange={(e) => handleInputForm(e)}
                 />
@@ -226,6 +253,7 @@ function MovieUpload() {
                         <input
                             type="file"
                             accept="image/png, image/gif, image/jpeg"
+                            name="picture"
                             hidden
                             onChange={(e) => handleImageUpload(e)}
                         />
@@ -271,16 +299,21 @@ function MovieUpload() {
                         <input
                             type="file"
                             accept=" video/*"
+                            name="video"
                             hidden
                             onChange={(e) => handleVideoUpload(e)}
                         />
                     </Button>
                 </div>
             </div>
-            <Button variant="contained" onClick={handleSubmit}>
+            <Button type="submit" variant="contained">
                 Submit
             </Button>
         </div>
+        {message ? <Alert severity="success" color="info" style={{position: "absolute", bottom: 0}}>
+            {message}
+        </Alert> : null}
+        </form>
     );
 }
 

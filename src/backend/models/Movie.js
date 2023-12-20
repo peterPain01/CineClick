@@ -7,6 +7,7 @@ module.exports = {
     MovieInfo: class {
         constructor(obj) {
             if (obj.id !== undefined && !isNumber(obj.id)) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
+            this.id = obj.id;
             this.title = obj.title || "";
             this.release = obj.release;
             this.imdb = obj.imdb;
@@ -18,8 +19,6 @@ module.exports = {
             this.length = obj.length;
             this.restrict_age = obj.restrict_age;
             this.year = obj.year;
-            this.id = obj.id;
-            this.genres = obj.genres;
         }
     },
     get_folder(id) {
@@ -90,20 +89,29 @@ FROM "Genre" g JOIN "MovieGenre" mvg ON g.id = mvg.genre_id
 WHERE mvg.mv_id = ${mv_id}
 `);
     },
-    async add(movie_info) {
+    async add(movie_info, genres) {
         if (!(movie_info instanceof this.MovieInfo)) {
             throw new Error("Can't insert object of different type than MovieInfo to 'Movie' table");
         }
         await db.helper_insert("Movie", movie_info);
-        // let id = 0;
-        // const {title, release, imdb, actors, directors, genres, type} = movie_info;
-        // await db.conn_execute(async (conn) => {
-        //     id = await conn.one('INSERT INTO movie VALUES(DEFAULT, $1, $2, $3, $4, $5, $6, $7) RETURNING id', [
-        //         title, release, imdb, actors, directors, genres, type
-        //     ], c => +c.id);
-        // });
-        // console.log(id);
-        // return id;
+        await this.add_genres(movie_info.id, genres);
+    },
+    async add_genres(mv_id, genres) {
+        for (const g of genres || []) {
+            await db.proc('add_genre', [mv_id, g.trim().toLowerCase()]);
+        }
+    },
+    async remove(id) {
+        console.log("OK");
+        await db.conn_execute(async (conn) => {
+            await conn.tx(async t => {
+                await t.none(`DELETE FROM "BoughtMovie" WHERE mv_id = ${id}`);
+                await t.none(`DELETE FROM "PaidMovie" WHERE id = ${id}`);
+                await t.none(`DELETE FROM "MovieGenre" WHERE mv_id = ${id}`);
+                await t.none(`DELETE FROM "MovieSimilar" WHERE similar_id = ${id} OR mv_id = ${id}`);
+                await t.none(`DELETE FROM "Movie" WHERE id = ${id}`);
+            });
+        });
     },
     async can_watch_paid_movie(email, id) {
         if (!id && !email) {
@@ -113,3 +121,4 @@ WHERE mvg.mv_id = ${mv_id}
         return result.length != 0;
     }
 }
+

@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 13123;
@@ -9,10 +10,12 @@ require("./config/passport")(app);
 app.use(express.urlencoded({extended: true})); // parse json body
 app.use(express.json());
 app.use((req, res, next) => {
-    if (req.headers.origin) res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Allow-Credentials", true);
-    next();
+    cors({
+        origin: req.headers.origin,
+        methods: "post, get",
+        allowedHeaders: "Content-Type",
+        credentials: true,
+    })(req, res, next);
 });
 app.use((req, res, next) => {
     console.log("[INFO]", req.path);

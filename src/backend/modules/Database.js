@@ -60,7 +60,7 @@ module.exports = {
                         const id = await t.one(sql, null, c => +c.id);
                         ids[mv.id] = id;
                         for (const g of mv.genreList || []) {
-                            await t.proc('add_genre', [id, g.trim()]);
+                            await t.proc('add_genre', [id, g.trim().toLowerCase()]);
                         }
                     });
                 });
@@ -87,7 +87,8 @@ module.exports = {
         let conn = null;
         try {
             conn = await cineclick_db.connect();
-            return await conn.any(sql);
+            const result = await conn.any(sql);
+            return result;
         } catch (err) {
             throw err;
         } finally {
@@ -100,6 +101,17 @@ module.exports = {
     async find(tb_name, condition) {
         condition = condition.trim();
         return this.exec(`select * from "${tb_name}" ${condition === "" ? "" : "where " + condition}`);
+    },
+    async proc(name, args) {
+        let conn = null;
+        try {
+            conn = await cineclick_db.connect();
+            return await conn.proc(name, args);
+        } catch (err) {
+            throw err;
+        } finally {
+            if (conn) conn.done();
+        }
     },
     async helper_insert(tb_name, obj) {
         this.exec(pgp.helpers.insert(obj, null, tb_name));

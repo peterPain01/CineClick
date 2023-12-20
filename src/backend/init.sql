@@ -45,33 +45,33 @@ create table "Genre"(
     primary key(id)
 );
 
-insert into "Genre" values(DEFAULT, 'Action');
-insert into "Genre" values(DEFAULT, 'Crime');
-insert into "Genre" values(DEFAULT, 'Drama');
-insert into "Genre" values(DEFAULT, 'Fantasy');
-insert into "Genre" values(DEFAULT, 'Horror');
-insert into "Genre" values(DEFAULT, 'Comedy');
-insert into "Genre" values(DEFAULT, 'History');
-insert into "Genre" values(DEFAULT, 'Romance');
-insert into "Genre" values(DEFAULT, 'Sci-Fi');
-insert into "Genre" values(DEFAULT, 'Family');
-insert into "Genre" values(DEFAULT, 'Film-Noir');
-insert into "Genre" values(DEFAULT, 'Music');
-insert into "Genre" values(DEFAULT, 'Animation');
-insert into "Genre" values(DEFAULT, 'Documentary');
-insert into "Genre" values(DEFAULT, 'Sport');
-insert into "Genre" values(DEFAULT, 'Biography');
-insert into "Genre" values(DEFAULT, 'Adventure');
-insert into "Genre" values(DEFAULT, 'Thriller');
-insert into "Genre" values(DEFAULT, 'Mystery');
-insert into "Genre" values(DEFAULT, 'War');
-insert into "Genre" values(DEFAULT, 'Western');
+insert into "Genre" values(DEFAULT, 'action');
+insert into "Genre" values(DEFAULT, 'crime');
+insert into "Genre" values(DEFAULT, 'drama');
+insert into "Genre" values(DEFAULT, 'fantasy');
+insert into "Genre" values(DEFAULT, 'horror');
+insert into "Genre" values(DEFAULT, 'comedy');
+insert into "Genre" values(DEFAULT, 'history');
+insert into "Genre" values(DEFAULT, 'romance');
+insert into "Genre" values(DEFAULT, 'sci-fi');
+insert into "Genre" values(DEFAULT, 'family');
+insert into "Genre" values(DEFAULT, 'film-noir');
+insert into "Genre" values(DEFAULT, 'music');
+insert into "Genre" values(DEFAULT, 'animation');
+insert into "Genre" values(DEFAULT, 'documentary');
+insert into "Genre" values(DEFAULT, 'sport');
+insert into "Genre" values(DEFAULT, 'biography');
+insert into "Genre" values(DEFAULT, 'adventure');
+insert into "Genre" values(DEFAULT, 'thriller');
+insert into "Genre" values(DEFAULT, 'mystery');
+insert into "Genre" values(DEFAULT, 'war');
+insert into "Genre" values(DEFAULT, 'western');
 
 create table "MovieGenre"(
     mv_id bigserial,
     genre_id serial,
     primary key(mv_id, genre_id),
-    foreign key(mv_id) references "Movie"(id),
+    -- foreign key(mv_id) references "Movie"(id)
     foreign key(genre_id) references "Genre"(id)
 );
 
@@ -94,6 +94,10 @@ create procedure add_genre(mv_id "Movie".id%TYPE, g "Genre".genre%TYPE) as $$
 declare g_id "Genre".id%TYPE;
 begin
     select id into g_id from "Genre" where genre = g;
+    if g_id is null then
+        insert into "Genre" values(DEFAULT, g);
+        select id into g_id from "Genre" where genre = g;
+    end if;
     insert into "MovieGenre" values(mv_id, g_id);
 end;
 $$ language plpgsql;

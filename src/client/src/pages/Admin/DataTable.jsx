@@ -21,6 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { getCoords } from "@/modules/getCoords";
 import axios from 'axios'
+import { useState } from "react";
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,33 +43,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-//TODO Fetch this from Server
-const Movies = [
-    {
-        image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABbUEHtsBjMAR4bBmJ0_a36FBPtRH-RveuuIKSwU6dlao2gANeSca7-6LvZI73BkpKqHTYEebYc4S1XgEJ5T7rInCE9MnhOuGSyo.webp?r=443",
-        title: "Fight Club",
-        description:
-            "A disillusioned office worker finds an outlet for his repressed emotions when he and a mysterious new friend named Tyler Durden start an underground fight club.",
-        matchScore: "9",
-        maturityNumber: "18+",
-        year: "1999",
-        duration: "2hours 15m",
-        video: "https://www.youtube.com/embed/qtRKdVHc-cE",
-    },
-    {
-        image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABeZZUaP6Pvahe-eM3w_wMytntYnO7prZZtM0NuKsbne77zGmEflYF2xvlZj2Xm7tvdMzKCM1JLIXBfuuqGBT3Jf5zg7IutRI6So_doN_eNSkE_9scjCTOC4MhaGlms-oUJwM.jpg?r=3d2",
-        title: "The Glory",
-        description:
-            "A disillusioned office worker finds an outlet for his repressed emotions when he and a mysterious new friend named Tyler Durden start an underground fight club.",
-        matchScore: "9",
-        maturityNumber: "18+",
-        year: "1999",
-        duration: "2hours 15m",
-        video: "https://www.youtube.com/embed/kUnkgGLMtIE",
-    },
-];
-
-const box_width = 500;
+const box_width = 200;
 const box_height = 400;
 // Title's Columns that you want to display
 const TableHeadTitles = [
@@ -80,19 +55,18 @@ const TableHeadTitles = [
 ];
 
 export default function DataTable() {
+    const per_page = 10;
+    const [movies, setMovies] = useState([]);
     React.useEffect(() => {
         // TODO Change api
-        axios.get('http:localhost:8000')
+        axios.get(`http://localhost:13123/movie/list?page=1&per_page=${per_page}`)
         .then(response => { 
-            console.log(response);
-            return response
-        })
-        .then(res => { 
-            const MoviesData = res.data
-            return MoviesData;  
+            setMovies(response.data || []);
         })
         .catch(err => { 
-            console.log(err);
+            if (err?.response?.status === 401) {
+                window.open("/", "_self");
+            }
         })
     }, []);
 
@@ -140,17 +114,39 @@ export default function DataTable() {
         setOpenImgBox(false);
     }
 
+    function handleDeleteMovie(id) {
+        axios.get(`http://localhost:13123/admin/delete-movie?id=${id}`, {
+            withCredentials: true
+        }).then(res => {
+            movies.splice(movies.findIndex(x => x.id === id), 1);
+            setMovies([...movies]);
+        }).catch(err => {
+            if (err?.response?.status === 401) {
+                window.open("/", "_self");
+            }
+            console.log(err);
+        });
+    }
+
     function handleOpenVideo(e, src) {
-        setOpenVidBox(!openVidBox);
-        setSrcVid(src);
         const { top, left } = getCoords(e.target);
         const x = left + e.target.offsetWidth / 2 - 1.1 * box_width;
         const y = top + e.target.offsetHeight / 2 - box_height / 2;
         vidPreviewBox.current.style.left = `${x}px`;
         vidPreviewBox.current.style.top = `${y}px`;
+        setOpenVidBox(!openVidBox);
+        setSrcVid(src);
     }
-    function handleMovePage(e){ 
-        const page = e.target.textContent; 
+    function handleMovePage(e, page){ 
+        axios.get(`http://localhost:13123/movie/list?page=${page}&per_page=${per_page}`)
+        .then(response => { 
+            setMovies(response.data || []);
+        })
+        .catch(err => { 
+            if (err?.response?.status === 401) {
+                window.open("/", "_self");
+            }
+        })
         // Fetch api with page 
     }
     return (
@@ -161,7 +157,8 @@ export default function DataTable() {
                 style={{
                     display: "none",
                     position: "absolute",
-                    width: box_width,
+                    maxWidth: `${box_width}px`,
+                    maxHeight: `${box_height}px`,
                     zIndex: 9999,
                 }}
             >
@@ -171,7 +168,8 @@ export default function DataTable() {
                 ref={previewImageBox}
                 style={{
                     position: "absolute",
-                    width: box_width,
+                    maxWidth: `${box_width}px`,
+                    maxHeight: `${box_height}px`,
                     objectFit: "cover",
                     zIndex: "9999",
                     opacity: 0,
@@ -193,7 +191,7 @@ export default function DataTable() {
                             : theme.palette.grey[900],
                     flexGrow: 1,
                     height: "100vh",
-                    overflow: "auto",
+                    overflow: "hidden",
                     alignItems: "center",
                     display: "flex",
                     flexDirection: "column",
@@ -220,16 +218,16 @@ export default function DataTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Movies.map((movie) => (
+                            {movies.map((movie) => (
                                 <StyledTableRow key={movie.title}>
                                     <StyledTableCell component="th" scope="row">
                                         {movie.title}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {movie.description}
+                                        {movie.summary}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {movie.maturityNumber}
+                                        {movie.restrict_age}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <IconButton
@@ -246,7 +244,7 @@ export default function DataTable() {
                                     <StyledTableCell component="th" scope="row">
                                         <IconButton
                                             onClick={(e) =>
-                                                handleOpenVideo(e, movie.video)
+                                                handleOpenVideo(e, movie.video) // TODO:
                                             }
                                         >
                                             <OndemandVideoIcon />
@@ -262,6 +260,7 @@ export default function DataTable() {
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <Button
+                                            onClick={() => handleDeleteMovie(movie.id)}
                                             variant="contained"
                                             color="error"
                                         >
@@ -274,7 +273,7 @@ export default function DataTable() {
                     </Table>
                 </TableContainer>
                 <Stack spacing={2}>
-                    <Pagination count={10} color="primary" onClick={(e) => handleMovePage(e)}/>
+                    <Pagination count={10} color="primary" onChange={handleMovePage}/>
                 </Stack>
                 <div style={{ marginTop: "40px" }}>
                     <Link to="/admin/movie/upload">
