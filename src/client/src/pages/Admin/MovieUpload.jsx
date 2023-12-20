@@ -20,6 +20,24 @@ const services = [
     },
 ];
 function MovieUpload() {
+    const [movie, setMovie] = useState({
+        title: "",
+        genres: "",
+        maturity: "",
+        year: "",
+        typeService: "",
+        description: "",
+        img: "",
+        video: "",
+    });
+
+    useEffect(() => {
+        document.addEventListener("wheel", function (event) {
+            if (document.activeElement.type === "number") {
+                document.activeElement.blur();
+            }
+        });
+    }, []);
     const [imgName, setImgName] = useState("");
     const [videoname, setVideoName] = useState("");
     const [openImg, setOpenImg] = useState(false);
@@ -36,7 +54,6 @@ function MovieUpload() {
         const file = e.target.files[0];
         const { name } = file;
         setImgName(name);
-        console.log(file);
 
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -58,6 +75,7 @@ function MovieUpload() {
         videoPreview.current.style.display = "block";
         setVideoSrc(url);
     };
+    
     useEffect(() => {
         if (openImg) {
             imgPreview.current.style.display = "block";
@@ -88,8 +106,11 @@ function MovieUpload() {
         setOpenImg((prev) => !prev);
     }
 
-    function handleSubmit(){ 
-        
+    function handleInputForm(event) {
+        setMovie({ ...movie, [event.target.name]: event.target.value });
+    }
+    function handleSubmit(event) {
+        console.log(movie);
     }
     return (
         <div
@@ -104,158 +125,179 @@ function MovieUpload() {
                 overflow: "auto",
             }}
         >
-            <Typography variant="h3" component="h3" mb={3} color={""}>
-                Upload Movie Form
-            </Typography>
-            <div
-                style={{
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    columnGap: "12px",
-                    rowGap: "12px",
-                    maxWidth: "768px",
-                    margin: "12px 0px",
-                }}
-            >
-                <TextField
-                    id="outlined-basic"
-                    label="Movie Name"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-basic"
-                    label="Genres"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-basic"
-                    label="Maturity"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-basic"
-                    label="Year"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-select-currency"
-                    select
-                    defaultValue={"Plan"}
-                    label="Type Service"
-                    helperText="Please select type service of Movie"
-                >
-                    {services.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </div>
-            <div style={{ width: "100%", maxWidth: "768px" }}>
-                <TextField
-                    id="filled-multiline-static"
-                    label="Description"
-                    multiline
-                    rows={4}
-                    variant="filled"
-                    fullWidth
-                />
-            </div>
-            <div
-                style={{
-                    marginTop: "40px",
-                    marginBottom: "40px",
-                    textAlign: "center",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                }}
-            >
+            {/* <form encType="multipart/form-data" method="POST" action="http://localhost:8000/admin/post" id="movieForm"> */}
+            <form>
+                <Typography variant="h3" component="h3" mb={3} color={""}>
+                    Upload Movie Form
+                </Typography>
                 <div
                     style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "12px",
-                        padding: "0px 20px",
-                        borderRight: "1px solid #fff",
+                        width: "100%",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        columnGap: "12px",
+                        rowGap: "12px",
+                        maxWidth: "768px",
+                        margin: "12px 0px",
                     }}
                 >
-                    <span>{imgName}</span>
-                    <img
-                        ref={imgPreview}
-                        onClick={openFullPage}
-                        style={{
-                            maxWidth: "400px",
-                            maxHeight: "300px",
-                            objectFit: "contain",
-                        }}
+                    <TextField
+                        id="title"
+                        name="title"
+                        label="Movie Name"
+                        variant="outlined"
+                        value={movie.title}
+                        onChange={(e) => handleInputForm(e)}
                     />
-                    <Button
-                        variant="contained"
-                        component="label"
-                        sx={{
-                            width: "180px",
-                            height: "40px",
-                        }}
+                    <TextField
+                        id="genres"
+                        name="genres"
+                        label="Genres"
+                        variant="outlined"
+                        value={movie.genres}
+                        onChange={(e) => handleInputForm(e)}
+                    />
+                    <TextField
+                        id="maturity"
+                        name="maturity"
+                        label="Maturity"
+                        variant="outlined"
+                        onChange={handleInputForm}
+                        type="number"
+                    />
+                    <TextField
+                        id="year"
+                        name="year"
+                        label="year"
+                        variant="outlined"
+                        onChange={handleInputForm}
+                        type="number"
+                    />
+                    <TextField
+                        id="typeService"
+                        name="typeService"
+                        select
+                        defaultValue={"Plan"}
+                        label="Type Service"
+                        helperText="Please select type service of Movie"
+                        onChange={handleInputForm}
                     >
-                        Upload Thumbnail
-                        <input
-                            type="file"
-                            accept="image/png, image/gif, image/jpeg"
-                            hidden
-                            onChange={(e) => handleImageUpload(e)}
-                        />
-                    </Button>
+                        {services.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </div>
+                <div style={{ width: "100%", maxWidth: "768px" }}>
+                    <TextField
+                        id="description"
+                        name="description"
+                        label="Description"
+                        multiline
+                        rows={4}
+                        variant="filled"
+                        fullWidth
+                        onChange={handleInputForm}
+                    />
                 </div>
                 <div
                     style={{
+                        marginTop: "40px",
+                        marginBottom: "40px",
+                        textAlign: "center",
                         display: "flex",
-                        flexDirection: "column",
                         alignItems: "center",
-                        justifyContent: "center",
                         gap: "12px",
                     }}
                 >
-                    <p
+                    <div
                         style={{
-                            width: "200px",
-                            wordWrap: "break-word",
-                            padding: "6px 0px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "12px",
+                            padding: "0px 20px",
+                            borderRight: "1px solid #fff",
                         }}
                     >
-                        {videoname}
-                    </p>
-                    <video
-                        ref={videoPreview}
-                        style={{
-                            display: "none",
-                            width: "300px",
-                            height: "300px",
-                        }}
-                        src={videoSrc}
-                        controls
-                    ></video>
-                    <Button
-                        variant="contained"
-                        component="label"
-                        sx={{
-                            width: "180px",
-                            height: "40px",
-                        }}
-                    >
-                        Upload Video
-                        <input
-                            type="file"
-                            accept=" video/*"
-                            hidden
-                            onChange={(e) => handleVideoUpload(e)}
+                        <span>{imgName}</span>
+                        <img
+                            ref={imgPreview}
+                            onClick={openFullPage}
+                            style={{
+                                maxWidth: "400px",
+                                maxHeight: "300px",
+                                objectFit: "contain",
+                            }}
                         />
-                    </Button>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            sx={{
+                                width: "180px",
+                                height: "40px",
+                            }}
+                        >
+                            Upload Thumbnail
+                            <input
+                                type="file"
+                                accept="image/png, image/gif, image/jpeg"
+                                hidden
+                                onChange={(e) => handleImageUpload(e)}
+                            />
+                        </Button>
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "12px",
+                        }}
+                    >
+                        <p
+                            style={{
+                                width: "200px",
+                                wordWrap: "break-word",
+                                padding: "6px 0px",
+                            }}
+                        >
+                            {videoname}
+                        </p>
+                        <video
+                            ref={videoPreview}
+                            style={{
+                                display: "none",
+                                width: "300px",
+                                height: "300px",
+                            }}
+                            src={videoSrc}
+                            controls
+                        ></video>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            sx={{
+                                width: "180px",
+                                height: "40px",
+                            }}
+                        >
+                            Upload Video
+                            <input
+                                type="file"
+                                accept=" video/*"
+                                hidden
+                                onChange={(e) => handleVideoUpload(e)}
+                            />
+                        </Button>
+                    </div>
                 </div>
-            </div>
-            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+            </form>
+            <Button type="submit" variant="contained" onClick={handleSubmit}>
+                Submit
+            </Button>
         </div>
     );
 }
