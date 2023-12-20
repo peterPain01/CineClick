@@ -22,7 +22,7 @@ import Customer from "@/pages/Admin/Customer";
 import Plan from "@/pages/Admin/Plan";
 
 //Public routes
-const publicRoutes = [
+const viewerRoutes = [
     { path: "/register", component: Register },
     { path: "/login", component: Auth },
     { path: "/UpgradePlan", component: UpgradePlan },
@@ -37,6 +37,11 @@ const publicRoutes = [
     { path: "/browse", component: Browse, layout: FullyNavLayout },
     { path: "*", component: Missing },
 
+];
+
+// Private Route
+const adminRoutes = [
+    { path: "/", component: Dashboard, layout: AdminLayout },
     { path: "/admin", component: Dashboard, layout: AdminLayout },
     { path: "/admin/movie", component: DataTable, layout: AdminLayout },
     {
@@ -46,11 +51,11 @@ const publicRoutes = [
     },
     { path: "/admin/customer", component: Customer, layout: AdminLayout },
     { path: "/admin/plan", component: Plan, layout: AdminLayout },
+    { path: "/register", component: Register },
+    { path: "/login", component: Auth },
+    { path: "*", component: Missing },
 ];
 
-// Private Route
-const privateRoutes = [];
-
-export { publicRoutes, privateRoutes };
+export { viewerRoutes, adminRoutes };
 
 //~

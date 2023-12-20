@@ -81,10 +81,10 @@ export function Auth() {
                 .then((response) => {
                     console.log(response.data)
                     if (response.status == 200) {
-                        setCookie("login", true, {
+                        setCookie("login", response.data, {
                             maxAge: response.data.age || undefined,
                         });
-                        window.open(document.location, "_self");
+                        window.open("/", "_self");
                     }
                 })
                 .catch((err) => {

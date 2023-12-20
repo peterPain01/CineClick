@@ -1,12 +1,13 @@
 import "./App.css";
 
-import { publicRoutes } from "@/routers";
+import { viewerRoutes, adminRoutes } from "@/routers";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import { Fragment, useEffect } from "react";
 
 import {NavLayout, FullyNavLayout} from "@/pages/NavLayout";
+import AdminLayout from "@/pages/AdminLayout";
 
 import {useCookies} from "react-cookie";
 
@@ -45,29 +46,52 @@ function App() {
 
     return (
         <>
-            {cookies.login ?
-            <Routes>
-                {publicRoutes.map((route, index) => {
-                    const Page = route.component;
-                    let Layout = NavLayout;
-                    if (route.layout === null) {
-                        Layout = Fragment;
-                    } else if (route.layout) {
-                        Layout = route.layout;
-                    }
-                    return (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element={
-                                <Layout>
-                                    <Page />
-                                </Layout>
-                            }
-                        />
-                    );
-                })}
+            {cookies.login ? <>
+                { cookies?.login?.type?.endsWith("-viewer") ? <Routes>
+                    {viewerRoutes.map((route, index) => {
+                        const Page = route.component;
+                        let Layout = NavLayout;
+                        if (route.layout === null) {
+                            Layout = Fragment;
+                        } else if (route.layout) {
+                            Layout = route.layout;
+                        }
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
             </Routes>
+                :
+            <Routes>
+                    {adminRoutes.map((route, index) => {
+                        const Page = route.component;
+                        let Layout = AdminLayout;
+                        if (route.layout === null) {
+                            Layout = Fragment;
+                        } else if (route.layout) {
+                            Layout = route.layout;
+                        }
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
+            </Routes>} </>
                 :
             <Routes>
                 <Route path="*" Component={Auth}></Route>
