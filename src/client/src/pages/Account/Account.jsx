@@ -117,7 +117,7 @@ export function Account() {
                             </div>
                             <div className={styles.accountInfoAction}>
                                 <span className={styles.accountInfoActionText}>
-                                    <Link to={"/UpgradePlan"}>Upgrade Plan</Link>
+                                    <Link to={"/payment"}>Upgrade Plan</Link>
                                 </span>
                             </div>
                         </div>

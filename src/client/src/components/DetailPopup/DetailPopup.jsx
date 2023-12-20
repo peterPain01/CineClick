@@ -10,20 +10,20 @@ import {
 
 import MovieGrid from "../MovieGrid/MovideGrid";
 import ActionButton from "../ActionButton/ActionButton";
-import { useRef } from "react";
-function DetailPopup({ openModal, setOpenModal, style}) {
-    const cards = [
-        {
-            image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABbUEHtsBjMAR4bBmJ0_a36FBPtRH-RveuuIKSwU6dlao2gANeSca7-6LvZI73BkpKqHTYEebYc4S1XgEJ5T7rInCE9MnhOuGSyo.webp?r=443",
-            title: "Fight Club",
-            description:
-                "A disillusioned office worker finds an outlet for his repressed emotions when he and a mysterious new friend named Tyler Durden start an underground fight club.",
-            matchScore: "9",
-            maturityNumber: "18+",
-            year: "1999",
-            duration: "2hours 15m",
-        },
-    ];
+import { useEffect, useState } from "react";
+import axios from "axios";
+function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
+    function playMovie() {
+        if (info?.id) {
+        }
+    }
+
+    const [similars, setSimilars] = useState(null)
+    useEffect(() => {
+        axios.get(`http://localhost:13123/movie/list-similar?id=${info.id}`, {
+            withCredentials: true
+        }).then(res => setSimilars(res.data)).catch(err => alert(err));
+    }, []);
     return (
         <> 
             <div className={styles.overlay}></div>
@@ -50,7 +50,7 @@ function DetailPopup({ openModal, setOpenModal, style}) {
                             />
                         </div>
                         <div className={styles.actionModal}>
-                            <div className={styles.playBtnBox}>
+                            <div className={styles.playBtnBox} onClick={playMovie}>
                                 <ActionButton
                                     icon={
                                         <FontAwesomeIcon
@@ -105,23 +105,18 @@ function DetailPopup({ openModal, setOpenModal, style}) {
                                         Match: 90%
                                     </span>
                                     <span className={styles.year}>
-                                        Released: 2023
+                                        Released: {info?.release}
                                     </span>
                                     <span className={styles.duration}>
-                                        7 seasons
+                                        {info?.length}
                                     </span>
                                 </div>
                                 <div className={styles.maturityNumber}>
-                                    <span>13+</span>
+                                    <span>{info?.restrict_age}</span>
                                 </div>
                                 <div>
                                     <p className={styles.desc}>
-                                        Lorem ipsum, dolor sit amet consectetur
-                                        adipisicing elit. Voluptas vel facilis
-                                        qui accusamus distinctio animi ratione,
-                                        quod quas ut vero facere eveniet nisi
-                                        aspernatur voluptatum obcaecati
-                                        consequatur doloremque incidunt beatae.
+                                        {info?.summary}
                                     </p>
                                 </div>
                             </div>
@@ -130,15 +125,15 @@ function DetailPopup({ openModal, setOpenModal, style}) {
                                     <span className={styles.tagLabel}>
                                         Actors:
                                     </span>
-                                    <a href="/">Comedy</a>
-                                    <a href="/">Comedy</a>
+                                    {(info?.actors?.split(", ") || []).map((actor, index) =>
+                                        <><a key={index} href="/">{actor}</a>,&nbsp;</>)}
                                 </div>
                                 <div className={styles.previewModalTags}>
                                     <span className={styles.tagLabel}>
                                         Category:
                                     </span>
-                                    <a href="/">Comedy</a>
-                                    <a href="/">Comedy</a>
+                                    {(info?.genres || []).map((genre, index) =>
+                                        <><a key={index} href="/">{genre}</a>,&nbsp;</>)}
                                 </div>
                                 <div className={styles.previewModalTags}>
                                     <span className={styles.tagLabel}>
@@ -153,7 +148,11 @@ function DetailPopup({ openModal, setOpenModal, style}) {
                             <h1 className={styles.moreLikeHeading}>
                                 Related Movies
                             </h1>
-                            <MovieGrid />
+                            <MovieGrid
+                                movies={similars}
+                                setOpenModal={setOpenModal}
+                                setPopupMovie={setPopupMovie}
+                            />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,10 @@
+import styles from './Admin.module.css'
 
-export default function Admin() {
-    return <h1>
-        Hello World
-    </h1>;
+export function Admin() {
+    return (
+        <div>
+            
+        </div>
+    );
 }
+

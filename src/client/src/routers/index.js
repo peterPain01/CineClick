@@ -2,7 +2,7 @@ import { Auth } from "@/pages/Auth/Auth";
 import { Register } from "@/pages/Register/Register";
 import { Home } from "@/pages/Home/Home";
 import { Profiles } from "@/pages/Profiles/Profiles";
-import { UpgradePlan } from "@/pages/UpgradePlan/UpgradePlan";
+import { Payment } from "@/pages/Payment/Payment";
 import { Account } from "@/pages/Account/Account";
 import { Missing } from "@/pages/Missing/Missing";
 import { CheckOut } from "@/pages/CheckOut/CheckOut";
@@ -11,23 +11,17 @@ import { TVShow } from "@/pages/TVShow/TVShow";
 import { Movies } from "@/pages/Movies/Movies";
 import { Cart } from "@/pages/Cart/Cart";
 import { Browse } from "@/pages/Browse/Browse";
+import { Admin } from "@/pages/Admin/Admin";
 
 import { NavLayout, FullyNavLayout } from "@/pages/NavLayout";
-
-import AdminLayout from "@/pages/AdminLayout";
-import Dashboard from "@/pages/Admin/DashBoard";
-import DataTable from "@/pages/Admin/DataTable";
-import MovieUpload from "@/pages/Admin/MovieUpload";
-import Customer from "@/pages/Admin/Customer";
-import Plan from "@/pages/Admin/Plan";
 
 //Public routes
 const publicRoutes = [
     { path: "/register", component: Register },
     { path: "/login", component: Auth },
-    { path: "/UpgradePlan", component: UpgradePlan },
+    { path: "/payment", component: Payment },
     { path: "/checkout", component: CheckOut },
-    { path: "/topup", component: CheckOut },
+    { path: "/topup", component: Cart },
     { path: "/profiles", component: Profiles },
     { path: "/YourAccount", component: Account },
 
@@ -36,16 +30,7 @@ const publicRoutes = [
     { path: "/movies", component: Movies, layout: FullyNavLayout },
     { path: "/browse", component: Browse, layout: FullyNavLayout },
     { path: "*", component: Missing },
-
-    { path: "/admin", component: Dashboard, layout: AdminLayout },
-    { path: "/admin/movie", component: DataTable, layout: AdminLayout },
-    {
-        path: "/admin/movie/upload",
-        component: MovieUpload,
-        layout: AdminLayout,
-    },
-    { path: "/admin/customer", component: Customer, layout: AdminLayout },
-    { path: "/admin/plan", component: Plan, layout: AdminLayout },
+    { path: "/admin", component: Admin },
 ];
 
 // Private Route

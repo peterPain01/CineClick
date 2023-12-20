@@ -1,31 +1,8 @@
-.main {
+.main{ 
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
     background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.container {
-    padding-top: 60px;
-    width: 550px;
-    height: 700px;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.heading {
-    color: #141414;
-    font-size: 30px;
-    text-align: center;
-}
-
-.subHeading{ 
-    font-size: 22px;
-    margin: 20px 0px;
 }

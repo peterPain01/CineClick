@@ -6,11 +6,11 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 export function Register() {
     const [account, setAccount] = useState({
-        username: "",
+        email: "",
         password: "",
         Cpassword: "",
     });
-    const [validUserName, setValidUserName] = useState(false);
+    const [validEmail, setValidEmail] = useState(false);
     const [validPwd, setValidPwd] = useState(false);
     const [validCPwd, setValidCPwd] = useState(false);
     const [focusConfirmPwd, isFocusConfirmPws] = useState(false);
@@ -20,8 +20,8 @@ export function Register() {
     const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     
     useEffect(() => {
-        setValidUserName(EMAIL_REGEX.test(account.username));
-    }, [account.username]);
+        setValidEmail(EMAIL_REGEX.test(account.email));
+    }, [account.email]);
 
     useEffect(() => {
         setValidPwd(PWD_REGEX.test(account.password));
@@ -34,7 +34,7 @@ export function Register() {
     }, [account.password, account.Cpassword]);
     // Ignore user have not input
     useEffect(() => {
-        setValidUserName(true);
+        setValidEmail(true);
     }, []);
 
     useEffect(() => {
@@ -60,14 +60,17 @@ export function Register() {
         if (account.password === account.Cpassword) {
             let data = JSON.stringify(account);
             axios
-                .post("http://10.123.0.217:13123/auth/register", data, {
+                .post("http://localhost:13123/auth/register", data, {
                     headers: {
                         "Content-Type": "application/json",
                     },
                     withCredentials: true,
                 })
-                .then((response) => console.log(response))
-                .catch((err) => console.log(err));
+                .then((response) => {
+                    console.log(response.data)
+                    window.open("/");
+                })
+                .catch((err) => alert(err?.response?.data)); // if email exists or some error happen
         }
     }
 
@@ -91,21 +94,21 @@ export function Register() {
                                 <input
                                     className={
                                         styles.inputForm +
-                                        (validUserName
+                                        (validEmail
                                             ? ""
                                             : " " + styles.errForm)
                                     }
                                     type="text"
-                                    name="username"
-                                    id="username"
-                                    value={account.username}
+                                    name="email"
+                                    id="email"
+                                    value={account.email}
                                     onChange={handleInput}
                                     required
                                 />
                                 <p
                                     className={styles.errText}
                                     style={{
-                                        display: validUserName
+                                        display: validEmail
                                             ? "none"
                                             : "block",
                                     }}
@@ -116,7 +119,7 @@ export function Register() {
                                     className={
                                         styles.labelForm +
                                         " " +
-                                        (account.username ? styles.texted : "")
+                                        (account.email ? styles.texted : "")
                                     }
                                 >
                                     Email or phone number
