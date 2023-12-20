@@ -75,7 +75,7 @@ function MovieUpload() {
         videoPreview.current.style.display = "block";
         setVideoSrc(url);
     };
-    
+
     useEffect(() => {
         if (openImg) {
             imgPreview.current.style.display = "block";
@@ -295,7 +295,7 @@ function MovieUpload() {
                     </div>
                 </div>
             </form>
-            <Button type="submit" variant="contained" onClick={handleSubmit}>
+            <Button  variant="contained" onClick={handleSubmit}>
                 Submit
             </Button>
         </div>
