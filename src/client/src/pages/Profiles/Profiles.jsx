@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./Profiles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faCaretUp } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,12 @@ export function Profiles() {
     const [selectedLanguage, setSelectedLannguage] = useState("");
 
     const languageDropDown = useRef(null);
+    
+    // Get Balance 
+    useEffect(() => { 
+        
+    }, [])
+    
     function showLanguageBox() {
         isShowLanguage(!showLanguage);
         if (showLanguage) languageDropDown.current.style.display = "flex";

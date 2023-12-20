@@ -12,8 +12,6 @@ import {
     faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from "react";
-import { useCookies } from "react-cookie";
-import axios from "axios";
 
 function Navbar({ logoOnly = false }) {
     const [search, isSearch] = useState(false);
@@ -41,7 +39,6 @@ function Navbar({ logoOnly = false }) {
         }   
     }
 
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
     window.addEventListener("scroll", setFixed);
     return (
         <>
@@ -206,7 +203,7 @@ function Navbar({ logoOnly = false }) {
                                     icon={faCaretDown}
                                     style={{ color: "#ffffff" }}
                                     size="lg"
-                                    rotation={expand ? 180 : 0}
+                                    rotation={expand ? 180 : ""}
                                 />
                                 <div className={styles.Boxlist}>
                                     <Link to="/profiles">
@@ -237,14 +234,7 @@ function Navbar({ logoOnly = false }) {
                                         Help Center
                                     </Link>
                                     <p className={styles.breakLine}></p>
-                                    <Link to="/" onClick={async () => {
-                                        axios.get("http://localhost:13123/auth/logout", {withCredentials: true}).then(res => {
-                                            console.log(res.data);
-                                        }).catch(err => alert(err?.response?.data));
-                                        removeCookie("login");
-                                    }}>
-                                        Sign out of NetFlix
-                                    </Link>
+                                    <Link to="/login">Sign out of NetFlix</Link>
                                 </div>
                             </div>
                         </div>

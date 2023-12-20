@@ -14,18 +14,81 @@ const cards = [
 ];
 
 // Nhan vao 1 list cards -> Duyet qua list
-function MovieGrid({ CardNumber = 9, movies = [], setPopupMovie, setOpenModal }) {
+function MovieGrid({ CardNumber = 9 }) {
     return (
         <div className={styles.MovieCards}>
-            { (movies || []).map((mv, index) =>
-                <MovieCard
-                    key={index}
-                    movie={mv}
-                    addBtn={false}
-                    setOpenModal={setOpenModal}
-                    setPopupMovie={setPopupMovie}
-                />)
-            }
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
+            <MovieCard
+                image={cards[0].image}
+                title={cards[0].title}
+                description={cards[0].description}
+                matchScore={cards[0].matchScore}
+                maturityNumber={cards[0].maturityNumber}
+                year={cards[0].year}
+                duration={cards[0].duration}
+            />
         </div>
     );
 }

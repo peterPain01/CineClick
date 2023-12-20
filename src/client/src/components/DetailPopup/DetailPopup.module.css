@@ -115,7 +115,6 @@
 
 .previewModalTags:not(:first-child) {
     margin-top: 20px;
-    word-break: break-all;
 }
 
 .moreLikeHeading {

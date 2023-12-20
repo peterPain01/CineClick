@@ -8,11 +8,6 @@ import { Fragment, useEffect } from "react";
 
 import {NavLayout, FullyNavLayout} from "@/pages/NavLayout";
 
-import {useCookies} from "react-cookie";
-
-import {Auth} from "./pages/Auth/Auth";
-import { Register } from "./pages/Register/Register";
-
 function App() {
     const titles = {
         "/": "Home",
@@ -34,18 +29,8 @@ function App() {
             (titles[location.pathname] ?? "Missing") + " - Netflix";
     }, [location]);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    if (cookies.login == undefined) {
-        // TODO: fetch user
-        setCookie("login", false, {
-            expires: false,
-        });
-        console.log("OK");
-    }
-
     return (
         <>
-            {cookies.login ?
             <Routes>
                 {publicRoutes.map((route, index) => {
                     const Page = route.component;
@@ -68,12 +53,6 @@ function App() {
                     );
                 })}
             </Routes>
-                :
-            <Routes>
-                <Route path="*" Component={Auth}></Route>
-                <Route path="/register" Component={Register}></Route>
-            </Routes>
-            }
         </>
     );
 }

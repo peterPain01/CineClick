@@ -4,33 +4,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 function MovieCard({
-    movie={},
+    image,
+    title,
+    description = "",
+    matchScore,
+    year,
+    maturityNumber,
+    duration,
     addBtn = true,
-    setPopupMovie = null,
-    setOpenModal = null
 }) {
     return (
-        <div className={styles.card} onClick={() => {
-            setPopupMovie(movie);
-            setOpenModal(true);
-        }}>
+        <div className={styles.card}>
             <div className={styles.thumb}>
-                <img src={movie?.image} alt="" />
-                <span>{movie?.length}</span>
+                <img src={image} alt="" />
+                <span>{duration}</span>
                 <div className={styles.overlay}></div>
             </div>
             <div className={styles.cardMetadata}>
                 <div className={styles.topCard}>
                     <div className={styles.info}>
                         <div className={styles.matchScore}>
-                            <span>Match Score: {(Math.random() * 10).toPrecision(2)}</span>
+                            <span>Match Score: {matchScore}</span>
                         </div>
                         <div>
                             <div className={styles.moreInfo}>
                                 <span className={styles.maturityNumber}>
-                                    {movie?.restrict_age}
+                                    {maturityNumber}
                                 </span>
-                                <span className={styles.year}>{movie?.year}</span>
+                                <span className={styles.year}>{year}</span>
                             </div>
                         </div>
                     </div>
@@ -61,9 +62,9 @@ function MovieCard({
                         />
                     )}
                 </div>
-                {movie?.summary ? (
+                {description ? (
                     <div className={styles.desc}>
-                        <p>{movie?.summary}</p>
+                        <p>{description}</p>
                     </div>
                 ) : (
                     ""
