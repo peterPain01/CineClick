@@ -8,6 +8,10 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
+import { Link } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const drawerWidth = 240;
 const AppBar = styled(MuiAppBar, {
@@ -29,6 +33,8 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
+    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+
     return (
         <AppBar position="absolute" open={open}>
             <Toolbar
@@ -57,6 +63,7 @@ function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
                 >
                     Dashboard
                 </Typography>
+
                 <IconButton
                     sx={{ ml: 1 }}
                     onClick={colorMode.toggleColorMode}
@@ -68,11 +75,30 @@ function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
                         <Brightness4Icon />
                     )}
                 </IconButton>
+
                 <IconButton color="inherit">
-                    <Badge badgeContent={4} color="secondary">
+                    <Badge adge badgeContent={4} color="secondary">
                         <NotificationsIcon />
                     </Badge>
                 </IconButton>
+                <Link
+                    to="/"
+                    onClick={async () => {
+                        axios
+                            .get("http://localhost:13123/auth/logout", {
+                                withCredentials: true,
+                            })
+                            .then((res) => {
+                                console.log(res.data);
+                            })
+                            .catch((err) => alert(err?.response?.data));
+                        removeCookie("login");
+                    }}
+                >
+                    <IconButton>
+                        <LogoutIcon />
+                    </IconButton>
+                </Link>
             </Toolbar>
         </AppBar>
     );
