@@ -20,6 +20,17 @@ const services = [
     },
 ];
 function MovieUpload() {
+    const [movie, setMovie] = useState({
+        title: "",
+        genres: "",
+        maturity: "",
+        year: "",
+        typeService: "",
+        description: "",
+        img: "",
+        video: "",
+    });
+
     const [imgName, setImgName] = useState("");
     const [videoname, setVideoName] = useState("");
     const [openImg, setOpenImg] = useState(false);
@@ -58,6 +69,7 @@ function MovieUpload() {
         videoPreview.current.style.display = "block";
         setVideoSrc(url);
     };
+
     useEffect(() => {
         if (openImg) {
             imgPreview.current.style.display = "block";
@@ -88,9 +100,14 @@ function MovieUpload() {
         setOpenImg((prev) => !prev);
     }
 
-    function handleSubmit(){ 
-        
+    function handleInputForm(e) {
+        setMovie({ ...movie, [event.target.name]: event.target.value });
     }
+    function handleSubmit(event) {
+        // setMovie({ ...movie, [event.target.name]: event.target.value });
+        // console.log(event.target.value);
+    }
+
     return (
         <div
             style={{
@@ -119,30 +136,34 @@ function MovieUpload() {
                 }}
             >
                 <TextField
-                    id="outlined-basic"
-                    label="Movie Name"
+                    id="title"
+                    name="title"
+                    label="Movie"
                     variant="outlined"
+                    value={movie.title}
+                    onChange={(e) => handleInputForm(e)}
                 />
                 <TextField
-                    id="outlined-basic"
+                    id="genres"
                     label="Genres"
                     variant="outlined"
+                    value={movie.genres}
+                    onChange={(e) => handleSubmit(e)}
                 />
+                
+                <TextField id="maturity" label="Maturity" variant="outlined" />
                 <TextField
                     id="outlined-basic"
-                    label="Maturity"
+                    label="year"
+                    onChange={(e) => handleInputForm(e)}
                     variant="outlined"
                 />
                 <TextField
-                    id="outlined-basic"
-                    label="Year"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-select-currency"
+                    id="select-plan"
                     select
                     defaultValue={"Plan"}
                     label="Type Service"
+                    onChange={(e) => handleInputForm(e)}
                     helperText="Please select type service of Movie"
                 >
                     {services.map((option) => (
@@ -160,6 +181,7 @@ function MovieUpload() {
                     rows={4}
                     variant="filled"
                     fullWidth
+                    onChange={(e) => handleInputForm(e)}
                 />
             </div>
             <div
@@ -255,7 +277,9 @@ function MovieUpload() {
                     </Button>
                 </div>
             </div>
-            <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+            <Button variant="contained" onClick={handleSubmit}>
+                Submit
+            </Button>
         </div>
     );
 }
