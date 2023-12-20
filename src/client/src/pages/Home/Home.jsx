@@ -43,15 +43,15 @@ export function Home() {
     const [openModal, setOpenModal] = useState(false);
     const shouldRenderChild = useDelayUnmount(openModal, 500);
 
-    // const mountedStyle = { opacity: '1', visibility: 'visible', scale:' 1', transition: 'all .5s' };
-    // const unmountedStyle = { opacity: '0', visibility: "hidden", scale: '0', overflow: 'hidden' };
-
     const mountedStyle = { animation: "inAnimation 500ms ease-in" };
     const unmountedStyle = {
         animation: "outAnimation 510ms ease-in",
         overflow: "hidden",
     };
+    // Fetch Trailer Movie
+    // Fetch 4 MovieCarousel 
 
+    
     useEffect(() => {
         document.body.style.maxHeight = openModal ? "100vh" : "";
         document.body.style.overflow = openModal

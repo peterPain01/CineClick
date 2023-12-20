@@ -1,12 +1,10 @@
 import styles from "./Auth.module.css";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import useAuth from "../../hooks/useAuth";
 import {useCookies} from "react-cookie";
 
 export function Auth() {
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    const { setAuth } = useAuth();
 
     const [account, setAccount] = useState({ username: "", password: "" });
 
@@ -201,7 +199,6 @@ export function Auth() {
                                 <div className={styles.remember}>
                                     <input
                                         type="checkbox"
-                                        value="true"
                                         name="remember"
                                         id="remember"
                                     />{" "}
