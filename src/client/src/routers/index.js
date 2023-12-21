@@ -20,7 +20,7 @@ import DataTable from "@/pages/Admin/DataTable";
 import MovieUpload from "@/pages/Admin/MovieUpload";
 import Customer from "@/pages/Admin/Customer";
 import Plan from "@/pages/Admin/Plan";
-
+import Watch from "@/pages/Watch/Watch";
 //Public routes
 const viewerRoutes = [
     { path: "/register", component: Register },
@@ -35,8 +35,8 @@ const viewerRoutes = [
     { path: "/tvshow", component: TVShow, layout: FullyNavLayout },
     { path: "/movies", component: Movies, layout: FullyNavLayout },
     { path: "/browse", component: Browse, layout: FullyNavLayout },
+    { path: "/watch/:id", component: Watch, layout: null },
     { path: "*", component: Missing },
-
 ];
 
 // Private Route
@@ -52,7 +52,7 @@ const adminRoutes = [
     { path: "/admin/customer", component: Customer, layout: AdminLayout },
     { path: "/admin/plan", component: Plan, layout: AdminLayout },
     { path: "/register", component: Register },
-    { path: "/login", component: Auth },
+    { path: "/login", component: Auth, layout: NavLayout },
     { path: "*", component: Missing },
 ];
 

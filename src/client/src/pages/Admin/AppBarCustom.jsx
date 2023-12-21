@@ -77,7 +77,7 @@ function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
                 </IconButton>
 
                 <IconButton color="inherit">
-                    <Badge adge badgeContent={4} color="secondary">
+                    <Badge badgeContent={4} color="secondary">
                         <NotificationsIcon />
                     </Badge>
                 </IconButton>

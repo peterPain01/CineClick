@@ -1,0 +1,240 @@
+.videoPlayer {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.controls {
+    padding: 0px 30px;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    bottom: 30px;
+    /* background: linear-gradient(to bottom, transparent, #000); */
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: opacity 0.2s;
+}
+
+/* .playing .controls {
+    opacity: 0;
+} */
+
+/* .videoPlayer:hover .controls {
+    opacity: 1;
+} */
+
+.controlButton {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.2s;
+}
+
+.controlButton:hover {
+    scale: 1.2;
+    opacity: 1;
+}
+
+.controlButton svg {
+    stroke: #fff;
+    fill: transparent;
+}
+
+.controlButton.playButton {
+    height: 40px;
+    width: 40px;
+}
+
+.speedButton {
+    width: 50px;
+    height: 50px;
+}
+
+.backwardButton {
+    width: 50px;
+    height: 50px;
+}
+
+.controlButton.soundButton {
+    height: 50px;
+    width: 50px;
+}
+
+.controlButton.fullscreenButton {
+    height: 50px;
+    width: 50px;
+}
+
+.backwardButton,
+.forwardButton {
+    width: 50px;
+    height: 50px;
+}
+
+.speedContainer {
+    position: relative;
+    width: 50px;
+}
+
+.speedContainer:hover .speedOption {
+    display: flex;
+}
+
+.speedOption {
+    padding: 30px;
+    padding-top: 40px;
+    gap: 60px;
+    flex-direction: row;
+    position: absolute;
+    top: -100px;
+    left: -300px;
+    background-color: #554f4f;
+    display: none;
+}
+
+.speedOption::after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    height: 1px;
+    background-color: #3b3535;
+    position: absolute;
+    top: calc(50% +  4px);
+    left: 0;
+}
+.OptionItem {
+    position: relative;
+    display: inline-block;
+    z-index: 2;
+    cursor: pointer;
+}
+.OptionItem:hover span{
+    color: #ddd8d8;
+    scale: 1.1;
+}
+
+.OptionItem:hover button{
+    background-color: #ddd8d8;
+    scale: 1.1;
+
+}
+.OptionItem span {
+    color: #808080;
+    font-size: 20px;
+    font-weight: 600;
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+}
+.speedOption button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background-color: #3f3c3cbe;
+}
+
+.timeline {
+    align-self: flex-start;
+    -webkit-appearance: none;
+    width: calc(100% - 125px);
+    height: 0.5em;
+    background-color: #808080;
+    border-radius: 5px;
+    background-size: 0% 100%;
+    background-image: linear-gradient(#f00, #f00);
+    background-repeat: no-repeat;
+}
+
+.timeline::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.1s;
+    background-color: #f00;
+}
+
+.timeline::-moz-range-thumb {
+    -webkit-appearance: none;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.1s;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.timeline::-ms-thumb {
+    -webkit-appearance: none;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.1s;
+    background-color: #f00;
+}
+
+.timeline::-webkit-slider-thumb:hover {
+    background-color: #f00;
+}
+
+.timeline:hover::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+.timeline::-moz-range-thumb:hover {
+    background-color: #f00;
+}
+
+.timeline:hover::-moz-range-thumb {
+    opacity: 1;
+}
+
+.timeline::-ms-thumb:hover {
+    background-color: #f00;
+}
+
+.timeline:hover::-ms-thumb {
+    opacity: 1;
+}
+
+.timeline::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+}
+
+.timeline::-moz-range-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+}
+
+.timeline::-ms-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+}
+
+video::-webkit-media-controls {
+    display: none !important;
+}
