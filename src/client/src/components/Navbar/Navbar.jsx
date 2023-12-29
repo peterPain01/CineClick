@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { logout } from "../../modules/logout";
 import axios from "axios";
 
 function Navbar({ logoOnly = false }) {
@@ -238,9 +239,7 @@ function Navbar({ logoOnly = false }) {
                                     </Link>
                                     <p className={styles.breakLine}></p>
                                     <Link to="/" onClick={async () => {
-                                        axios.get("http://localhost:13123/auth/logout", {withCredentials: true}).then(res => {
-                                            console.log(res.data);
-                                        }).catch(err => alert(err?.response?.data));
+                                        await logout();
                                         removeCookie("login");
                                     }}>
                                         Sign out of NetFlix

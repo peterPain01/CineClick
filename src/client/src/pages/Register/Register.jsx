@@ -68,7 +68,7 @@ export function Register() {
                 })
                 .then((response) => {
                     console.log(response.data)
-                    window.open("/");
+                    window.open("/", "_self");
                 })
                 .catch((err) => alert(err?.response?.data)); // if email exists or some error happen
         }

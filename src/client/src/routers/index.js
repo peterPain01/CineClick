@@ -33,9 +33,10 @@ const viewerRoutes = [
 
     { path: "/", component: Home, layout: FullyNavLayout },
     { path: "/tvshow", component: TVShow, layout: FullyNavLayout },
+    { path: "/cart", component: Cart },
     { path: "/movies", component: Movies, layout: FullyNavLayout },
     { path: "/browse", component: Browse, layout: FullyNavLayout },
-    { path: "/watch/:id", component: Watch, layout: null },
+    { path: "/watch/:id/:name", component: Watch, layout: null },
     { path: "*", component: Missing },
 ];
 

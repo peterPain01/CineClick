@@ -4,6 +4,7 @@ import { Typography, Alert } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import request from "../../modules/request";
 
 // TODO Fetch this from Server
 const services = [
@@ -116,21 +117,18 @@ function MovieUpload() {
     function handleSubmit(event) {
         event.preventDefault();
         let data = new FormData(event.target);
-        axios.post("http://localhost:13123/admin/upload-movie", data, {
-            withCredentials: true,
-        }).then(res => {
-            setMessage("Upload successfully");
-        }).catch(err => {
-            if (res?.response?.status === 401) {
-                window.open("/", "_self");
-            }
-        });
-        // setMovie({ ...movie, [event.target.name]: event.target.value });
-        // console.log(event.target.value);
+        request.post("admin/upload-movie", data)
+            .then(res => {
+                setMessage("Upload successfully");
+            }).catch(err => {
+                if (res?.response?.status === 401) {
+                    window.open("/", "_self");
+                }
+            });
     }
 
     return (
-        <form action="http://localhost:13123/admin/upload-movie" style={{position: "relative"}} method="POST" onSubmit={handleSubmit}>
+        <form style={{position: "relative"}} onSubmit={handleSubmit}>
         <div
             style={{
                 position: "relative",

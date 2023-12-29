@@ -15,11 +15,10 @@ router.get("/watch/:mv_id(\\d+)/:file_name(part(.m3u8|\\d+.ts))", async (req, re
             if (movie == null) {
                 res.status(400).send(`No movie with id ${mv_id} exist`);
             } else {
-                if (MovieController.can_watch(req.user, mv_id)) {
+                if (await MovieController.can_watch(req.user, mv_id)) {
                     const video_path = path.join(MovieModel.get_folder(mv_id), file_name);
                     if (!fs.existsSync(video_path)) {
-                        // TODO: send a pseudo video in this case ???
-                        res.status(400).send("No data for video with id=" + mv_id);
+                        MovieController.stream(path.join(MovieModel.MOVIES_FOLDER, "default", file_name), res);
                     } else {
                         MovieController.stream(video_path, res);
                     }

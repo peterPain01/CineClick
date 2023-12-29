@@ -12,6 +12,7 @@ import MovieGrid from "../MovieGrid/MovideGrid";
 import ActionButton from "../ActionButton/ActionButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
     function playMovie() {
         if (info?.id) {
@@ -32,8 +33,8 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                 style={style}
             >
                 <div className={styles.previewModalContent}>
-                    <div className={styles.previewVideo}>
-                        <video src="./trailer.mp4"></video>
+                    <div style={{textAlign: "center"}} className={styles.previewVideo}>
+                        <img style={{}} src={info?.image}></img>
                         <div className={styles.closeModal}>
                             <ActionButton
                                 handleCloseState={setOpenModal}
@@ -50,7 +51,7 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                             />
                         </div>
                         <div className={styles.actionModal}>
-                            <div className={styles.playBtnBox} onClick={playMovie}>
+                            <Link to={info?.id ? `/watch/${info.id}/${info.title}` : ""} className={styles.playBtnBox} onClick={playMovie}>
                                 <ActionButton
                                     icon={
                                         <FontAwesomeIcon
@@ -66,7 +67,7 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                                     gap="8px"
                                     border="none"
                                 />
-                            </div>
+                            </Link>
                             <ActionButton
                                 icon={
                                     <FontAwesomeIcon

@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
+import { logout } from "../../modules/logout";
 import { useCookies } from "react-cookie";
 
 const drawerWidth = 240;
@@ -84,14 +85,7 @@ function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
                 <Link
                     to="/"
                     onClick={async () => {
-                        axios
-                            .get("http://localhost:13123/auth/logout", {
-                                withCredentials: true,
-                            })
-                            .then((res) => {
-                                console.log(res.data);
-                            })
-                            .catch((err) => alert(err?.response?.data));
+                        await logout();
                         removeCookie("login");
                     }}
                 >

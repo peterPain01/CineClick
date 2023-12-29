@@ -22,6 +22,8 @@ import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { getCoords } from "@/modules/getCoords";
 import axios from 'axios'
 import { useState } from "react";
+import request from "../../modules/request";
+import { useCookies } from "react-cookie";
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,17 +59,19 @@ const TableHeadTitles = [
 export default function DataTable() {
     const per_page = 10;
     const [movies, setMovies] = useState([]);
+    const [cookies, setCookie, removeCookie] = useCookies(['login']);
     React.useEffect(() => {
         // TODO Change api
-        axios.get(`http://localhost:13123/movie/list?page=1&per_page=${per_page}`)
-        .then(response => { 
-            setMovies(response.data || []);
-        })
-        .catch(err => { 
-            if (err?.response?.status === 401) {
-                window.open("/", "_self");
-            }
-        })
+        request.get(`movie/list?page=1&per_page=${per_page}`)
+            .then(response => { 
+                setMovies(response.data || []);
+            })
+            .catch(err => { 
+                if (err?.response?.status === 401) {
+                    removeCookie("login");
+                    window.open("/", "_self");
+                }
+            });
     }, []);
 
     const imgPreview = React.useRef(null);
@@ -115,13 +119,13 @@ export default function DataTable() {
     }
 
     function handleDeleteMovie(id) {
-        axios.get(`http://localhost:13123/admin/delete-movie?id=${id}`, {
-            withCredentials: true
-        }).then(res => {
+        request.get(`admin/delete-movie?id=${id}`)
+        .then(res => {
             movies.splice(movies.findIndex(x => x.id === id), 1);
             setMovies([...movies]);
         }).catch(err => {
             if (err?.response?.status === 401) {
+                removeCookie("login");
                 window.open("/", "_self");
             }
             console.log(err);

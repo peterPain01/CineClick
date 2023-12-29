@@ -8,6 +8,7 @@ import MovieCard from "../../components/MovieCard/MovieCard";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
 import {useCookies} from "react-cookie";
+import request from "../../modules/request";
 
 const cards = [
     {
@@ -70,7 +71,7 @@ export function Home() {
         const url = new URL("http://localhost:13123/movie/list");
         genres.forEach(genre => {
             url.search = new URLSearchParams({genres: genre, length: 20});
-            axios.get(url.toString(), { withCredentials: true }).then(res => {
+            request.get(url).then(res => {
                 if (res.status === 200) {
                     genreList[genre].set(res.data);
                 } else {

@@ -36,13 +36,6 @@ function App() {
     }, [location]);
 
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    if (cookies.login == undefined) {
-        // TODO: fetch user
-        setCookie("login", false, {
-            expires: false,
-        });
-        console.log("OK");
-    }
 
     return (
         <>

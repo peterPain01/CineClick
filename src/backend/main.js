@@ -20,7 +20,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     console.log("[INFO]", req.path);
     console.log("[INFO]", req.session);
-    console.log("[INFO]", req.isAuthenticated());
     next();
 });
 app.use("/views", express.static("views"));

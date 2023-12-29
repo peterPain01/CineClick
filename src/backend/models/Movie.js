@@ -62,11 +62,11 @@ module.exports = {
         if (genres !== undefined) {
             if (isArray(genres) && genres.length >= 1) {
                 result = result.filter(mv => {
-                    return genres.find(g => !mv.genres.includes(g.trim())) === undefined;
+                    return genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
                 });
             } else if (typeof genres == "string") {
                 result = result.filter(mv => {
-                    return mv.genres.includes(genres);
+                    return mv.genres.includes(genres.toLowerCase());
                 });
             }
         }

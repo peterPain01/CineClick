@@ -2,6 +2,7 @@ import styles from "./Auth.module.css";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {useCookies} from "react-cookie";
+import request from "../../modules/request";
 
 export function Auth() {
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
@@ -16,7 +17,7 @@ export function Auth() {
     }, [account.username]);
 
     useEffect(() => {
-        setValidPwd(PWD_REGEX.test(account.password));
+        setValidPwd(true);// PWD_REGEX.test(account.password));
     }, [account.password]);
 
     // Ignore user have not input
@@ -71,13 +72,8 @@ export function Auth() {
         if (validUserName && validPwd) {
             const data = new FormData(event.target);
             const value = Object.fromEntries(data);
-            axios
-                .post("http://localhost:13123/auth/login", JSON.stringify(value), {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
+            console.log(value);
+            request.post("auth/login", JSON.stringify(value), {headers: {"Content-Type": "application/json"}})
                 .then((response) => {
                     console.log(response.data)
                     if (response.status == 200) {
@@ -109,7 +105,6 @@ export function Auth() {
                         <form
                             onSubmit={handleSignIn}
                             ref={logInForm}
-                            method="post"
                             className={styles.form}
                         >
                             <h1 className={styles.heroHeading}>Sign In</h1>

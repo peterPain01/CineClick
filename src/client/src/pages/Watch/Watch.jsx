@@ -22,11 +22,12 @@ const forwardIcon =
 // Open fullscreen ko mat nut
 export default function Watch() {
     //TODO Use movie id get from url that to fetch video from server
-    const { id } = useParams();
-    //TODO set Movie name
-    const [movieName, setMovieName] = useState("Super man vs Spider man");
+    const { id, name: movieName } = useParams();
 
-    const [activeRate, setActiveRate] = useState('1')
+    const [activeRate, setActiveRate] = useState('1.0')
+    const [isFullScreen, setFullScreen] = useState(false);
+    const [showControl, setShowControl] = useState(true);
+    const controlTimeout = useRef(null);
 
     let playButton = useRef(null);
     let video = useRef(null);
@@ -40,14 +41,44 @@ export default function Watch() {
     let backward = useRef(null);
 
     useEffect(() => {
-        video.current.play();
-        playButton.current.innerHTML = play;
-        soundButton.current.innerHTML = video.current.muted ? mute : sound;
-        speedButton.current.innerHTML = speed;
-        backward.current.innerHTML = backwardIcon;
-        forward.current.innerHTML = forwardIcon;
+        if (playButton.current) playButton.current.innerHTML = play;
+        if (soundButton.current) soundButton.current.innerHTML = video.current.muted ? mute : sound;
+        if (speedButton.current) speedButton.current.innerHTML = speed;
+        if (backward.current) backward.current.innerHTML = backwardIcon;
+        if (forward.current) forward.current.innerHTML = forwardIcon;
+    }, [showControl]);
+    useEffect(() => {
+        // Call API here /watch/idMovie
+        var hls = new Hls({
+            xhrSetup: function (xhr, url) {
+                xhr.withCredentials = true; // do send cookies
+            },
+        });
+        try {
+            hls.loadSource(`http://localhost:13123/viewer/watch/${id}/part.m3u8`);
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                var errorType = data.type;
+                var errorDetails = data.details;
+                var errorFatal = data.fatal;
+                switch (errorType) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                        if (data?.response?.code === 401) {
+                         alert(data?.response?.text);
+                        }
+                        break;
+                    default:
+                        console.log(errorType);
+                        break;
+                }
+            });
+            hls.attachMedia(video.current);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                video.current.play();
+            });
+        } catch(err) {
+            console.log("QJWEIOQWOJE");
+        }
     }, []);
-    const [isFullScreen, setFullScreen] = useState(false);
 
     function handlePlayBtn() {
         if (video.current.paused) {
@@ -63,10 +94,24 @@ export default function Watch() {
         }
     }
 
+    function handleVideoMouseMove() {
+        if (isFullScreen) {
+            if (controlTimeout.current !== null) {
+                clearTimeout(controlTimeout.current);
+            }
+            setShowControl(true);
+            controlTimeout.current = setTimeout(() => {
+                setShowControl(false);
+                controlTimeout.current = null;
+            }, 2000);
+        }
+    }
+
     function handleVidEnded() {
         playButton.current.innerHTML = play;
     }
     function handleTimeUpdate() {
+        if (!timeline.current) return;
         const percentagePosition =
             (100 * video.current.currentTime) / video.current.duration;
         timeline.current.style.backgroundSize = `${percentagePosition}% 100%`;
@@ -95,6 +140,7 @@ export default function Watch() {
                 videoContainer.current.msRequestFullscreen();
             }
             video.current.style.width = "100%";
+            setShowControl(false);
             setFullScreen(true);
         } else {
             if (document.exitFullscreen) {
@@ -107,6 +153,7 @@ export default function Watch() {
                 document.msExitFullscreen();
             }
             video.current.style.width = "100%";
+            setShowControl(true);
             setFullScreen(false);
         }
     }
@@ -130,12 +177,12 @@ export default function Watch() {
     return (
         <div
             onMouseEnter={() => {
-                controlContainer.current.style.opacity = 1;
+                if (controlContainer.current) controlContainer.current.style.opacity = 1;
             }}
             className={styles.videoPlayer}
             ref={videoContainer}
         >
-            <span
+            { !isFullScreen || showControl ? <span
                 style={{
                     position: "absolute",
                     bottom: "10px",
@@ -146,8 +193,10 @@ export default function Watch() {
                 }}
             >
                 {movieName}
-            </span>
+            </span> : null}
             <video
+                style={isFullScreen && !showControl ? {cursor: "none"} : {}}
+                onMouseMove={handleVideoMouseMove}
                 onTimeUpdate={handleTimeUpdate}
                 ref={video}
                 src="/testing.mp4"
@@ -155,6 +204,7 @@ export default function Watch() {
                 muted
                 onEnded={handleVidEnded}
             ></video>
+            { !isFullScreen || showControl ?
             <div className={styles.controls} ref={controlContainer}>
                 <button
                     ref={playButton}
@@ -184,6 +234,7 @@ export default function Watch() {
                     min="0"
                     max="100"
                     ref={timeline}
+                    style={{cursor: "pointer"}}
                     className={styles.timeline}
                     value={"0"}
                     onChange={handleChangeTimeLine}
@@ -191,7 +242,7 @@ export default function Watch() {
                 <div className={styles.speedContainer}>
                     <div className={styles.speedOption}>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "0.25" ? " " + styles.OptionItemActive : "")}
                             onClick={(e) => handlePlayBackRate(e)}
                             id="0.25"
                         >
@@ -199,7 +250,7 @@ export default function Watch() {
                             <button></button>
                         </div>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "0.5" ? " " + styles.OptionItemActive : "")}
                             id="0.5"
                             onClick={(e) => handlePlayBackRate(e)}
                         >
@@ -207,7 +258,7 @@ export default function Watch() {
                             <button></button>
                         </div>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "1.0" ? " " + styles.OptionItemActive : "")}
                             id="1.0"
                             onClick={(e) => handlePlayBackRate(e)}
                         >
@@ -215,7 +266,7 @@ export default function Watch() {
                             <button></button>
                         </div>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "1.25" ? " " + styles.OptionItemActive : "")}
                             id="1.25"
                             onClick={(e) => handlePlayBackRate(e)}
                         >
@@ -223,7 +274,7 @@ export default function Watch() {
                             <button></button>
                         </div>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "1.5" ? " " + styles.OptionItemActive : "")}
                             id="1.5"
                             onClick={(e) => handlePlayBackRate(e)}
                         >
@@ -231,7 +282,7 @@ export default function Watch() {
                             <button></button>
                         </div>
                         <div
-                            className={styles.OptionItem}
+                            className={styles.OptionItem + (activeRate === "1.75" ? " " + styles.OptionItemActive : "")}
                             id="1.75"
                             onClick={(e) => handlePlayBackRate(e)}
                         >
@@ -273,7 +324,8 @@ export default function Watch() {
                         />
                     </svg>
                 </button>
-            </div>
+            </div> :
+            null}
         </div>
     );
 }

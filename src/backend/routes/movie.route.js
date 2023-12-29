@@ -5,11 +5,12 @@ const MovieModel = require("../models/Movie");
 router.get("/list", async (req, res) => {
     const length = req.query.length;
     const genres = req.query.genres || [];
-    const page = Number(req.query.page);
-    const per_page = Number(req.query.per_page) || 10;
+    const page = req.query.page;
+    const per_page = req.query.per_page || 10;
+
     let movies = await MovieModel.list(null, genres);
-    if (length) movies = movies.slice(0, length);
-    else if (page !== undefined && page !== null) movies = movies.slice((page-1)*per_page, page*per_page);
+    if (!isNaN(length)) movies = movies.slice(0, length);
+    if (!isNaN(page)) movies = movies.slice((page-1)*per_page, page*per_page);
     res.setHeader("Content-Type", "application/json");
     res.status(200).send(JSON.stringify(movies));
 });
@@ -19,6 +20,9 @@ router.get("/list-similar", async (req, res) => {
     const movies = await MovieModel.list_similars(id);
     res.setHeader("Content-Type", "application/json");
     res.status(200).send(JSON.stringify(movies));
+});
+
+router.get("/daily-movie", async (req, res) => {
 });
 
 module.exports = router;
