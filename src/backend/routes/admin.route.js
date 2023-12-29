@@ -12,6 +12,8 @@ router.use((req, res, next) => {
         res.status(401).send("Unauthenticated admin");
     } else if (req.user.type !== "admin") {
         res.status(401).send("Unauthorized admin");
+    }
+});
 router.get("/delete-movie", uploader.single("video"), async (req, res, next) => {
     const id = Number(req.query.id);
     console.log("[INFO] Remove movie with id = " +  id);

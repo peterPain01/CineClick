@@ -19,7 +19,7 @@
     /* background: linear-gradient(to bottom, transparent, #000); */
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 20px;
     transition: opacity 0.2s;
 }
 
@@ -91,6 +91,7 @@
 
 .speedOption {
     padding: 30px;
+    border-radius: 12px;
     padding-top: 40px;
     gap: 60px;
     flex-direction: row;
@@ -108,14 +109,15 @@
     height: 1px;
     background-color: #3b3535;
     position: absolute;
-    top: calc(50% +  4px);
+    top: calc(50% + 4px);
     left: 0;
 }
+
 .OptionItem {
     position: relative;
     display: inline-block;
     z-index: 2;
-    cursor: pointer;
+    transition: scale 0.3s;
 }
 .OptionItem span{
     color: #ddd8d8;
@@ -128,6 +130,7 @@
 .OptionItem:hover span{
     color: #ddd8d8;
     scale: 1.1;
+    cursor: pointer !important;
 }
 
 .OptionItemActive button{
@@ -137,8 +140,13 @@
 .OptionItem:hover button{
     background-color: #ddd8d8;
     scale: 1.1;
-
 }
+
+.OptionItem:hover button {
+    background-color: #ddd8d8 !important;
+    cursor: pointer !important;
+}
+
 .OptionItem span {
     color: #808080;
     font-size: 20px;
@@ -155,6 +163,14 @@
     border-radius: 50%;
     border: none;
     background-color: #3f3c3cbe;
+}
+
+.standardItem span {
+    color: #ddd8d8;
+}
+
+.standardItem button {
+    background-color: #ddd8d8;
 }
 
 .timeline {
