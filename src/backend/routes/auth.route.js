@@ -52,5 +52,6 @@ router.get("/login_fail", (req, res, next) => {
     let msg = req.session.messages?.length ? req.session.messages.pop() : "Failed to log in";
     res.status(400).send(msg);
 });
-
+router.post("/forgot-password", AccountController.sendMailActive)
+router.post("/reset-password", AccountController.resetPassword)
 module.exports = router;

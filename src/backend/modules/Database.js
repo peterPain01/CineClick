@@ -137,6 +137,18 @@ module.exports = {
         } finally {
             if (conn) conn.done();
         }
+    },
+    async update (tb_name, condition, update) {
+        let conn = null;
+        try {
+            conn = await cineclick_db.connect();
+            let sql = UPDATE "${tb_name}" SET ${update} WHERE ${condition}
+            return await conn.any(sql);
+        } catch (err) {
+            throw err;
+        } finally {
+            if (conn) conn.done();
+        }
     }
 // exports.all = async (tb_name) => {
 //     let conn = null;
