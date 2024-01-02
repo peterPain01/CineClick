@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 function ResetPassword() {
     const [pwd, setPwd] = useState({ pwd: "", Cpwd: "" });
     let { email, token } = useParams();
-    email = decodeURIComponent(email)
-    token = decodeURIComponent(token)
+    email = atob(email)
+    token = atob(token)
   
     const [validPwd, setValidPwd] = useState(true);
     const [validCPwd, setValidCPwd] = useState(true);
