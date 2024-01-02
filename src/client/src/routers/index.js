@@ -21,6 +21,7 @@ import MovieUpload from "@/pages/Admin/MovieUpload";
 import Customer from "@/pages/Admin/Customer";
 import Plan from "@/pages/Admin/Plan";
 import Watch from "@/pages/Watch/Watch";
+ 
 //Public routes
 const viewerRoutes = [
     { path: "/register", component: Register },

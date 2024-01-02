@@ -19,7 +19,7 @@ module.exports = {
             this.email = email;
             this.password = password;
             if (!module.exports.is_valid_type(type)) {
-                throw new Error(Invalid account type ${type});
+                throw new Error(`Invalid account type ${type}`);
             }
             this.type = type;
         }
@@ -27,13 +27,13 @@ module.exports = {
     // NOTE: 'type' is optional
     async get(email, type) {
         let condition = "";
-        if (email) condition +=  email = '${email}';
+        if (email) condition += ` email = '${email}'`;
         else throw new Error("Email is missing");
         if (type) {
             if (!this.is_valid_type(type)) {
-                throw new Error(Unregconized type '${type}');
+                throw new Error(`Unregconized type ${type}`);
             }
-            condition +=  type = '${type}';
+            condition += ` type = '${type}'`;
         }
         let result = await db.get("Account", condition);
         if (result == null) return null;
@@ -54,10 +54,10 @@ module.exports = {
     async update(email, password) {
         let condition = "";
         let update = "";
-        if (email) condition +=  email = '${email}';
+        if (email) condition += ` email = '${email}'`;
         else throw new Error("Email is missing");
         if (password) {
-            update +=  password = '${password}';
+            update += ` password = '${password}'`;
         }else throw new Error("Password is missing");
         
         let result = await db.update("Account", condition, update);

@@ -59,7 +59,7 @@ function Navbar({ logoOnly = false }) {
                         {" "}
                         <img
                             className={styles.logo}
-                            src="./img/logo.png"
+                            src="/img/cineclicklogo.svg"
                             alt=""
                         />
                     </a>

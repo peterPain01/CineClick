@@ -14,7 +14,7 @@ var jwt = require("jwt-simple");
 module.exports = {
     async create(req, res, next) {
         const { email, password } = req.body;
-        console.log([INFO] Register api call with for, email);
+        console.log(`[INFO] Register api call with for, email`);
         try {
             if (!email || !password) {
                 res.status(400).send("Missing one of password/email");
@@ -51,11 +51,19 @@ module.exports = {
                 var secret = acc.password + "-" + acc.email;
                 var token = jwt.encode(payload, secret);
 
+                const encodedEmail = encodeURIComponent(email);
+                const encodedToken = encodeURIComponent(token);
+                let resetPasswordLink =  `http://127.0.0.1:5173/reset-password/${encodedEmail}/${encodedToken}`
+                const shortenLink = await Utils.shortenLink(
+                    resetPasswordLink,
+                    process.env.BITLY
+                )
+                resetPasswordLink = shortenLink
                 // TODO change hard url to .env
                 const info = await sendEmail(
                     email,
                     "Reset Password",
-                    http://localhost:5173/reset-password/${email}/${token}
+                    resetPasswordLink
                 );
                 res.status(200).send(
                     "Check your email for instructions to reset your password."
@@ -111,7 +119,7 @@ async function sendEmail(to, subject, resetPasswordLink) {
         },
     });
     let htmlTemplate = "";
-    const filePath = path.join(__dirname, "recoverMail.html");
+    const filePath = path.join(__dirname, "../views/recoverMail.html");
     try {
         htmlTemplate = fs.readFileSync(filePath, "utf8");
     } catch (err) {

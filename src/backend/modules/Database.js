@@ -142,7 +142,7 @@ module.exports = {
         let conn = null;
         try {
             conn = await cineclick_db.connect();
-            let sql = UPDATE "${tb_name}" SET ${update} WHERE ${condition}
+            let sql =` UPDATE "${tb_name}" SET ${update} WHERE ${condition}`
             return await conn.any(sql);
         } catch (err) {
             throw err;

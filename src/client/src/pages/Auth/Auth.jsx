@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import request from "../../modules/request";
-
+import {Link} from 'react-router-dom'
 export function Auth() {
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
 
@@ -205,9 +205,9 @@ export function Auth() {
                                     </label>
                                 </div>
                                 <div className={styles.action}>
-                                    <a href="/" className={styles.actionText}>
-                                        Need help?
-                                    </a>
+                                <Link to="/recover" className={styles.actionText}>
+                                            Need help?
+                                    </Link>
                                 </div>
                             </div>
                         </form>
