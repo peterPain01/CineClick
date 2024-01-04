@@ -170,13 +170,7 @@ export default function Watch() {
     function handlePlayBackRate(e) {
         if (e.currentTarget.id) {
             video.current.playbackRate = e.currentTarget.id;
-            const listRate = document.querySelectorAll(".optionItem");
-            listRate.forEach((item) => {
-                item.childNodes[0].style.color = "#808080";
-                item.childNodes[1].style.backgroundColor = "#3f3c3cbe";
-            });
-            e.currentTarget.childNodes[0].style.color = "#ddd8d8";
-            e.currentTarget.childNodes[1].style.backgroundColor = "#ddd8d8";
+            setActiveRate(e.currentTarget.id);
         } else {
             console.log("err", e.currentTarget.id);
         }

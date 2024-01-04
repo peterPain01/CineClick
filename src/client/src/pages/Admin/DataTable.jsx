@@ -142,7 +142,7 @@ export default function DataTable() {
         setSrcVid(src);
     }
     function handleMovePage(e, page){ 
-        axios.get(`http://localhost:13123/movie/list?page=${page}&per_page=${per_page}`)
+        request.get(`movie/list?page=${page}&per_page=${per_page}`)
         .then(response => { 
             setMovies(response.data || []);
         })
