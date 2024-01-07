@@ -71,7 +71,7 @@ export function Home() {
         const url = new URL("http://localhost:13123/movie/list");
         genres.forEach(genre => {
             url.search = new URLSearchParams({genres: genre, length: 20});
-            request.get(url).then(res => {
+            request.get('/movie/list').then(res => {
                 if (res.status === 200) {
                     genreList[genre].set(res.data);
                 } else {
@@ -117,7 +117,7 @@ export function Home() {
                         carouselClass={"carousel-" + item.toLowerCase()}
                         wrapperClass={"wrapper-" + item.toLowerCase()}
                         heading={item}
-                        marginTop={index === 0 ? -150 : 50}
+                        marginTop={index === 0 ? -50 : 50}
                         items={genreList[item].data}
                         openMovieBox={openMovieBox}
                         setMovieCard={setMovieCard}

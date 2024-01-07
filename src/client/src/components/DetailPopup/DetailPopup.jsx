@@ -34,7 +34,7 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
             >
                 <div className={styles.previewModalContent}>
                     <div style={{textAlign: "center"}} className={styles.previewVideo}>
-                        <img style={{}} src={info?.image}></img>
+                        <img style={{maxWidth: '300px'}} src={info?.image}></img>
                         <div className={styles.closeModal}>
                             <ActionButton
                                 handleCloseState={setOpenModal}

@@ -56,7 +56,7 @@
 
 .actionModal {
     position: absolute;
-    top: 300px;
+    top: 350px;
     left: 50px;
     display: flex;
     align-items: center;
@@ -74,7 +74,7 @@
 }
 
 .previewInfoRight {
-    width: 70%;
+    flex: 0 0 60%;
 }
 .previewInfoRight span:not(:first-child) {
     padding-left: 10px;

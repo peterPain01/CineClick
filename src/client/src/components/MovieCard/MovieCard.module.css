@@ -3,7 +3,7 @@
     background-color: #2f2f2f;
     border-radius: 6px;
     height: fit-content;
-    min-height: 500px; 
+    min-height: 500px;
 }
 
 .thumb {
@@ -56,9 +56,20 @@
 }
 
 .desc {
+    height: 160px;
+    overflow: auto;
     margin-top: 12px;
     color: #bebebe;
     line-height: 1.5;
+}
+
+/* Hide scroll bar, but while still being able to scroll */
+.desc {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.desc::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
 
 .maturityNumber {
