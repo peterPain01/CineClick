@@ -178,7 +178,7 @@ function Navbar({ logoOnly = false }) {
                                     <p>Empty NotifyCation</p>
                                 </div>
                             </div>
-                            {/* Cart */}
+                            {/* Cart
                             <Link to={"cart"}>
                                 <div className={styles.cardBox}>
                                     <div>
@@ -190,7 +190,7 @@ function Navbar({ logoOnly = false }) {
                                     </div>
                                     <span className={styles.cartNumber}>1</span>
                                 </div>
-                            </Link>
+                            </Link> */}
 
                             <div
                                 className={styles.avatarBox}

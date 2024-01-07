@@ -109,3 +109,23 @@ create table "BoughtMovie"(
     foreign key(email) references "Account"(email),
     foreign key(mv_id) references "PaidMovie"(id)
 );
+
+-- Create the Plan table
+CREATE TABLE plan (
+    plan_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price VARCHAR(20) NOT NULL,
+    devices VARCHAR(255) NOT NULL,
+    registered INTEGER NOT NULL,
+    videoQuality VARCHAR(255) NOT NULL,
+    resolution VARCHAR(20) NOT NULL, 
+    duration int not null
+);
+
+-- Insert data into the Plan table
+INSERT INTO plan (name, price, devices, registered, videoQuality, resolution, duration)
+VALUES 
+    ('1 month', '3', 'phone, tablet', 0, 'Good', '480p', 1),
+    ('3 months', '8', 'phone, tablet, computer, TV', 0, 'Good', '720p',3),
+    ('6 months', '15', 'phone, tablet, computer, TV', 0, 'Better', '1080p',6),
+    ('1 year', '28', 'phone, tablet, computer, TV', 0, 'Best', '4k+HDR',12);

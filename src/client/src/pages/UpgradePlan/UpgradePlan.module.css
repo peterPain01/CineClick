@@ -94,6 +94,7 @@
     color: #737373;
 }
 
+
 .informationText {
     color: #737373;
     display: block;
@@ -114,6 +115,7 @@
     color: #fff;
     border: none;
     cursor: pointer;
+    font-size: 16px;
 }
 
 @media screen and (max-width: 768px) {

@@ -31,7 +31,7 @@ module.exports = {
         else throw new Error("Email is missing");
         if (type) {
             if (!this.is_valid_type(type)) {
-                throw new Error(`Unregconized type ${type}`);
+                throw new Error(`Unrecognizable type ${type}`);
             }
             condition += ` type = '${type}'`;
         }
@@ -58,9 +58,27 @@ module.exports = {
         else throw new Error("Email is missing");
         if (password) {
             update += ` password = '${password}'`;
-        }else throw new Error("Password is missing");
-        
+        } else throw new Error("Password is missing");
+
         let result = await db.update("Account", condition, update);
-        return result
+        return result;
+    },
+
+    async update_type(email, type) {
+        let condition = "";
+        let update = "";
+        if (email) condition += ` email = '${email}'`;
+        else throw new Error("Email is missing");
+        if (type) {
+            if (!this.is_valid_type(type)) {
+                throw new Error(`Unrecognizable type ${type}`);
+            }
+            update += ` type = '${type}'`;
+        }
+        else{
+            throw new Error("Missing type")
+        }
+        let result = await db.update("Account", condition, update);
+        return result;
     },
 };

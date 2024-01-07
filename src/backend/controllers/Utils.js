@@ -1,4 +1,7 @@
 const axios = require('axios');
+const nodemailer = require("nodemailer");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     async shortenLink(originalUrl, accessToken) {
@@ -24,6 +27,41 @@ module.exports = {
             }
             throw error;
         }
+    },
+
+    async sendEmail(to, subject, resetPasswordLink) {
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        });
+        let htmlTemplate = "";
+        const filePath = path.join(__dirname, "../views/recoverMail.html");
+        try {
+            htmlTemplate = fs.readFileSync(filePath, "utf8");
+        } catch (err) {
+            console.error("Read html err:", err.message);
+        }
+    
+        const formattedHTML = htmlTemplate.replace(
+            /{resetPasswordLink}/g,
+            resetPasswordLink
+        );
+        const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: to,
+            subject: subject,
+            html: formattedHTML,
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                throw error;
+            } else {
+                return info.response;
+            }
+        });
     }
     
 }

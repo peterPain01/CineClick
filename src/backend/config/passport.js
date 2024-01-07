@@ -51,7 +51,7 @@ module.exports = (app) => {
                 if (acc) {
                     done(null, acc);
                 } else {
-                    acc = new AccountInfo(profile.email, null, null, "free-viewer");
+                    acc = new AccountInfo(profile.email, null, "free-viewer");
                     AccountModel.insert(acc);
                     UserModel.insert(new UserInfo(profile.email, profile.name, profile.picture));
                     done(null, acc);
