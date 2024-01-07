@@ -116,6 +116,7 @@ export function Auth() {
                                             ? ""
                                             : " " + styles.errForm)
                                     }
+                                    autoComplete="current-password"
                                     type="text"
                                     name="username"
                                     id="username"
@@ -148,6 +149,7 @@ export function Auth() {
                                         styles.inputForm +
                                         (validPwd ? "" : " " + styles.errForm)
                                     }
+                                    autoComplete="current-password"
                                     type="password"
                                     name="password"
                                     id="password"

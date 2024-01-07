@@ -22,21 +22,25 @@
             p {
                 margin-bottom: 15px;
             }
-            a {
-                color: #007BFF;
+            a.button {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: #fff;
                 text-decoration: none;
                 font-weight: bold;
+                border-radius: 5px;
             }
-            a:hover {
-                text-decoration: underline;
+            a.button:hover {
+                background-color: #0056b3;
             }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Xin chào từ CineClick!</h1>
-            <p>Bạn (hoặc ai đó) đã yêu cầu đặt lại mật khẩu cho tài khoản của mình trên CineClick. Nhấn vào liên kết dưới đây để tiếp tục quá trình đặt lại mật khẩu:</p>
-            <p><a href="{resetPasswordLink}">{resetPasswordLink}</a></p>
+            <p>Bạn (hoặc ai đó) đã yêu cầu đặt lại mật khẩu cho tài khoản của mình trên CineClick. Nhấn vào nút dưới đây để tiếp tục quá trình đặt lại mật khẩu:</p>
+            <p><a class="button" href="{resetPasswordLink}">Đặt lại mật khẩu</a></p>
             <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
             <p>Trân trọng,</p>
             <p>Đội ngũ hỗ trợ của chúng tôi tại CineClick</p>

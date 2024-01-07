@@ -1,4 +1,4 @@
-import * as React from "react";
+import {useState, useEffect}from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
@@ -21,6 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { getCoords } from "@/modules/getCoords";
 import axios from "axios";
+import request from "../../modules/request.js";
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -91,17 +92,13 @@ const TableHeadTitles = [
 ];
 
 export default function Plan() {
-    React.useEffect(() => {
+    const [plans, setPlans] = useState([])
+    useEffect(() => {
         // TODO Change api
-        axios
-            .get("http:localhost:8000")
+        request
+            .get("/plan")
             .then((response) => {
-                console.log(response);
-                return response;
-            })
-            .then((res) => {
-                const plansData = res.data;
-                return plansData;
+                setPlans(response.data)
             })
             .catch((err) => {
                 console.log(err);
@@ -165,10 +162,10 @@ export default function Plan() {
                                         {plan.registered}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {plan.videoQuality}
+                                        {plan.videoquality}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {plan.Resolution}
+                                        {plan.resolution}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <Button
@@ -191,20 +188,6 @@ export default function Plan() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Stack spacing={2}>
-                    <Pagination
-                        count={10}
-                        color="primary"
-                        onClick={(e) => handleMovePage(e)}
-                    />
-                </Stack>
-                <div style={{ marginTop: "40px" }}>
-                    <Link to="/admin/plan/upload">
-                        <Button variant="outlined" startIcon={<UploadIcon />}>
-                            Upload plan
-                        </Button>
-                    </Link>
-                </div>
             </Box>
         </>
     );

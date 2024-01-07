@@ -27,7 +27,7 @@ const viewerRoutes = [
     { path: "/register", component: Register },
     { path: "/login", component: Auth },
     { path: "/UpgradePlan", component: UpgradePlan },
-    { path: "/checkout", component: CheckOut },
+    { path: "/checkout/:p_id", component: CheckOut },
     { path: "/topup", component: CheckOut },
     { path: "/profiles", component: Profiles },
     { path: "/YourAccount", component: Account },

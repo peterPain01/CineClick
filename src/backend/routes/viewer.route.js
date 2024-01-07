@@ -1,9 +1,13 @@
 const express = require("express");
+const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const router = express.Router();
 const MovieModel = require("../models/Movie");
 const MovieController = require("../controllers/movie");
+const { UserInfo } = require("../models/User");
+const User = require("../models/User");
+const AccountController= require('../controllers/Account')
+
 // TODO: Split into 2 routes, premium and free viewer
 // TODO: Check authorization properly
 
@@ -34,4 +38,9 @@ router.get("/watch/:mv_id(\\d+)/:file_name(part(.m3u8|\\d+.ts))", async (req, re
     }
 });
 
+// router to get user info 
+// send Email và plan của user
+// Plan: premium or free 
+// các gói chia theo đăng ký dài hạn (càng lâu càng rẻ)
+router.get("/profile", AccountController.getAccountInfo)
 module.exports = router;

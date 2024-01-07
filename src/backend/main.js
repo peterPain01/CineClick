@@ -40,6 +40,8 @@ app.use((req, res, next) => {
 app.use("/admin", require("./routes/admin.route"));
 app.use("/viewer", require("./routes/viewer.route"));
 app.use("/movie", require("./routes/movie.route"));
+app.use('/plan', require('./routes/plan.route'))
+app.use('/premium', require('./routes/premium.route'))
 app.use((err, req, res, next) => {
     console.log(err);
     res.status(500).send("Internal server error");

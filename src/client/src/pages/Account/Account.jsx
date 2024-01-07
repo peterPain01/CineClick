@@ -8,8 +8,32 @@ import {
     faCircleInfo,
     faLock,
 } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import request from "../../modules/request.js";
 
 export function Account() {
+    const [userInfo, setUserInfo] = useState({
+        email: "",
+        type: "",
+    });
+
+    // Optional 
+    // Fetch email and phone, plan info (ngay hetin han, loai plan) from data base
+    // Thay doi email, thay doi so dien thoai
+    // Neu chua co phone -> Add phone
+
+    // Lay ngay het han cua user ve. 
+
+    useEffect(() => {
+        request
+            .get("viewer/profile")
+            .then((response) => {
+                setUserInfo((userInfo) => ({...userInfo, ...response.data}))
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
     return (
         <>
             <div className={styles.centeredDiv}>
@@ -88,7 +112,7 @@ export function Account() {
                             </header>
                             <div className={styles.accountInfoContent}>
                                 {/* hard Code */}
-                                <span>phamhuy1112003@gmail.com</span>
+                                <span>{userInfo.email}</span>
                                 <span>Password: ********</span>
                                 <span>Phone Number: 0772538679</span>
                             </div>
@@ -113,11 +137,13 @@ export function Account() {
                             </header>
                             <div className={styles.accountInfoContent}>
                                 {/* hard Code */}
-                                <span>Your Plan is ......</span>
+                                <span>Your Account Type is <strong>{userInfo.type}</strong></span>
                             </div>
                             <div className={styles.accountInfoAction}>
                                 <span className={styles.accountInfoActionText}>
-                                    <Link to={"/UpgradePlan"}>Upgrade Plan</Link>
+                                    <Link to={"/UpgradePlan"}>
+                                        Upgrade Plan
+                                    </Link>
                                 </span>
                             </div>
                         </div>

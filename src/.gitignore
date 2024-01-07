@@ -2,4 +2,4 @@
 **/package-lock.json
 **/videos
 backend/raw-movies
-**/env
+**/.env
