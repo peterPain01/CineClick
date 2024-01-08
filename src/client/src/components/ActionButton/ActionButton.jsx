@@ -23,8 +23,8 @@ function ActionButton({
         rect: "6px",
         circle: "50%",
     };
-    function handleClick() {
-        click_event();
+    function handleClick(e) {
+        click_event(e);
         if (handleCloseState) handleCloseState(false);
         if (handleOpenState) handleOpenState(true);
     }

@@ -5,7 +5,8 @@ const MovieModel = require("../models/Movie");
 const User = require("../models/User");
 
 module.exports = {
-    async watch(req, res, next) {    const {mv_id, file_name} = req.params;
+    async watch(req, res, next) {
+        const {mv_id, file_name} = req.params;
         if (mv_id !== undefined && file_name !== undefined) {
             try {
                 const movie = await MovieModel.get(mv_id);

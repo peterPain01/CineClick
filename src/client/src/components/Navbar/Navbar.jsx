@@ -114,14 +114,13 @@ function Navbar({ logoOnly = false }) {
                 }}
             >
                 <div className={styles.direct}>
-                    <a href="/">
-                        {" "}
+                    <Link to="/">
                         <img
                             className={styles.logo}
                             src="/img/cineclicklogo.svg"
                             alt=""
                         />
-                    </a>
+                    </Link>
                     {logoOnly || (
                         <ul className={styles.link}>
                             <li>
@@ -315,13 +314,10 @@ function Navbar({ logoOnly = false }) {
                                         Help Center
                                     </Link>
                                     <p className={styles.breakLine}></p>
-                                    <Link
-                                        to="/"
-                                        onClick={async () => {
-                                            await logout();
-                                            removeCookie("login");
-                                        }}
-                                    >
+                                    <Link to="/login" onClick={async () => {
+                                        await logout();
+                                        removeCookie("login");
+                                    }}>
                                         Sign out of NetFlix
                                     </Link>
                                 </div>

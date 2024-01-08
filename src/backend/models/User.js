@@ -37,7 +37,6 @@ module.exports = {
             return {...x, genres: await MovieModel.list_genres(x.id)};
         });
         const temp = await Promise.all(promises);
-        console.log(temp[0].genres);
         return temp;
     },
 };

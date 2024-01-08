@@ -2,6 +2,7 @@ require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const app = express();
+const path = require("path");
 const port = process.env.PORT || 13123;
 
 // common middlewares
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
     console.log("[INFO]", req.session);
     next();
 });
+app.use("/resources/images", express.static(path.join(__dirname, "resources", "images")));
 app.use("/views", express.static("views"));
 
 app.get("/", (req, res) => {
