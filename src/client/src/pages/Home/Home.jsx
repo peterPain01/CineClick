@@ -7,21 +7,14 @@ import MovieCarouselItems from "../../modules/MovieCarouselItems";
 import MovieCard from "../../components/MovieCard/MovieCard";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
-import {useCookies} from "react-cookie";
+import { useCookies } from "react-cookie";
 import request from "../../modules/request";
 
-const cards = [
-    {
-        image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABbUEHtsBjMAR4bBmJ0_a36FBPtRH-RveuuIKSwU6dlao2gANeSca7-6LvZI73BkpKqHTYEebYc4S1XgEJ5T7rInCE9MnhOuGSyo.webp?r=443",
-        title: "Fight Club",
-        description:
-            "A disillusioned office worker finds an outlet for his repressed emotions when he and a mysterious new friend named Tyler Durden start an underground fight club.",
-        matchScore: "9",
-        maturityNumber: "18+",
-        year: "1999",
-        duration: "2hours 15m",
-    },
-];
+
+
+
+import Loading from "../../components/Loading";
+
 
 function useDelayUnmount(isMounted, delayTime) {
     const [shouldRender, setShouldRender] = useState(false);
@@ -50,9 +43,8 @@ export function Home() {
         overflow: "hidden",
     };
     // Fetch Trailer Movie
-    // Fetch 4 MovieCarousel 
+    // Fetch 4 MovieCarousel
 
-    
     useEffect(() => {
         document.body.style.maxHeight = openModal ? "100vh" : "";
         document.body.style.overflow = openModal
@@ -62,29 +54,37 @@ export function Home() {
 
     const genres = ["Action", "Comedy", "Drama"];
     let genreList = {};
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    genres.forEach(genre => {
+    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+    genres.forEach((genre) => {
         const [data, set] = useState([]);
-        genreList[genre] = {data, set};
+        genreList[genre] = { data, set };
     });
+
+    const [isLoading, setIsLoading] = useState(true);
+    
     useEffect(() => {
         const url = new URL("http://localhost:13123/movie/list");
-        genres.forEach(genre => {
-            url.search = new URLSearchParams({genres: genre, length: 20});
-            request.get(url).then(res => {
-                if (res.status === 200) {
-                    genreList[genre].set(res.data);
-                } else {
-                    alert(res.data);
-                }
-            }).catch(err => {
-                if (err?.response?.status === 401) {
-                    removeCookie("login");
-                    window.open("/", "_self");
-                }
-                console.log(err);
-            });
-        })
+        genres.forEach((genre) => {
+            url.search = new URLSearchParams({ genres: genre, length: 20 });
+            request
+                .get("/movie/list")
+                // resolve
+                .then((res) => {
+                    if (res.status === 200) {
+                        genreList[genre].set(res.data);
+                        setIsLoading(false);
+                    } else {
+                        alert(res.data);
+                    }
+                })
+                .catch((err) => {
+                    if (err?.response?.status === 401) {
+                        removeCookie("login");
+                        window.open("/", "_self");
+                    }
+                    console.log(err);
+                })
+        });
     }, []);
 
     const openMovieBox = useRef(null);
@@ -94,6 +94,10 @@ export function Home() {
         openMovieBox.current.style.opacity = 0;
         openMovieBox.current.style.visibility = "hidden";
         openMovieBox.current.style.scale = 0;
+    }
+
+    if (isLoading == true) {
+        return <Loading />;
     }
 
     return (
@@ -117,7 +121,7 @@ export function Home() {
                         carouselClass={"carousel-" + item.toLowerCase()}
                         wrapperClass={"wrapper-" + item.toLowerCase()}
                         heading={item}
-                        marginTop={index === 0 ? -150 : 50}
+                        marginTop={index === 0 ? -50 : 50}
                         items={genreList[item].data}
                         openMovieBox={openMovieBox}
                         setMovieCard={setMovieCard}

@@ -15,6 +15,7 @@ import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { logout } from "../../modules/logout";
 import axios from "axios";
+import { counter } from "@fortawesome/fontawesome-svg-core";
 
 function Navbar({ logoOnly = false }) {
     const [search, isSearch] = useState(false);
@@ -22,6 +23,7 @@ function Navbar({ logoOnly = false }) {
     const [fix, setFix] = useState(false);
     const [expand, setExpand] = useState(false);
     const searchInput = useRef(null);
+    const [isDrop, setDrop] = useState(false);
     const dropDown = useRef(null);
     const navigateLink = useRef(null);
     function handleSearch() {
@@ -56,9 +58,18 @@ function Navbar({ logoOnly = false }) {
     }
     const [cookies, setCookie, removeCookie] = useCookies(["login"]);
     window.addEventListener("scroll", setFixed);
+    
     window.addEventListener("resize", checkWidth);
 
-    function handleDropDown(e){
+    function handleDropDown(e) {
+        setDrop((isDrop) => !isDrop);
+        if (isDrop) {
+            handleOpenDropDown();
+        } else {
+            handleCloseDropDown();
+        }
+    }
+    function handleOpenDropDown() {
         navigateLink.current.style.display = "flex";
         navigateLink.current.style.flexDirection = "column";
         navigateLink.current.style.backgroundColor = "#000";
@@ -67,12 +78,13 @@ function Navbar({ logoOnly = false }) {
         navigateLink.current.style.borderRadius = "6px";
         navigateLink.current.style.width = "200px";
         navigateLink.current.style.height = "220px";
-        navigateLink.current.style.position = 'absolute'
-        navigateLink.current.style.top = '30px'
-        navigateLink.current.style.left = '30px'
+        navigateLink.current.style.position = "absolute";
+        navigateLink.current.style.top = "30px";
+        navigateLink.current.style.left = "30px";
+        navigateLink.current.firstChild.style.padding = "0";
     }
 
-    function handleCloseDropDown(e){
+    function handleCloseDropDown() {
         navigateLink.current.style.flexDirection = "unset";
         navigateLink.current.style.backgroundColor = "unset";
         navigateLink.current.style.border = "unset";
@@ -80,9 +92,9 @@ function Navbar({ logoOnly = false }) {
         navigateLink.current.style.borderRadius = "unset";
         navigateLink.current.style.width = "unset";
         navigateLink.current.style.height = "unset";
-        navigateLink.current.style.position = 'unset'
-        navigateLink.current.style.top = 'unset'
-        navigateLink.current.style.left = 'unset'
+        navigateLink.current.style.position = "unset";
+        navigateLink.current.style.top = "unset";
+        navigateLink.current.style.left = "unset";
         navigateLink.current.style.display = "none";
     }
     return (
@@ -107,7 +119,7 @@ function Navbar({ logoOnly = false }) {
                         />
                     </a>
                     {logoOnly || (
-                        <div style={{position: 'relative'}} onMouseLeave={(e) => handleCloseDropDown(e)}>
+                        <div style={{ position: "relative" }}>
                             <FontAwesomeIcon
                                 ref={dropDown}
                                 icon={faList}
@@ -117,9 +129,9 @@ function Navbar({ logoOnly = false }) {
                                     marginLeft: "50px",
                                     display: "none",
                                     marginBottom: "10px",
-                                    cursor: 'pointer'
+                                    cursor: "pointer",
                                 }}
-                                onMouseOver={(e) => handleDropDown(e)}
+                                onClick={(e) => handleDropDown(e)}
                             />
                             <ul className={styles.link} ref={navigateLink}>
                                 <li>

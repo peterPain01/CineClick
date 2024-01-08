@@ -8,8 +8,17 @@ import {
     faCircleInfo,
     faLock,
 } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../../components/Loading";
+import { useState } from "react";
 
 export function Account() {
+    const [isLoading, setIsLoading] = useState(true)
+    setTimeout(() => { 
+        setIsLoading(false)
+    }, 1000)
+    if (isLoading) {
+        return <Loading/>
+    }
     return (
         <>
             <div className={styles.centeredDiv}>

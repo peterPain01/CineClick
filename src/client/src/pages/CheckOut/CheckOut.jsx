@@ -3,7 +3,9 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import env from "react-dotenv";
 import { Alert, AlertTitle } from "@mui/material";
 import styles from "./CheckOut.module.css";
+import Loading from "../../components/Loading";
 export function CheckOut({ price, plan = "" }) {
+    
     const initialOptions = {
         "client-id": "test",
         "enable-funding": "card",
@@ -12,7 +14,13 @@ export function CheckOut({ price, plan = "" }) {
     };
 
     const [message, setMessage] = useState("");
-
+    const [isLoading, setIsLoading] = useState(true)
+    setTimeout(() => { 
+        setIsLoading(false)
+    }, 1000)
+    if (isLoading) {
+        return <Loading/>
+    }
     return (
         <>
             <div className={styles.main}>

@@ -6,6 +6,7 @@ import PlanList from "@/modules/PlanList.js";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { CheckOut } from "../CheckOut/CheckOut";
+import Loading from "../../components/Loading";
 export function UpgradePlan() {
     const [selectPlan, setSelectPlan] = useState("");
 
@@ -38,7 +39,7 @@ export function UpgradePlan() {
             }
         });
     });
-
+    
     function handleSelectedPlan(e) {
         e.preventDefault();
         setSelectPlan(e.target.id);
@@ -46,7 +47,13 @@ export function UpgradePlan() {
 
     const [planPrice, setPlanPrice] = useState(0);
     const [loadPrice, setLoadPrice] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(true)
+    setTimeout(() => { 
+        setIsLoading(false)
+    }, 1000)
+    if (isLoading) {
+        return <Loading/>
+    }
     // POST PLAN
     function handleSubmitPlan() {
         if (selectPlan) {
