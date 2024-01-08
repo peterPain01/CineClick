@@ -3,11 +3,24 @@ const router = express.Router();
 const User = require("../models/User");
 const UserController = require("../controllers/User.controller");
 const AccountController= require('../controllers/Account')
+const bcrypt = require("bcrypt");
+const Account = require("../models/Account");
+const MovieController = require("../controllers/movie");
 
 // TODO: Split into 2 routes, premium and free viewer
 // TODO: Check authorization properly
 
 router.get("/watch/:mv_id(\\d+)/:file_name(part(.m3u8|\\d+.ts))", UserController.watch);
+router.get("/can-watch", async (req, res, next) => {
+    try {
+        const {mv_id} = req.query;
+        if (mv_id === undefined) res.status(400).send("Missing movie id");
+        const result = await MovieController.can_watch(req.user, mv_id);
+        res.status(200).send(result);
+    } catch(err) {
+        next(err);
+    }
+});
 router.get("/set-favorite", async (req, res, next) => {
     const {mv_id, fav} = req.query;
     if (mv_id === undefined || fav === undefined) res.status(400).send("Missing arguments");
@@ -35,6 +48,17 @@ router.get("/list-favorite", async (req, res, next) => {
     res.status(200)
        .setHeader("Content-Type", "application/json")
        .send({movies: movies, total_page: ((total/per_page) >> 0) + (total%per_page == 0 ? 0 : 1)});
+});
+
+router.post("/change-pass", async (req, res, next) => {
+    const {new_pass} = req.body;
+    if (new_pass === undefined || new_pass === "") res.status(400).send("Missing new password");
+    try {
+        await Account.update(req.user?.email, bcrypt.hashSync(new_pass, 10));
+    } catch(err) {
+        next(err);
+    }
+    res.status(200).send("OK");
 });
 
 // router to get user info 

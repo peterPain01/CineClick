@@ -263,6 +263,14 @@
     background: transparent;
 }
 
+.upgrade_box {
+    padding-top: 45vh;
+    color: white;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+}
+
 video::-webkit-media-controls {
     display: none !important;
 }

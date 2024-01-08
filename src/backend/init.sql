@@ -13,6 +13,7 @@ create table "UserInfo"(
     avatar varchar(2048),
     primary key(email),
     foreign key(email) references "Account"(email)
+
 );
 
 create table "PremiumInfo"(
@@ -35,7 +36,7 @@ create table "Movie"(
     summary varchar(1024),
     image varchar(2048),
     length varchar(20),
-    type varchar(10) not null check( type = 'premium' or type = 'free' or type = 'paid' ), -- free, premium, paid
+    type varchar(10) not null check( type = 'premium' or type = 'free'), -- free, premium
     primary key(id)
 );
 
@@ -91,13 +92,6 @@ create table "MovieFavorite"(
     foreign key(movie) references "Movie"(id)
 );
 
-create table "PaidMovie"(
-    id bigserial not null,
-    price float not null check (price > 0),
-    primary key(id),
-    foreign key (id) references "Movie"(id)
-);
-
 create procedure add_genre(mv_id "Movie".id%TYPE, g "Genre".genre%TYPE) as $$
 declare g_id "Genre".id%TYPE;
 begin
@@ -109,14 +103,6 @@ begin
     insert into "MovieGenre" values(mv_id, g_id);
 end;
 $$ language plpgsql;
-
-create table "BoughtMovie"(
-    email varchar(512) not null,
-    mv_id bigserial not null,
-    primary key(email, mv_id),
-    foreign key(email) references "Account"(email),
-    foreign key(mv_id) references "PaidMovie"(id)
-);
 
 -- Create the Plan table
 CREATE TABLE plan (

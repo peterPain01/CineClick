@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+.side_filter {
+    color: white;
+    background-color: black;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 200px;
+    min-width: 180px;
+}
+.filter_item {
+    display: flex;
+}
+.filter_list {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.filter_button {
+    background-color: #222222;
+    box-shadow: none;
+    color: white;
+    appearance: none;
+    border: 1px solid white;
+    display: block;
+    text-align: center;
+    margin: auto auto;
+    margin-top: 20px;
+    font-size: 1.2em;
+    padding: 1px 10px;
+    cursor: pointer;
+}

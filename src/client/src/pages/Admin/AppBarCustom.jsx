@@ -83,7 +83,7 @@ function AppBarCustom({ toggleDrawer, colorMode, theme, open }) {
                     </Badge>
                 </IconButton>
                 <Link
-                    to="/"
+                    to="/login"
                     onClick={async () => {
                         await logout();
                         removeCookie("login");
