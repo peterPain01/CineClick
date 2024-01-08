@@ -8,13 +8,14 @@ import {
     faCaretDown,
     faPencil,
     faUser,
-    faCartShopping,
     faQuestion,
+    faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { logout } from "../../modules/logout";
 import axios from "axios";
+import { counter } from "@fortawesome/fontawesome-svg-core";
 
 function Navbar({ logoOnly = false }) {
     const [search, isSearch] = useState(false);
@@ -22,28 +23,80 @@ function Navbar({ logoOnly = false }) {
     const [fix, setFix] = useState(false);
     const [expand, setExpand] = useState(false);
     const searchInput = useRef(null);
-
+    const [isDrop, setDrop] = useState(false);
+    const dropDown = useRef(null);
+    const navigateLink = useRef(null);
     function handleSearch() {
         isSearch(true);
         searchInput.current.focus();
     }
 
-    function closeInputField(){ 
-        if(!searchValue){ 
-            isSearch(false)
+    function closeInputField() {
+        if (!searchValue) {
+            isSearch(false);
         }
     }
-    
+
     function setFixed() {
         if (window.scrollY >= 20) {
             setFix(true);
         } else {
             setFix(false);
-        }   
+        }
+    }
+    function checkWidth() {
+        let windowWidth = window.innerWidth;
+
+        if (windowWidth < 800) {
+            dropDown.current.style.display = "block";
+            dropDown.current.style.position = "relative";
+            navigateLink.current.style.display = "none";
+        } else {
+            dropDown.current.style.display = "none";
+            navigateLink.current.style.display = "flex";
+        }
+    }
+    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+    window.addEventListener("scroll", setFixed);
+    
+    window.addEventListener("resize", checkWidth);
+
+    function handleDropDown(e) {
+        setDrop((isDrop) => !isDrop);
+        if (isDrop) {
+            handleOpenDropDown();
+        } else {
+            handleCloseDropDown();
+        }
+    }
+    function handleOpenDropDown() {
+        navigateLink.current.style.display = "flex";
+        navigateLink.current.style.flexDirection = "column";
+        navigateLink.current.style.backgroundColor = "#000";
+        navigateLink.current.style.border = "1px solid #fff";
+        navigateLink.current.style.padding = "20px";
+        navigateLink.current.style.borderRadius = "6px";
+        navigateLink.current.style.width = "200px";
+        navigateLink.current.style.height = "220px";
+        navigateLink.current.style.position = "absolute";
+        navigateLink.current.style.top = "30px";
+        navigateLink.current.style.left = "30px";
+        navigateLink.current.firstChild.style.padding = "0";
     }
 
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    window.addEventListener("scroll", setFixed);
+    function handleCloseDropDown() {
+        navigateLink.current.style.flexDirection = "unset";
+        navigateLink.current.style.backgroundColor = "unset";
+        navigateLink.current.style.border = "unset";
+        navigateLink.current.style.padding = "unset";
+        navigateLink.current.style.borderRadius = "unset";
+        navigateLink.current.style.width = "unset";
+        navigateLink.current.style.height = "unset";
+        navigateLink.current.style.position = "unset";
+        navigateLink.current.style.top = "unset";
+        navigateLink.current.style.left = "unset";
+        navigateLink.current.style.display = "none";
+    }
     return (
         <>
             <div
@@ -52,7 +105,9 @@ function Navbar({ logoOnly = false }) {
                         ? styles.navbar + " " + styles.navbarFixed
                         : styles.navbar
                 }
-                style={{backgroundColor: logoOnly ? '#000' : 'rgba(0, 0, 0, 0.2)' }}
+                style={{
+                    backgroundColor: logoOnly ? "#000" : "rgba(0, 0, 0, 0.2)",
+                }}
             >
                 <div className={styles.direct}>
                     <a href="/">
@@ -64,57 +119,75 @@ function Navbar({ logoOnly = false }) {
                         />
                     </a>
                     {logoOnly || (
-                        <ul className={styles.link}>
-                            <li>
-                                <Link to="/">Home</Link>
-                            </li>
-                            <li>
-                                <Link to="/tvshow">TV Show</Link>
-                            </li>
-                            <li className={styles.mainMenu}>
-                                <Link to="/movies">Movies</Link>
-                                <ul className={styles.subMenu}>
-                                    <li className={styles.mainMenu}>
-                                        Action
-                                        <ul className={styles.subMenu}>
-                                            <li>Martial Arts</li>
-                                            <li>Superhero</li>
-                                            <li>Espionage/Thriller</li>
-                                            <li>Disaster</li>
-                                            <li>War</li>
-                                        </ul>
-                                    </li>
-                                    <li className={styles.mainMenu}>
-                                        Comedy
-                                        <ul className={styles.subMenu}>
-                                            <li>Romantic Comedy</li>
-                                            <li>Slapstick</li>
-                                            <li>Satire/Parody</li>
-                                            <li>Dark Comedy</li>
-                                            <li>Screwball Comedy</li>
-                                        </ul>
-                                    </li>
-                                    <li className={styles.mainMenu}>
-                                        Drama
-                                        <ul className={styles.subMenu}>
-                                            <li>Historical Drama</li>
-                                            <li>Crime Drama</li>
-                                            <li>Melodrama</li>
-                                            <li>Courtroom Drama</li>
-                                            <li>Family Drama</li>
-                                        </ul>
-                                    </li>
-                                    <li>Science Fiction</li>
-                                    <li>Horror</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <Link to="/browse"> Browse by Language</Link>
-                            </li>
-                            <li>
-                                <Link to="/fav">My Favorite List</Link>
-                            </li>
-                        </ul>
+                        <div style={{ position: "relative" }}>
+                            <FontAwesomeIcon
+                                ref={dropDown}
+                                icon={faList}
+                                size="lg"
+                                style={{
+                                    color: "#ffffff",
+                                    marginLeft: "50px",
+                                    display: "none",
+                                    marginBottom: "10px",
+                                    cursor: "pointer",
+                                }}
+                                onClick={(e) => handleDropDown(e)}
+                            />
+                            <ul className={styles.link} ref={navigateLink}>
+                                <li>
+                                    <Link to="/">Home</Link>
+                                </li>
+                                <li>
+                                    <Link to="/tvshow">TV Show</Link>
+                                </li>
+                                <li className={styles.mainMenu}>
+                                    <Link to="/movies">Movies</Link>
+                                    <ul className={styles.subMenu}>
+                                        <li className={styles.mainMenu}>
+                                            Action
+                                            <ul className={styles.subMenu}>
+                                                <li>Martial Arts</li>
+                                                <li>Superhero</li>
+                                                <li>Espionage/Thriller</li>
+                                                <li>Disaster</li>
+                                                <li>War</li>
+                                            </ul>
+                                        </li>
+                                        <li className={styles.mainMenu}>
+                                            Comedy
+                                            <ul className={styles.subMenu}>
+                                                <li>Romantic Comedy</li>
+                                                <li>Slapstick</li>
+                                                <li>Satire/Parody</li>
+                                                <li>Dark Comedy</li>
+                                                <li>Screwball Comedy</li>
+                                            </ul>
+                                        </li>
+                                        <li className={styles.mainMenu}>
+                                            Drama
+                                            <ul className={styles.subMenu}>
+                                                <li>Historical Drama</li>
+                                                <li>Crime Drama</li>
+                                                <li>Melodrama</li>
+                                                <li>Courtroom Drama</li>
+                                                <li>Family Drama</li>
+                                            </ul>
+                                        </li>
+                                        <li>Science Fiction</li>
+                                        <li>Horror</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <Link to="/browse">
+                                        {" "}
+                                        Browse by Language
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/fav">My Favorite List</Link>
+                                </li>
+                            </ul>
+                        </div>
                     )}
                 </div>
                 {logoOnly || (
@@ -238,10 +311,13 @@ function Navbar({ logoOnly = false }) {
                                         Help Center
                                     </Link>
                                     <p className={styles.breakLine}></p>
-                                    <Link to="/" onClick={async () => {
-                                        await logout();
-                                        removeCookie("login");
-                                    }}>
+                                    <Link
+                                        to="/"
+                                        onClick={async () => {
+                                            await logout();
+                                            removeCookie("login");
+                                        }}
+                                    >
                                         Sign out of NetFlix
                                     </Link>
                                 </div>

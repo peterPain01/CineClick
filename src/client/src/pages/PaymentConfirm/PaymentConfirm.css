@@ -1,0 +1,102 @@
+.payment-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7efea;
+}
+
+.payment-card {
+    display: flex;
+    width: 500px;
+    height: 600px;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+}
+
+.payment-pay {
+    margin-top: 20px;
+    cursor: pointer;
+    width: 60%;
+    height: 200px;
+    border-radius: 6px;
+    overflow: auto;
+}
+
+.payment-products {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-products {
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+.main-products span {
+    margin-top: 30px;
+}
+
+.left-products {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-products {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-products span {
+    color: rgba(0, 0, 0, 1);
+    height: auto;
+    font-size: 18px;
+    font-style: Semi Bold;
+    font-family: Inter;
+    font-weight: 500;
+    line-height: normal;
+    font-stretch: normal;
+    text-decoration: none;
+}
+
+.right-products span {
+    text-align: right;
+}
+.products-total {
+    margin-top: 22px;
+    font-size: 24px;
+    font-weight: 600;
+}
+.products-title {
+}
+
+.products-heading {
+    margin-top: 20px;
+    color: rgba(38, 38, 38, 1);
+    font-size: 30px;
+    font-style: Semi Bold;
+    text-align: center;
+    font-family: Inter;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    text-decoration: none;
+}
+@media (max-width: 991px) {
+    .products-heading {
+        color: rgb(38, 38, 38);
+        font-size: 22px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: normal;
+        text-decoration: none;
+    }
+}

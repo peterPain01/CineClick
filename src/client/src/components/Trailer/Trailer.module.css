@@ -16,7 +16,8 @@
 }
 
 .action {
-    width: 36vw; 
+    width: 42vw;
+    max-width: 600px; 
     position: absolute;
     top: 20%;
     left: 60px;
@@ -35,12 +36,12 @@
     letter-spacing: 0;
     line-height: 1.5;
     color: white;
-    font-size: 1.3vw;
+    font-size: calc(14px + 0.3vw);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
 }
 
 .playBtnBox, .detailBtnBox{ 
-    width: 20%;
+    width:calc(120px + 0.5vw);
     margin-top: 12px;
     display: inline-block;
 }

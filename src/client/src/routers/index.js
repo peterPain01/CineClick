@@ -21,19 +21,21 @@ import MovieUpload from "@/pages/Admin/MovieUpload";
 import Customer from "@/pages/Admin/Customer";
 import Plan from "@/pages/Admin/Plan";
 import Watch from "@/pages/Watch/Watch";
- 
-//Public routes
+import PaymentConfirm from "../pages/PaymentConfirm/PaymentConfirm";
+import PaymentSuccess from "../pages/PaymentConfirm/PaymentSuccess";
+//Public routes payment_success
 const viewerRoutes = [
     { path: "/register", component: Register },
     { path: "/login", component: Auth },
     { path: "/UpgradePlan", component: UpgradePlan },
-    { path: "/checkout/:p_id", component: CheckOut },
+    { path: "/checkout/:p_id", component: PaymentConfirm, layout: null },
     { path: "/profiles", component: Profiles },
     { path: "/YourAccount", component: Account },
 
     { path: "/", component: Home, layout: FullyNavLayout },
     { path: "/tvshow", component: TVShow, layout: FullyNavLayout },
     { path: "/cart", component: Cart },
+    { path: "/payment_success", component: PaymentSuccess, layout: null },
     { path: "/movies", component: Movies, layout: FullyNavLayout },
     { path: "/browse", component: Browse, layout: FullyNavLayout },
     { path: "/watch/:id/:name", component: Watch, layout: null },

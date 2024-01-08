@@ -34,7 +34,10 @@ function MovieCarousel({
     let openMovieTimeOut = useRef(false);
 
     function handleMouseEnter(event, mv) {
-        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+        const vw = Math.max(
+            document.documentElement.clientWidth || 0,
+            window.innerWidth || 0
+        );
         const box_width = 0.25 * vw;
         const box_height = 400;
         const { top, left } = getCoords(event.target);
@@ -90,22 +93,29 @@ function MovieCarousel({
                         />
                     </div>
 
-                    <div className={styles.carousel + ` ${carouselClass}`}>
-                        {(items ? items : []).map((mv, index) => 
+                    <div
+                        className={styles.carousel + ` ${carouselClass}`}
+                        id="imageList"
+                    >
+                        {(items ? items : []).map((mv, index) => (
                             <img
                                 key={index}
                                 src={mv.image}
-                                onMouseEnter={(event) => handleMouseEnter(event, mv)}
+                                onMouseEnter={(event) =>
+                                    handleMouseEnter(event, mv)
+                                }
                                 onMouseLeave={handleMouseLeave}
                                 onClick={(event) => {
                                     setPopupMovie(mv);
                                     if (openMovieTimeOut.current) {
-                                        window.clearTimeout(openMovieTimeOut.current);
+                                        window.clearTimeout(
+                                            openMovieTimeOut.current
+                                        );
                                     }
                                     setOpenModal(true);
                                 }}
                             />
-                        )}
+                        ))}
                     </div>
                     <div
                         className={styles.rightSection}

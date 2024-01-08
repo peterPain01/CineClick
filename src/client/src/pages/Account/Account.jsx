@@ -17,6 +17,7 @@ export function Account() {
         type: "",
     });
 
+
     const [expired_day, set_expired_day] = useState("")
     useEffect(() => {
         // lay ve email va type 

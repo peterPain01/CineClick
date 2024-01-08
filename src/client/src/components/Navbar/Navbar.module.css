@@ -51,7 +51,7 @@
     color: #e50914; 
 }
 .logo {
-    width: 130px;
+    width: calc(130px + 0.4vw);
     height: 40px;
     object-fit: cover;
 }
@@ -63,7 +63,10 @@
     font-weight: 500;
     gap: 15px;
     cursor: pointer;
-    margin-left: 20px;
+}
+
+.link > li:first-child { 
+    padding-left: 20px;
 }
 
 .link li a:hover {

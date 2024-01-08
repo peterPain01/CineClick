@@ -38,12 +38,6 @@ export function CheckOut() {
         <>
             <div className={styles.main}>
                 <div className={styles.container}>
-                    <h1 className={styles.heading}>
-                        {plan.name} is good duration
-                    </h1>
-                    <span className={styles.subHeading}>
-                        Choose your payment method to finish
-                    </span>
                     <PayPalScriptProvider options={initialOptions}>
                         <PayPalButtons
                             style={{
