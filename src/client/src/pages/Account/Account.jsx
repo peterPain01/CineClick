@@ -17,23 +17,35 @@ export function Account() {
         type: "",
     });
 
-    // Optional 
-    // Fetch email and phone, plan info (ngay hetin han, loai plan) from data base
-    // Thay doi email, thay doi so dien thoai
-    // Neu chua co phone -> Add phone
-
-    // Lay ngay het han cua user ve. 
-
+    const [expired_day, set_expired_day] = useState("")
     useEffect(() => {
+        // lay ve email va type 
         request
             .get("viewer/profile")
             .then((response) => {
                 setUserInfo((userInfo) => ({...userInfo, ...response.data}))
+              
             })
             .catch((err) => {
                 console.log(err);
             });
+
+        // TODO 1: Lay ngay het han 
+        if(userInfo.type === "free-viewer"){
+            set_expired_day("")
+        }
+        else{ 
+            // get expired day from server 
+        }
     }, []);
+    
+    
+    function handleChangePassword(){
+    }
+
+    function handleChangeEmail(){
+
+    }
     return (
         <>
             <div className={styles.centeredDiv}>
@@ -90,7 +102,6 @@ export function Account() {
                     </div>
                     <div className={styles.accountRecovery}>
                         <div className={styles.notifyItem}>
-                            {/* Hard data */}
                             <p className={styles.notifyDesc}>
                                 Your membership will be canceled at the end of
                                 your current billing period.

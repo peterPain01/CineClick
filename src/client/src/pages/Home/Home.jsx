@@ -98,7 +98,7 @@ export function Home() {
                         carouselClass={"carousel-" + item.toLowerCase()}
                         wrapperClass={"wrapper-" + item.toLowerCase()}
                         heading={item}
-                        marginTop={index === 0 ? -150 : 50}
+                        marginTop={index === 0 ? -50 : 50}
                         items={genreList[item].data}
                         openMovieBox={openMovieBox}
                         setMovieCard={setMovieCard}

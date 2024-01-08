@@ -62,7 +62,6 @@
 }
 
 .wrapper .carousel {
-    /* Mat khoang trang o giua cac phan tu */
     position: relative;
     font-size: 0px;
     overflow: hidden;
@@ -72,12 +71,12 @@
 }
 
 .carousel img {
-    margin-left: 6px;
+    margin-left: 20px;
     border-radius: 6px;
     /* height: 100%;
     width: calc(100% / 5); */
-    height: 200px;
-    width: calc(100% / 5);  
+    height: 280px;
+    width: calc(100% / 6);  
     object-fit: cover;
     border-radius: 6px;
     transition: all 0.2s ease-in-out;

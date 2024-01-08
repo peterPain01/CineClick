@@ -33,7 +33,7 @@ export function Profiles() {
                 <h1>Edit Profiles</h1>
                 <div className={styles.profileEntry}>
                     <div className={styles.profileAvatar}>
-                        <img src="./img/avatar.jpg" alt="" />
+                        <img src="/img/avatar.jpg" alt="" />
                         <button className={styles.editButton}>
                             <i>
                                 <FontAwesomeIcon
@@ -52,15 +52,6 @@ export function Profiles() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                             />
-                        </div>
-                        <div className={styles.balanceData}>
-                            <div className={styles.balanceInfo}>
-                                <h2>Balance:</h2>
-                                <p>100000₫</p>
-                            </div>
-                            <button className={styles.topUpBtn}>
-                                <Link to='/topup'>Top up</Link>
-                                </button>
                         </div>
                         <div className={styles.language}>
                             <h2>Language:</h2>
