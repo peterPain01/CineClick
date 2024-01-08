@@ -16,13 +16,15 @@ function ActionButton({
     minWidth = "40px",
     gap = "0px",
     border = '1px solid #bebebe',
-    marginLeft = '0px'
+    marginLeft = '0px',
+    click_event = () => {},
 }) {
     const typeStyles = {
         rect: "6px",
         circle: "50%",
     };
     function handleClick() {
+        click_event();
         if (handleCloseState) handleCloseState(false);
         if (handleOpenState) handleOpenState(true);
     }

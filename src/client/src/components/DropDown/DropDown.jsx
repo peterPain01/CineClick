@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
-function DropDown({ title = "", minWidth = "140px", contentList = [] }) {
+function DropDown({ on_selected_choice = (choice) => {}, title = "", minWidth = "140px", contentList = [] }) {
     const [showChoice, isShowChoice] = useState(false);
     const [selectedChoice, setSelectedChoice] = useState(title);
 
@@ -20,6 +20,7 @@ function DropDown({ title = "", minWidth = "140px", contentList = [] }) {
 
     function handleSelectedChoice(e) {
         setSelectedChoice(e.target.innerHTML);
+        on_selected_choice(e.target.innerHTML);
     }
     return (
         <div

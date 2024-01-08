@@ -95,14 +95,9 @@ export default function Plan() {
     const [plans, setPlans] = useState([])
     useEffect(() => {
         // TODO Change api
-        request
-            .get("/plan")
-            .then((response) => {
-                setPlans(response.data)
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        request.get("/plan", res => {
+            setPlans(response.data)
+        });
     }, []);
 
     function handleMovePage(e) {

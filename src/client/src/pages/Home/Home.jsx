@@ -10,19 +10,6 @@ import axios from "axios";
 import {useCookies} from "react-cookie";
 import request from "../../modules/request";
 
-const cards = [
-    {
-        image: "https://occ-0-64-58.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABbUEHtsBjMAR4bBmJ0_a36FBPtRH-RveuuIKSwU6dlao2gANeSca7-6LvZI73BkpKqHTYEebYc4S1XgEJ5T7rInCE9MnhOuGSyo.webp?r=443",
-        title: "Fight Club",
-        description:
-            "A disillusioned office worker finds an outlet for his repressed emotions when he and a mysterious new friend named Tyler Durden start an underground fight club.",
-        matchScore: "9",
-        maturityNumber: "18+",
-        year: "1999",
-        duration: "2hours 15m",
-    },
-];
-
 function useDelayUnmount(isMounted, delayTime) {
     const [shouldRender, setShouldRender] = useState(false);
 
@@ -50,9 +37,9 @@ export function Home() {
         overflow: "hidden",
     };
     // Fetch Trailer Movie
-    // Fetch 4 MovieCarousel 
+    // Fetch 4 MovieCarousel
 
-    
+
     useEffect(() => {
         document.body.style.maxHeight = openModal ? "100vh" : "";
         document.body.style.overflow = openModal
@@ -68,21 +55,15 @@ export function Home() {
         genreList[genre] = {data, set};
     });
     useEffect(() => {
-        const url = new URL("http://localhost:13123/movie/list");
+        const url = new URL("http://localhost:13123/movie/list-all");
         genres.forEach(genre => {
             url.search = new URLSearchParams({genres: genre, length: 20});
-            request.get(url).then(res => {
+            request.get(url, res => {
                 if (res.status === 200) {
                     genreList[genre].set(res.data);
                 } else {
                     alert(res.data);
                 }
-            }).catch(err => {
-                if (err?.response?.status === 401) {
-                    removeCookie("login");
-                    window.open("/", "_self");
-                }
-                console.log(err);
             });
         })
     }, []);

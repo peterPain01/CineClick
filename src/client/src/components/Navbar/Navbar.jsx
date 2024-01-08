@@ -22,6 +22,7 @@ function Navbar({ logoOnly = false }) {
     const [fix, setFix] = useState(false);
     const [expand, setExpand] = useState(false);
     const searchInput = useRef(null);
+    const search_link = useRef(null);
 
     function handleSearch() {
         isSearch(true);
@@ -112,7 +113,7 @@ function Navbar({ logoOnly = false }) {
                                 <Link to="/browse"> Browse by Language</Link>
                             </li>
                             <li>
-                                <Link to="/fav">My Favorite List</Link>
+                                <Link to="/favorite">My Favorite List</Link>
                             </li>
                         </ul>
                     )}
@@ -135,6 +136,8 @@ function Navbar({ logoOnly = false }) {
                                     size="lg"
                                     style={{ color: "#ffffff" }}
                                 />
+                                <Link style={{display: "none"}} ref={search_link} // change page without reload window
+                                      to={{pathname: `/search`, search: `?pattern=${searchValue}`}}> </Link>
                                 <input
                                     type="text"
                                     placeholder="Movies, Cast, ...."
@@ -142,6 +145,11 @@ function Navbar({ logoOnly = false }) {
                                     onChange={(e) =>
                                         setSearchvalue(e.target.value)
                                     }
+                                    onKeyUp={(e) => {
+                                        if (e.key === 'Enter' || e.keyCode === 13) {
+                                            search_link.current.click();
+                                        }
+                                    }}
                                     className={styles.searchFieldInput}
                                     ref={searchInput}
                                     onBlur={closeInputField}

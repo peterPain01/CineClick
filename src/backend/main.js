@@ -19,6 +19,7 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
     console.log("[INFO]", req.path);
+    console.log("[INFO]", req.query);
     console.log("[INFO]", req.session);
     next();
 });

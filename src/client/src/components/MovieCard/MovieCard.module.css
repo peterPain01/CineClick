@@ -75,3 +75,12 @@
     font-size: 18px;
 }
 
+.title {
+    padding: 0px;
+    padding-top: 5px;
+    margin: 0px;
+    text-align: center;
+    display: block;
+    width: 100%;
+    color: white;
+}

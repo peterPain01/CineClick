@@ -12,12 +12,12 @@ router.use((req, res, next) => {
         res.status(401).send("Unauthenticated admin");
     } else if (req.user.type !== "admin") {
         res.status(401).send("Unauthorized admin");
-    }
+    } else next();
 });
-router.get("/delete-movie", uploader.single("video"), async (req, res, next) => {
+router.get("/delete-movie", async (req, res, next) => {
     const id = Number(req.query.id);
     console.log("[INFO] Remove movie with id = " +  id);
-    if (id !== undefined && id !== null) {
+    if (!isNaN(id)) {
         await MovieModel.remove(id);
         res.status(200).send("OK");
     } else {
