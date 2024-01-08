@@ -60,7 +60,8 @@ function App() {
                                         path={route.path}
                                         element={
                                             <Layout>
-                                                <Page />
+                                                <Page key={window.location.pathname === "/search" ? // HACK: fix reload when search on search page
+                                                            Math.random() : 0}/>
                                             </Layout>
                                         }
                                     />

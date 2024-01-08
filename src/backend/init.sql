@@ -83,6 +83,14 @@ create table "MovieSimilar"(
     foreign key(similar_id) references "Movie"(id)
 );
 
+create table "MovieFavorite"(
+    email varchar(512),
+    movie bigserial,
+    primary key(email, movie),
+    foreign key(email) references "UserInfo"(email),
+    foreign key(movie) references "Movie"(id)
+);
+
 create table "PaidMovie"(
     id bigserial not null,
     price float not null check (price > 0),

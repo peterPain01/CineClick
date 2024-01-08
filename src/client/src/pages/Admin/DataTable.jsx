@@ -58,20 +58,13 @@ const TableHeadTitles = [
 
 export default function DataTable() {
     const per_page = 10;
-    const [movies, setMovies] = useState([]);
+    const [data, set_data] = useState({movies: [], total_page: 1});
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
     React.useEffect(() => {
         // TODO Change api
-        request.get(`movie/list?page=1&per_page=${per_page}`)
-            .then(response => { 
-                setMovies(response.data || []);
-            })
-            .catch(err => { 
-                if (err?.response?.status === 401) {
-                    removeCookie("login");
-                    window.open("/", "_self");
-                }
-            });
+        request.get(`movie/list?page=1&per_page=${per_page}`, response => {
+            set_data(response.data || {movies: [], total_page: 1});
+        })
     }, []);
 
     const imgPreview = React.useRef(null);
@@ -119,16 +112,9 @@ export default function DataTable() {
     }
 
     function handleDeleteMovie(id) {
-        request.get(`admin/delete-movie?id=${id}`)
-        .then(res => {
-            movies.splice(movies.findIndex(x => x.id === id), 1);
-            setMovies([...movies]);
-        }).catch(err => {
-            if (err?.response?.status === 401) {
-                removeCookie("login");
-                window.open("/", "_self");
-            }
-            console.log(err);
+        request.get(`admin/delete-movie?id=${id}`, res => {
+            data.movies.splice(data.movies.findIndex(x => x.id === id), 1);
+            set_data({...data});
         });
     }
 
@@ -142,14 +128,8 @@ export default function DataTable() {
         setSrcVid(src);
     }
     function handleMovePage(e, page){ 
-        request.get(`movie/list?page=${page}&per_page=${per_page}`)
-        .then(response => { 
-            setMovies(response.data || []);
-        })
-        .catch(err => { 
-            if (err?.response?.status === 401) {
-                window.open("/", "_self");
-            }
+        request.get(`movie/list?page=${page}&per_page=${per_page}`, response => { 
+            set_data(response.data || {movies: [], total_page: 1});
         })
         // Fetch api with page 
     }
@@ -222,7 +202,7 @@ export default function DataTable() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {movies.map((movie) => (
+                            {data.movies.map((movie) => (
                                 <StyledTableRow key={movie.title}>
                                     <StyledTableCell component="th" scope="row">
                                         {movie.title}
@@ -277,7 +257,7 @@ export default function DataTable() {
                     </Table>
                 </TableContainer>
                 <Stack spacing={2}>
-                    <Pagination count={10} color="primary" onChange={handleMovePage}/>
+                    <Pagination count={data.total_page} color="primary" onChange={handleMovePage}/>
                 </Stack>
                 <div style={{ marginTop: "40px" }}>
                     <Link to="/admin/movie/upload">

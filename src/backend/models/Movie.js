@@ -48,17 +48,21 @@ module.exports = {
     },
 
     // NOTE: type and genre are optional
+    async list_movie_append_genres(condition) {
+        let result = (await db.find("Movie", condition)).map(async mv => {
+            return {
+                ...mv,
+                genres: (await this.list_genres(mv.id)),
+            };
+        });
+        result = await Promise.all(result);
+        return result;
+    },
     async list(type, genres) {
         let condition = "";
         type = type?.trim();
         if (type !== undefined && type !== "") condition += ` type = '${type}'`;
-        let result = await (await db.find("Movie", condition)).map(async mv => {
-            return {
-                ...mv,
-                genres: (await this.list_genres(mv.id)).map(x => x.genre),
-            };
-        });
-        result = await Promise.all(result);
+        let result = await this.list_movie_append_genres(condition);
         if (genres !== undefined) {
             if (isArray(genres) && genres.length >= 1) {
                 result = result.filter(mv => {
@@ -83,11 +87,11 @@ WHERE mvs.mv_id = ${mv_id}
 `);
     },
     async list_genres(mv_id) {
-        return await db.exec(`
+        return (await db.exec(`
 SELECT genre
 FROM "Genre" g JOIN "MovieGenre" mvg ON g.id = mvg.genre_id
 WHERE mvg.mv_id = ${mv_id}
-`);
+`)).map(x => x.genre);
     },
     async add(movie_info, genres) {
         if (!(movie_info instanceof this.MovieInfo)) {
@@ -105,6 +109,7 @@ WHERE mvg.mv_id = ${mv_id}
         console.log("OK");
         await db.conn_execute(async (conn) => {
             await conn.tx(async t => {
+                await t.none(`DELETE FROM "MovieFavorite" WHERE movie = ${id}`);
                 await t.none(`DELETE FROM "BoughtMovie" WHERE mv_id = ${id}`);
                 await t.none(`DELETE FROM "PaidMovie" WHERE id = ${id}`);
                 await t.none(`DELETE FROM "MovieGenre" WHERE mv_id = ${id}`);
@@ -119,6 +124,27 @@ WHERE mvg.mv_id = ${mv_id}
         }
         const result = await db.exec(`SELECT * FROM "BoughtMovie" WHERE email = '${email}' AND id = ${id}`);
         return result.length != 0;
+    },
+    async search(pattern, genres, sort_by, order) {
+        const all_posible_sort = ["title", "imdb", "release"];
+        let condition = `LOWER(title) LIKE LOWER('%${pattern.trim()}%')`;
+        if (sort_by !== undefined && all_posible_sort.includes(sort_by.toLowerCase())) {
+            condition += ` ORDER BY ${sort_by.toLowerCase()} ${["asc", "desc"].includes(order.toLowerCase()) ? order : "asc"}`;
+        }
+        let result = await this.list_movie_append_genres(condition);
+        result = await Promise.all(result);
+        if (genres !== undefined) {
+            if (isArray(genres) && genres.length >= 1) {
+                result = result.filter(mv => {
+                    return genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                });
+            } else if (typeof genres == "string") {
+                result = result.filter(mv => {
+                    return mv.genres.includes(genres.toLowerCase());
+                });
+            }
+        }
+        return result;
     }
 }
 

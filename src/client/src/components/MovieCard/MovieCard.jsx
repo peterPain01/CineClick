@@ -19,6 +19,7 @@ function MovieCard({
                 <span>{movie?.length}</span>
                 <div className={styles.overlay}></div>
             </div>
+            <h3 className={styles.title}>{movie?.title}</h3>
             <div className={styles.cardMetadata}>
                 <div className={styles.topCard}>
                     <div className={styles.info}>

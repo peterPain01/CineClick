@@ -26,6 +26,8 @@ function Navbar({ logoOnly = false }) {
     const [isDrop, setDrop] = useState(false);
     const dropDown = useRef(null);
     const navigateLink = useRef(null);
+    const search_link = useRef(null);
+
     function handleSearch() {
         isSearch(true);
         searchInput.current.focus();
@@ -188,6 +190,57 @@ function Navbar({ logoOnly = false }) {
                                 </li>
                             </ul>
                         </div>
+                        <ul className={styles.link}>
+                            <li>
+                                <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/tvshow">TV Show</Link>
+                            </li>
+                            <li className={styles.mainMenu}>
+                                <Link to="/movies">Movies</Link>
+                                <ul className={styles.subMenu}>
+                                    <li className={styles.mainMenu}>
+                                        Action
+                                        <ul className={styles.subMenu}>
+                                            <li>Martial Arts</li>
+                                            <li>Superhero</li>
+                                            <li>Espionage/Thriller</li>
+                                            <li>Disaster</li>
+                                            <li>War</li>
+                                        </ul>
+                                    </li>
+                                    <li className={styles.mainMenu}>
+                                        Comedy
+                                        <ul className={styles.subMenu}>
+                                            <li>Romantic Comedy</li>
+                                            <li>Slapstick</li>
+                                            <li>Satire/Parody</li>
+                                            <li>Dark Comedy</li>
+                                            <li>Screwball Comedy</li>
+                                        </ul>
+                                    </li>
+                                    <li className={styles.mainMenu}>
+                                        Drama
+                                        <ul className={styles.subMenu}>
+                                            <li>Historical Drama</li>
+                                            <li>Crime Drama</li>
+                                            <li>Melodrama</li>
+                                            <li>Courtroom Drama</li>
+                                            <li>Family Drama</li>
+                                        </ul>
+                                    </li>
+                                    <li>Science Fiction</li>
+                                    <li>Horror</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <Link to="/browse"> Browse by Language</Link>
+                            </li>
+                            <li>
+                                <Link to="/favorite">My Favorite List</Link>
+                            </li>
+                        </ul>
                     )}
                 </div>
                 {logoOnly || (
@@ -208,6 +261,8 @@ function Navbar({ logoOnly = false }) {
                                     size="lg"
                                     style={{ color: "#ffffff" }}
                                 />
+                                <Link style={{display: "none"}} ref={search_link} // change page without reload window
+                                      to={{pathname: `/search`, search: `?pattern=${searchValue}`}}> </Link>
                                 <input
                                     type="text"
                                     placeholder="Movies, Cast, ...."
@@ -215,6 +270,11 @@ function Navbar({ logoOnly = false }) {
                                     onChange={(e) =>
                                         setSearchvalue(e.target.value)
                                     }
+                                    onKeyUp={(e) => {
+                                        if (e.key === 'Enter' || e.keyCode === 13) {
+                                            search_link.current.click();
+                                        }
+                                    }}
                                     className={styles.searchFieldInput}
                                     ref={searchInput}
                                     onBlur={closeInputField}

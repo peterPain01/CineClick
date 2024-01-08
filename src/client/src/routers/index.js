@@ -11,6 +11,8 @@ import { TVShow } from "@/pages/TVShow/TVShow";
 import { Movies } from "@/pages/Movies/Movies";
 import { Cart } from "@/pages/Cart/Cart";
 import { Browse } from "@/pages/Browse/Browse";
+import { Favorite } from "@/pages/Favorite/Favorite";
+import { Search } from "@/pages/Search/Search";
 
 import { NavLayout, FullyNavLayout } from "@/pages/NavLayout";
 
@@ -38,6 +40,8 @@ const viewerRoutes = [
     { path: "/payment_success", component: PaymentSuccess, layout: null },
     { path: "/movies", component: Movies, layout: FullyNavLayout },
     { path: "/browse", component: Browse, layout: FullyNavLayout },
+    { path: "/favorite", component: Favorite, layout: FullyNavLayout },
+    { path: "/search", component: Search, layout: FullyNavLayout },
     { path: "/watch/:id/:name", component: Watch, layout: null },
     { path: "*", component: Missing },
 ];

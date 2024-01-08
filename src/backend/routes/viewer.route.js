@@ -1,41 +1,40 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
-const fs = require("fs");
-const MovieModel = require("../models/Movie");
-const MovieController = require("../controllers/movie");
-const { UserInfo } = require("../models/User");
 const User = require("../models/User");
+const UserController = require("../controllers/User.controller");
 const AccountController= require('../controllers/Account')
 
 // TODO: Split into 2 routes, premium and free viewer
 // TODO: Check authorization properly
 
-router.get("/watch/:mv_id(\\d+)/:file_name(part(.m3u8|\\d+.ts))", async (req, res, next) => {
-    const {mv_id, file_name} = req.params;
-    if (mv_id !== undefined && file_name !== undefined) {
-        try {
-            const movie = await MovieModel.get(mv_id);
-            if (movie == null) {
-                res.status(400).send(`No movie with id ${mv_id} exist`);
-            } else {
-                if (await MovieController.can_watch(req.user, mv_id)) {
-                    const video_path = path.join(MovieModel.get_folder(mv_id), file_name);
-                    if (!fs.existsSync(video_path)) {
-                        MovieController.stream(path.join(MovieModel.MOVIES_FOLDER, "default", file_name), res);
-                    } else {
-                        MovieController.stream(video_path, res);
-                    }
-                } else {
-                    res.status(401).send("Unauthorized to watch movie");
-                }
-            }
-        } catch (err) {
-            next(err);
-        }
-    } else {
-        res.status(400).send("Viewer watch error");
+router.get("/watch/:mv_id(\\d+)/:file_name(part(.m3u8|\\d+.ts))", UserController.watch);
+router.get("/set-favorite", async (req, res, next) => {
+    const {mv_id, fav} = req.query;
+    if (mv_id === undefined || fav === undefined) res.status(400).send("Missing arguments");
+    else {
+        await User.set_fav(req.user?.email, mv_id, fav);
+        res.status(200).send("OK");
     }
+});
+router.get("/is-favorite", async (req, res, next) => {
+    const {mv_id} = req.query;
+    if (mv_id === undefined) res.status(400).send("Missing movie id");
+    else {
+        res.status(200).send(await User.is_fav(req.user?.email, mv_id));
+    }
+});
+router.get("/list-favorite", async (req, res, next) => {
+    const page = isNaN(req.query.page) ? 1 : Number(req.query.page);
+    const per_page = isNaN(req.query.per_page) ? 6 : Number(req.query.per_page);
+    let movies = await User.list_fav(req.user?.email) || [];
+    const total = movies.length;
+
+    console.log(page, per_page);
+
+    movies = movies.slice((page-1)*per_page, page*per_page);
+    res.status(200)
+       .setHeader("Content-Type", "application/json")
+       .send({movies: movies, total_page: ((total/per_page) >> 0) + (total%per_page == 0 ? 0 : 1)});
 });
 
 // router to get user info 

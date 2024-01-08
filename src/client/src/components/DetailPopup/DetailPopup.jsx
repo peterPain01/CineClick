@@ -13,18 +13,29 @@ import ActionButton from "../ActionButton/ActionButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import request from "../../modules/request";
 function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
-    function playMovie() {
-        if (info?.id) {
-        }
-    }
-
+    const [is_favorite, set_favorite] = useState(false);
     const [similars, setSimilars] = useState(null)
     useEffect(() => {
-        axios.get(`http://localhost:13123/movie/list-similar?id=${info.id}`, {
-            withCredentials: true
-        }).then(res => setSimilars(res.data)).catch(err => alert(err));
-    }, []);
+        request.get(`movie/list-similar?id=${info.id}`, res => {
+            setSimilars(res.data);
+        });
+        request.get(`viewer/is-favorite?mv_id=${info.id}`, res => {
+            set_favorite(res.data);
+        });
+    }, [info]);
+
+    function format_date(date) {
+        date = new Date(date);
+        return `${(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`;
+    }
+
+    function toggle_favorite() {
+        request.get(`viewer/set-favorite?mv_id=${info.id}&fav=${!is_favorite}`, res => {
+            set_favorite(!is_favorite);
+        });
+    }
     return (
         <> 
             <div className={styles.overlay}></div>
@@ -51,7 +62,7 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                             />
                         </div>
                         <div className={styles.actionModal}>
-                            <Link to={info?.id ? `/watch/${info.id}/${info.title}` : ""} className={styles.playBtnBox} onClick={playMovie}>
+                            <Link to={info?.id ? `/watch/${info.id}/${info.title}` : ""} className={styles.playBtnBox}>
                                 <ActionButton
                                     icon={
                                         <FontAwesomeIcon
@@ -71,8 +82,8 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                             <ActionButton
                                 icon={
                                     <FontAwesomeIcon
-                                        icon={faPlus}
-                                        style={{ color: "#fff" }}
+                                        icon={faThumbsUp}
+                                        style={{ color: is_favorite ? "#0000ff" : "#ffffff" }}
                                         size="xl"
                                     />
                                 }
@@ -81,34 +92,22 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                                 paddingLeftRight="6px"
                                 bgc="rgba(0,0,0,0.4)"
                                 desc="Add to my Favorite List"
-                            />
-                            <ActionButton
-                                icon={
-                                    <FontAwesomeIcon
-                                        icon={faThumbsUp}
-                                        style={{ color: "#ffffff" }}
-                                        size="xl"
-                                    />
-                                }
-                                type="circle"
-                                paddingTopBot="10px"
-                                paddingLeftRight="6px"
-                                bgc="rgba(0,0,0,0.4)"
+                                click_event={toggle_favorite}
                             />
                         </div>
                     </div>
 
                     <div className={styles.previewInfo}>
                         <div className={styles.textInfo}>
-                            <div className={styles.previewInfoRight}>
+                            <div className={styles.previewInfoLeft}>
                                 <div className={styles.metadata}>
                                     <span className={styles.matchScore}>
                                         Match: 90%
                                     </span>
-                                    <span className={styles.year}>
-                                        Released: {info?.release}
+                                    <br/><span style={{paddingLeft: "0px"}} className={styles.year}>
+                                        Released: {format_date(info?.release)}
                                     </span>
-                                    <span className={styles.duration}>
+                                    <br/><span style={{paddingLeft: "0px"}} className={styles.duration}>
                                         {info?.length}
                                     </span>
                                 </div>
@@ -121,7 +120,7 @@ function DetailPopup({ openModal, setOpenModal, style, info, setPopupMovie}) {
                                     </p>
                                 </div>
                             </div>
-                            <div className={styles.previewInfoLeftBox}>
+                            <div className={styles.previewInfoRightBox}>
                                 <div className={styles.previewModalTags}>
                                     <span className={styles.tagLabel}>
                                         Actors:
