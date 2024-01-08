@@ -1,10 +1,11 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const router = express.Router();
 const MovieController = require("../controllers/movie");
 const MovieModel = require("../models/Movie");
 const { MovieInfo } = require("../models/Movie");
-const uploader = require("multer")({dest: "raw-movies"});
+const uploader = require("multer")({dest: "raw-files"});
 // TODO: Split into 2 routes, premium and free viewer
 // TODO: Check authorization properly
 router.use((req, res, next) => {
@@ -24,16 +25,20 @@ router.get("/delete-movie", async (req, res, next) => {
         res.status(400).send("Missing id");
     }
 });
-router.post("/upload-movie", uploader.single("video"), async (req, res, next) => {
+router.post("/upload-movie",
+    uploader.fields([{ name: 'picture', maxCount: 1 }, { name: 'video', maxCount: 1 }]),
+    async (req, res, next) => {
     try {
-        const genres = req.body.genres?.split(",").map(x => x.trim());
+        const genres = req.body.genres?.split(",").map(x => x.trim()) || [];
         const info = new MovieInfo(req.body);
-        if (!req.file?.path) {
+        const image_path = req.files?.picture?.at(0)?.path;
+        const video_path = req.files?.video?.at(0)?.path;
+        if (!video_path) {
             res.status(400).send("Missing video");
         } else if (!info.title) {
             res.status(400).send("Missing title");
         } else {
-            await MovieController.add(info, req.file.path, genres);
+            await MovieController.add(info, genres, video_path, image_path);
             res.status(200).send("OK");
         }
     } catch (err) {
