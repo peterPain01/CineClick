@@ -5,7 +5,7 @@ import styles from "./CheckOut.module.css";
 import { useParams, useNavigate } from "react-router-dom";
 import request from "../../modules/request";
 import { ToastContainer, toast } from "react-toastify";
-import { ClipLoader } from "react-spinners";
+import Loading from "../../components/Loading"; 
 
 // Todo nhận và plan -> Fetch len server lay gia ve sau do thuc hien thanh toan
 export function CheckOut() {
@@ -20,6 +20,7 @@ export function CheckOut() {
             .then((res) => {
                 console.log(res.data[0]);
                 setPlan(res.data[0]);
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.log(err);
@@ -33,7 +34,10 @@ export function CheckOut() {
     };
 
     const [message, setMessage] = useState("");
-
+    const [isLoading, setIsLoading] = useState(true)
+    if (isLoading) {
+        return <Loading/> 
+    }
     return (
         <>
             <div className={styles.main}>

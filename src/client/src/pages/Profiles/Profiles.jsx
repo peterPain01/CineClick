@@ -5,19 +5,26 @@ import { faPencil, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 import DropDown from "../../components/DropDown/DropDown";
-
+import Loading from "../../components/Loading";
 export function Profiles() {
+    
     const [name, setName] = useState("Pham Hoang Gia Huy");
     const [showLanguage, isShowLanguage] = useState(false);
     const [selectedLanguage, setSelectedLannguage] = useState("");
 
     const languageDropDown = useRef(null);
+    const [isLoading, setIsLoading] = useState(true)
     
     // Get Balance 
     useEffect(() => { 
         
     }, [])
-    
+    setTimeout(() => { 
+        setIsLoading(false)
+    }, 1000)
+    if (isLoading) {
+        return <Loading/>
+    }
     function showLanguageBox() {
         isShowLanguage(!showLanguage);
         if (showLanguage) languageDropDown.current.style.display = "flex";

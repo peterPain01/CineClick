@@ -6,8 +6,9 @@ import axios from "axios";
 import { Link, useNavigate   } from "react-router-dom";
 import { CheckOut } from "../CheckOut/CheckOut";
 import request from "../../modules/request";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
+import Loading from "../../components/Loading";
 
 export function UpgradePlan() {
     const navigate = useNavigate();
@@ -21,7 +22,8 @@ export function UpgradePlan() {
         request
             .get("/plan")
             .then((res) => {
-                setPlans(res.data);
+                setPlans(res.data); 
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.log(err);
@@ -48,7 +50,7 @@ export function UpgradePlan() {
             }
         });
     });
-
+    
     function handleSelectedPlan(e) {
         e.preventDefault();
         setSelectPlan(e.target.id);
@@ -56,8 +58,12 @@ export function UpgradePlan() {
 
     const [planPrice, setPlanPrice] = useState(0);
     const [loadPrice, setLoadPrice] = useState(false);
-
-    // Todo Navigate to payment page     
+    const [isLoading, setIsLoading] = useState(true)
+   
+    if (isLoading) {
+        return <Loading/>
+    }
+    // POST PLAN 
     function handleSubmitPlan() {
         if(selectPlan){
             navigate(`/checkout/${selectPlan}`)    

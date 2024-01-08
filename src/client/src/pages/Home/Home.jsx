@@ -7,10 +7,11 @@ import MovieCarouselItems from "../../modules/MovieCarouselItems";
 import MovieCard from "../../components/MovieCard/MovieCard";
 import { CSSTransition } from "react-transition-group";
 import axios from "axios";
-import { useCookies } from "react-cookie";
+import { useCookies } from "react-cookie"; 
 import request from "../../modules/request";
 
-import Loading from "../../Loading/Loading";
+import Loading from "../../components/Loading"; 
+
 
 function useDelayUnmount(isMounted, delayTime) {
     const [shouldRender, setShouldRender] = useState(false);

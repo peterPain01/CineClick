@@ -8,15 +8,17 @@ import {
     faCircleInfo,
     faLock,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 import request from "../../modules/request.js";
+import Loading from "../../components/Loading";
 
 export function Account() {
     const [userInfo, setUserInfo] = useState({
         email: "",
-        type: "",
+        type: "", 
     });
-
+    const[isLoading, setIsLoading] = useState(true)
 
     const [expired_day, set_expired_day] = useState("")
     useEffect(() => {
@@ -25,6 +27,7 @@ export function Account() {
             .get("viewer/profile")
             .then((response) => {
                 setUserInfo((userInfo) => ({...userInfo, ...response.data}))
+                setIsLoading(false)
               
             })
             .catch((err) => {
@@ -45,7 +48,9 @@ export function Account() {
     }
 
     function handleChangeEmail(){
-
+   
+    if (isLoading) {
+        return <Loading/>
     }
     return (
         <>
