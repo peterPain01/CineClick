@@ -15,19 +15,19 @@ export function UpgradePlan() {
     const [selectPlan, setSelectPlan] = useState("");
     const [plans, setPlans] = useState([]);
     const table = useRef(null);
+    const [planPrice, setPlanPrice] = useState(0);
+    const [loadPrice, setLoadPrice] = useState(false);
+    const [isLoading, setIsLoading] = useState(true)
+
     const selectStyle = {
         color: "#e50914",
     };
     useEffect(() => {
         request
-            .get("/plan")
-            .then((res) => {
+            .get(request.baseURL + "plan", res => { 
                 setPlans(res.data); 
                 setIsLoading(false)
             })
-            .catch((err) => {
-                console.log(err);
-            });
     }, []);
 
     useEffect(() => {
@@ -56,9 +56,7 @@ export function UpgradePlan() {
         setSelectPlan(e.target.id);
     }
 
-    const [planPrice, setPlanPrice] = useState(0);
-    const [loadPrice, setLoadPrice] = useState(false);
-    const [isLoading, setIsLoading] = useState(true)
+    
    
     if (isLoading) {
         return <Loading/>

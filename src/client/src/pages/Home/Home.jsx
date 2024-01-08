@@ -3,10 +3,7 @@ import DetailPopup from "../../components/DetailPopup/DetailPopup";
 import styles from "./Home.module.css";
 import MovieCarousel from "../../components/MovieCarousel/MovieCarousel";
 import { useEffect, useRef, useState } from "react";
-import MovieCarouselItems from "../../modules/MovieCarouselItems";
 import MovieCard from "../../components/MovieCard/MovieCard";
-import { CSSTransition } from "react-transition-group";
-import axios from "axios";
 import { useCookies } from "react-cookie"; 
 import request from "../../modules/request";
 
@@ -60,26 +57,15 @@ export function Home() {
     const [isLoading, setIsLoading] = useState(true);
     
     useEffect(() => {
-        const url = new URL("http://localhost:13123/movie/list");
+        const url = new URL("http://localhost:13123/movie/list-all");
         genres.forEach((genre) => {
             url.search = new URLSearchParams({ genres: genre, length: 20 });
             request
-                .get("/movie/list")
-                // resolve
-                .then((res) => {
+                .get(url, res =>  {
                     if (res.status === 200) {
                         genreList[genre].set(res.data);
                         setIsLoading(false);
-                    } else {
-                        alert(res.data);
-                    }
-                })
-                .catch((err) => {
-                    if (err?.response?.status === 401) {
-                        removeCookie("login");
-                        window.open("/", "_self");
-                    }
-                    console.log(err);
+                    } 
                 })
         });
     }, []);

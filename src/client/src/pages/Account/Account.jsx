@@ -16,41 +16,32 @@ import Loading from "../../components/Loading";
 export function Account() {
     const [userInfo, setUserInfo] = useState({
         email: "",
-        type: "", 
+        type: "",
     });
-    const[isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
 
-    const [expired_day, set_expired_day] = useState("")
+    const [expired_day, set_expired_day] = useState("");
     useEffect(() => {
-        // lay ve email va type 
-        request
-            .get("viewer/profile")
-            .then((response) => {
-                setUserInfo((userInfo) => ({...userInfo, ...response.data}))
-                setIsLoading(false)
-              
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        // lay ve email va type
+        request.get(request.baseURL + "viewer/profile", (res) => {
+            setUserInfo((userInfo) => ({ ...userInfo, ...res.data }));
+            setIsLoading(false);
+        });
 
-        // TODO 1: Lay ngay het han 
-        if(userInfo.type === "free-viewer"){
-            set_expired_day("")
-        }
-        else{ 
-            // get expired day from server 
+        // TODO 1: Lay ngay het han
+        if (userInfo.type === "free-viewer") {
+            set_expired_day("");
+        } else {
+            // get expired day from server
         }
     }, []);
-    
-    
-    function handleChangePassword(){
-    }
 
-    function handleChangeEmail(){
-   
+    function handleChangePassword() {}
+
+    function handleChangeEmail() {}
+
     if (isLoading) {
-        return <Loading/>
+        return <Loading />;
     }
     return (
         <>
@@ -154,7 +145,10 @@ export function Account() {
                             </header>
                             <div className={styles.accountInfoContent}>
                                 {/* hard Code */}
-                                <span>Your Account Type is <strong>{userInfo.type}</strong></span>
+                                <span>
+                                    Your Account Type is{" "}
+                                    <strong>{userInfo.type}</strong>
+                                </span>
                             </div>
                             <div className={styles.accountInfoAction}>
                                 <span className={styles.accountInfoActionText}>

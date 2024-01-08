@@ -27,6 +27,7 @@ function Navbar({ logoOnly = false }) {
     const dropDown = useRef(null);
     const navigateLink = useRef(null);
     const search_link = useRef(null);
+    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
 
     function handleSearch() {
         isSearch(true);
@@ -45,8 +46,8 @@ function Navbar({ logoOnly = false }) {
         } else {
             setFix(false);
         }
-        }
     }
+
     function checkWidth() {
         let windowWidth = window.innerWidth;
 
@@ -55,65 +56,13 @@ function Navbar({ logoOnly = false }) {
             dropDown.current.style.position = "relative";
             navigateLink.current.style.display = "none";
         } else {
-            dropDown.current.style.display = "none";
-            navigateLink.current.style.display = "flex";
+            if(dropDown.current != null){
+                dropDown.current.style.display = "none";
+                navigateLink.current.style.display = "flex";
+            }
         }
     }
-    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
-    function checkWidth() {
-        let windowWidth = window.innerWidth;
-
-        if (windowWidth < 800) {
-            dropDown.current.style.display = "block";
-            dropDown.current.style.position = "relative";
-            navigateLink.current.style.display = "none";
-        } else {
-            dropDown.current.style.display = "none";
-            navigateLink.current.style.display = "flex";
-        }
-    }
-    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
     window.addEventListener("scroll", setFixed);
-    
-    window.addEventListener("resize", checkWidth);
-
-    function handleDropDown(e) {
-        setDrop((isDrop) => !isDrop);
-        if (isDrop) {
-            handleOpenDropDown();
-        } else {
-            handleCloseDropDown();
-        }
-    }
-    function handleOpenDropDown() {
-        navigateLink.current.style.display = "flex";
-        navigateLink.current.style.flexDirection = "column";
-        navigateLink.current.style.backgroundColor = "#000";
-        navigateLink.current.style.border = "1px solid #fff";
-        navigateLink.current.style.padding = "20px";
-        navigateLink.current.style.borderRadius = "6px";
-        navigateLink.current.style.width = "200px";
-        navigateLink.current.style.height = "220px";
-        navigateLink.current.style.position = "absolute";
-        navigateLink.current.style.top = "30px";
-        navigateLink.current.style.left = "30px";
-        navigateLink.current.firstChild.style.padding = "0";
-    }
-
-    function handleCloseDropDown() {
-        navigateLink.current.style.flexDirection = "unset";
-        navigateLink.current.style.backgroundColor = "unset";
-        navigateLink.current.style.border = "unset";
-        navigateLink.current.style.padding = "unset";
-        navigateLink.current.style.borderRadius = "unset";
-        navigateLink.current.style.width = "unset";
-        navigateLink.current.style.height = "unset";
-        navigateLink.current.style.position = "unset";
-        navigateLink.current.style.top = "unset";
-        navigateLink.current.style.left = "unset";
-        navigateLink.current.style.display = "none";
-    }
-    
     window.addEventListener("resize", checkWidth);
 
     function handleDropDown(e) {
@@ -245,8 +194,16 @@ function Navbar({ logoOnly = false }) {
                                     size="lg"
                                     style={{ color: "#ffffff" }}
                                 />
-                                <Link style={{display: "none"}} ref={search_link} // change page without reload window
-                                      to={{pathname: `/search`, search: `?pattern=${searchValue}`}}> </Link>
+                                <Link
+                                    style={{ display: "none" }}
+                                    ref={search_link} // change page without reload window
+                                    to={{
+                                        pathname: `/search`,
+                                        search: `?pattern=${searchValue}`,
+                                    }}
+                                >
+                                    {" "}
+                                </Link>
                                 <input
                                     type="text"
                                     placeholder="Movies, Cast, ...."
@@ -255,7 +212,10 @@ function Navbar({ logoOnly = false }) {
                                         setSearchvalue(e.target.value)
                                     }
                                     onKeyUp={(e) => {
-                                        if (e.key === 'Enter' || e.keyCode === 13) {
+                                        if (
+                                            e.key === "Enter" ||
+                                            e.keyCode === 13
+                                        ) {
                                             search_link.current.click();
                                         }
                                     }}

@@ -13,16 +13,14 @@ const PaymentConfirm = () => {
     const [plan, setPlan] = useState({});
     const [IsDone, setIsDone] = useState(false);
     // fetch plan info
-    useEffect(() => {
+    useEffect(() => {   
+        const url = new URL("http://localhost:13123/plan/info");
+        url.search = new URLSearchParams({ p_id });
         request
-            .get("/plan/info", { params: { p_id } })
-            .then((res) => {
+            .get(url, res => { 
                 console.log(res.data[0]);
                 setPlan(res.data[0]);
             })
-            .catch((err) => {
-                console.log(err);
-            });
     }, []);
 
     const [orderInfo, setOrderInfo] = useState({});
