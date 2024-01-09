@@ -58,7 +58,6 @@ router.get("/search", async (req, res) => {
 router.get("/daily-movie", async (req, res, next) => {
     try {
         const result = await MovieModel.get_first();
-        result.trailer = "https://www.youtube.com/watch?v=iwROgK94zcM";
         result.thumbnail = "https://reelsteelsheffield.files.wordpress.com/2020/01/hmc-01.jpg"
         res.status(200).setHeader("Content-Type", "application/json").send(result);
     } catch(err) {
