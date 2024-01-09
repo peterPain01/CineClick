@@ -21,6 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { getCoords } from "@/modules/getCoords";
+import request from "../../modules/request";
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,57 +43,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-//TODO Fetch this from Server
-const Customers = [
-    {
-        id: "21127167",
-        email: "phamhuy1112003@gmail.com",
-        name: "Huy",
-        gender: "Male",
-        age: "20",
-        type: "Premium",
-        status: "Ban",
-    },
-    {
-        id: "21127720",
-        email: "dvt1312003@gmail.com",
-        name: "Tuong",
-        gender: "Male",
-        age: "20",
-        type: "Free",
-        status: "Active",
-    },
-    {
-        id: "21127667",
-        email: "tcgphat21@clc.fitus.edu.vn",
-        name: "Phat",
-        gender: "Male",
-        age: "20",
-        status: "Active",
-    },
-    {
-        id: "21127743",
-        email: "tttoan121@clc.fitus.edu.vn",
-        name: "Toan",
-        gender: "Male",
-        age: "20",
-        type: "Mobile",
-        status: "Active",
-    },
-];
-
 // Title's Columns that you want to display
 const TableHeadTitles = [
     "ID",
     "Email",
     "Name",
-    "Gender",
     "Age",
     "Type",
     "Status",
 ];
 
 export default function Customer() {
+    //TODO Fetch this from Server
+    const [data, set_data] = React.useState({viewers: [], total_page: 1});
+    const per_page = 5;
+    function get_viewers(page) {
+        request.get(`admin/list-viewers?page=${1}&per_page=${per_page}`, res => {
+            set_data(res.data);
+        });
+    }
+    React.useEffect(() => {
+        get_viewers(1);
+    }, []);
+
     const imgPreview = React.useRef(null);
     const previewImageBox = React.useRef(null);
     const [openImgBox, setOpenImgBox] = React.useState(false);
@@ -125,7 +98,16 @@ export default function Customer() {
         setOpenImgBox(false);
     }
 
-    function handleMovePage() {}
+    function handleMovePage(e, page){ 
+        get_viewers(page);
+    }
+
+    function handle_ban_click(viewer) {
+        request.post("admin/update-ban", {email: viewer.email, ban: !viewer.is_ban});
+        viewer.is_ban = !viewer.is_ban;
+        set_data({...data});
+    }
+
     return (
         <>
             <div
@@ -185,25 +167,22 @@ export default function Customer() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Customers.map((customer) => (
-                                <StyledTableRow key={customer.id}>
+                            {data.viewers.map((viewer, index) => (
+                                <StyledTableRow key={index}>
                                     <StyledTableCell component="th" scope="row">
-                                        {customer.id}
+                                        {index}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {customer.email}
+                                        {viewer.email}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {customer.name}
+                                        {viewer.name}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {customer.gender}
+                                        {viewer.age}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
-                                        {customer.age}
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row">
-                                        {customer.type}
+                                        {viewer.type}
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <Button
@@ -213,22 +192,19 @@ export default function Customer() {
                                             }}
                                             variant="contained"
                                             color={
-                                                customer.status === "Active"
-                                                    ? "success"
-                                                    : "error"
+                                                viewer.is_ban ? "error" : "success"
                                             }
                                         >
-                                            {customer.status}
+                                            {viewer.is_ban ? "Banned" : "Active"}
                                         </Button>
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <Button
                                             variant="contained"
                                             color="error"
+                                            onClick={() => handle_ban_click(viewer)}
                                         >
-                                            {customer.status === "Ban"
-                                                ? "UnBan"
-                                                : "Ban"}
+                                            {viewer.is_ban ? "Unban" : "Ban"}
                                         </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
@@ -238,7 +214,7 @@ export default function Customer() {
                 </TableContainer>
                 <Stack spacing={2}>
                     <Pagination
-                        count={10}
+                        count={data.total_page}
                         color="primary"
                         onClick={handleMovePage}
                     />

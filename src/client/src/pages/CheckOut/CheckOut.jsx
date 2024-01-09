@@ -12,7 +12,6 @@ export function CheckOut() {
     const [is_paypal_loaded, setPaypalLoaded] = useState(false);
     const navigate = useNavigate();
     let { p_id } = useParams();
-    const [isLoading, setIsLoading] = useState(true)
     const [plan, setPlan] = useState({});
     // fetch plan info
     useEffect(() => {
@@ -21,7 +20,7 @@ export function CheckOut() {
             .then((res) => {
                 console.log(res.data[0]);
                 setPlan(res.data[0]);
-               
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.log(err);
@@ -35,7 +34,7 @@ export function CheckOut() {
     };
 
     const [message, setMessage] = useState("");
-   
+    const [isLoading, setIsLoading] = useState(true)
     if (isLoading) {
         return <Loading/> 
     }
@@ -154,10 +153,8 @@ export function CheckOut() {
                             onCancel={async (data, actions) => {
                                 toast.warning("Cancelled  Transaction");
                             }}
-                            
                             onInit={async (data, actions) => {
                                 setPaypalLoaded(true);
-                                setIsLoading(false)
                             }}
                         />
                     </PayPalScriptProvider>

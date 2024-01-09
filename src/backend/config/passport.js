@@ -49,7 +49,9 @@ module.exports = (app) => {
             try {
                 let acc = await AccountModel.get(profile.email);
                 if (acc) {
-                    done(null, acc);
+                    if (acc.type !== "admin"  && (await UserModel.get(acc.email)).is_ban) {
+                        done(null, false, "Account is banned");
+                    } else done(null, acc);
                 } else {
                     acc = new AccountInfo(profile.email, null, "free-viewer");
                     AccountModel.insert(acc);
@@ -69,7 +71,9 @@ module.exports = (app) => {
         try {
             const acc = await AccountModel.get(email);
             if (acc && bcrypt.compareSync(password, acc.password)) {
-                done(null, acc);
+                if (acc.type !== "admin" && (await UserModel.get(acc.email)).is_ban) {
+                    done(null, false, {message: "Account is banned"});
+                } else done(null, acc);
             } else {
                 done(null, false, {message: "Invalid email or password"});
             }

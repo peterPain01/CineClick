@@ -29,7 +29,6 @@ export function Profiles() {
             setIsLoading(false);
         });
     }, []);
-
     if (isLoading) {
         return <Loading />;
     }
