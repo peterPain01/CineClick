@@ -48,7 +48,7 @@ export default function Recover() {
                     "Content-Type": "application/json"
                 }
             })
-            .then((response) => {   
+            .then((response) => {
                 if(response.status === 200){
                     toast.success(response.data); 
                 }

@@ -104,7 +104,7 @@ module.exports = {
                 var secret = acc.password + "-" + acc.email;
                 var token = jwt.encode(payload, secret);
 
-                const encodedEmail = btoa(email); 
+                const encodedEmail = btoa(email);
                 const encodedToken = btoa(token);
                 let resetPasswordLink = `http://localhost:5173/reset-password/${encodedEmail}/${encodedToken}`;
                 // const shortenLink = await Utils.shortenLink(

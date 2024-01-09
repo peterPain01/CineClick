@@ -6,7 +6,7 @@ module.exports = {
     MOVIES_FOLDER,
     MovieInfo: class {
         constructor(obj) {
-            if (obj.id !== undefined && !isNumber(obj.id)) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
+            if (obj.id !== undefined) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
             this.id = obj.id;
             this.title = obj.title || "";
             this.release = obj.release;
@@ -38,10 +38,6 @@ module.exports = {
     },
 
     async get(id) {
-        id = Number(id);
-        if (id === undefined || id === null || !isNumber(id)) {
-            throw new Error(`[Movie get error] Invalid id ${id}`);
-        }
         const result = await db.get("Movie", `id = ${id}`);
         if (result == null) return null;
         return result;

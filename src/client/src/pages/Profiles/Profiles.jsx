@@ -15,13 +15,13 @@ export function Profiles() {
     const languageDropDown = useRef(null);
     const [isLoading, setIsLoading] = useState(true)
     
-    // Get name and avatar 
+    // Get Balance 
     useEffect(() => { 
         
     }, [])
     setTimeout(() => { 
         setIsLoading(false)
-    }, 100)
+    }, 1000)
     if (isLoading) {
         return <Loading/>
     }
