@@ -11,7 +11,7 @@
 .payment-card {
     display: flex;
     width: 500px;
-    height: calc(550px + 0.3vw);
+    height: 600px;
     background-color: #fff;
     flex-direction: column;
     align-items: center;

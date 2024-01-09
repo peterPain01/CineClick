@@ -11,9 +11,10 @@ create table "UserInfo"(
     email varchar(512) not null,
     name varchar(512),
     avatar varchar(2048),
+    age integer,
+    is_ban boolean,
     primary key(email),
     foreign key(email) references "Account"(email)
-
 );
 
 create table "PremiumInfo"(

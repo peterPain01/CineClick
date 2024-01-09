@@ -6,7 +6,7 @@ module.exports = {
     MOVIES_FOLDER,
     MovieInfo: class {
         constructor(obj) {
-            if (obj.id !== undefined && !isNumber(obj.id)) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
+            if (obj.id !== undefined) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
             this.id = obj.id;
             this.title = obj.title || "";
             this.release = obj.release;
@@ -38,12 +38,8 @@ module.exports = {
     },
 
     async get(id) {
-        id = Number(id);
-        if (id === undefined || id === null || !isNumber(id)) {
-            throw new Error(`[Movie get error] Invalid id ${id}`);
-        }
         const result = await db.get("Movie", `id = ${id}`);
-        if (result == null) return null;
+        result.genres = await this.list_genres(result.id);
         return result;
     },
 
@@ -152,6 +148,11 @@ WHERE mvg.mv_id = ${mv_id}
                 });
             }
         }
+        return result;
+    },
+    async get_first() {
+        const result = await db.proc("one", `SELECT * FROM "Movie" ORDER BY id ASC LIMIT 1`);
+        result.genres = await this.list_genres(result.id);
         return result;
     }
 }

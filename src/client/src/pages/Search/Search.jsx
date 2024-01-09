@@ -10,6 +10,9 @@ import {
 import styles from "./Search.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 import Loading from "../../components/Loading";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { faDotCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Search() {
     const pattern = new URLSearchParams(useLocation().search).get("pattern");
@@ -28,8 +31,6 @@ export function Search() {
     const [isLoading, setIsLoading] = useState(true)
 
     function search() {
-        setIsLoading(true)
-        console.log(params.current);
         const url = new URL(request.baseURL + "movie/search");
         url.search = new URLSearchParams({
             ...params.current,

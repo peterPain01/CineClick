@@ -106,7 +106,7 @@ module.exports = {
         let conn = null;
         try {
             conn = await cineclick_db.connect();
-            return await conn.proc(name, args);
+            return await conn[name](args);
         } catch (err) {
             throw err;
         } finally {

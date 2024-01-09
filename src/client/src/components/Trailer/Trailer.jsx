@@ -1,25 +1,33 @@
 import styles from "./Trailer.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import ActionButton from "../ActionButton/ActionButton";
 import { Link } from "react-router-dom";
+import request from "../../modules/request";
 
-function Trailer({ setOpenModal }) {
+function Trailer({ setOpenModal = () => {}, setPopupMovie = () => {} }) {
     // set Title of Trailer here
     // const [trailerId, setTrailerId] = useState("");
     // const [trailerTitle, setTrailerTitle] = useState("Lord of the Rings");
     const imageThumb = useRef(null);
+    const [movie, setMovie] = useState({});
+    useEffect(() => {
+        request.get("movie/daily-movie", res => {
+            setMovie(res.data);
+            console.log(res.data);
+        });
+    }, []);
 
     return (
         <>
-            <div className={styles.Trailer}>
+            {movie !== null ? <div className={styles.Trailer}>
                 <div>
                     <img
                         className={styles.imageThumb}
                         id="imageThumbnail"
-                        src="./img/Thumbnail.jpg"
+                        src={movie.thumbnail}
                         alt=""
                         ref={imageThumb}
                     />
@@ -27,19 +35,16 @@ function Trailer({ setOpenModal }) {
 
                 <div className={styles.action}>
                     <div>
-                        <img
-                            className={styles.movieThumb}
-                            src="./img/trailerthumb.png"
-                            alt=""
-                        />
-                        <p className={styles.trailerDesc}>
-                            World-renowned detective Benoit Blanc travels to
-                            Greece to investigate a mystery surrounding a tech
-                            billionaire and his unlikely group of friends.
+                        <h1
+                            className={styles.movieThumb}>
+                            {movie.title}
+                        </h1>
+k                       <p className={styles.trailerDesc}>
+                            {movie.summary}
                         </p>
                     </div>
 
-                    <Link to="/watch/1/spider" className={styles.playBtnBox}>
+                    <Link to={`/watch/${movie.id}/${movie.title}`} className={styles.playBtnBox}>
                         <ActionButton
                             text="Play"
                             icon={
@@ -73,13 +78,16 @@ function Trailer({ setOpenModal }) {
                             gap="8px"
                             paddingTopBot="12px"
                             paddingLeftRight="25px"
-                            handleOpenState={setOpenModal}
+                            handleOpenState={() => {
+                                setPopupMovie(movie);
+                                setOpenModal(true);
+                            }}
                             marginLeft="20px"
 
                         />
                     </div>
                 </div>
-            </div>
+            </div> : null}
         </>
     );
 }

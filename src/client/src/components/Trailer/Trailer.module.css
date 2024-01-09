@@ -27,6 +27,8 @@
 .movieThumb {
     width: 100%;
     object-fit: contain;
+    color: white;
+    text-align: center;
 }
 
 .trailerDesc {

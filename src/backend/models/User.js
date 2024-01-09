@@ -1,18 +1,21 @@
 const db = require("../modules/Database");
 const MovieModel = require("../models/Movie");
+const Account = require("./Account");
 module.exports = {
     UserInfo: class {
-        constructor(email, name, avatar) {
+        constructor(email, name, avatar, age = 0, is_ban = false) {
             this.email = email;
             this.name = name;
             this.avatar = avatar;
+            this.age = age;
+            this.is_ban = is_ban;
         }
     },
     async get(email) {
         let result = await db.get("UserInfo", `email = '${email}'`);
-        const {name, avatar} = result;
+        const {name, avatar, age, is_ban} = result;
         if (result == null) return null;
-        return new this.UserInfo(email, name, avatar);
+        return new this.UserInfo(email, name, avatar, age, is_ban);
     },
     async insert(user_info) {
         if (!(user_info instanceof this.UserInfo)) {
@@ -32,19 +35,13 @@ module.exports = {
         } else await db.exec(`DELETE FROM "MovieFavorite" WHERE email = '${email}' AND movie = ${movie}`);
     },
     async list_fav(email) {
-       try{
         const result = await db.exec(`SELECT mv.* FROM "MovieFavorite" mf JOIN "Movie" mv ON mf.movie = mv.id WHERE mf.email = '${email}'`);
         const promises = result.map(async x => {
             return {...x, genres: await MovieModel.list_genres(x.id)};
         });
         const temp = await Promise.all(promises);
         return temp;
-       }
-       catch(err){
-        throw err
-       }
     },
-
     async getAllAvatar(){
         try{
             const res = await db.all("avatar")
@@ -64,5 +61,20 @@ module.exports = {
         catch(err){
             throw err
         }
+    },
+    async list_users_with_type() {
+        const promises = (await db.all("UserInfo")).map(async x => {
+            return {
+                ...x,
+                type: (await Account.get(x.email)).type,
+            }
+        });
+        return await Promise.all(promises);
+    },
+    async ban(email) {
+        await db.exec(`UPDATE "UserInfo" SET is_ban = true WHERE email = '${email}'`);
+    },
+    async unban(email) {
+        await db.exec(`UPDATE "UserInfo" SET is_ban = false WHERE email = '${email}'`);
     }
 };
