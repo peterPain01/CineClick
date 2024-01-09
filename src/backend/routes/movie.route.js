@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
 const MovieModel = require("../models/Movie");
+const MovieController = require("../controllers/movie");
 
 router.get("/list-all", async (req, res) => {
     const genres = req.query.genres !== "" ? req.query.genres?.split(",")?.map(x => x.trim()) : [];
@@ -58,11 +61,48 @@ router.get("/search", async (req, res) => {
 router.get("/daily-movie", async (req, res, next) => {
     try {
         const result = await MovieModel.get_first();
-        result.thumbnail = "https://reelsteelsheffield.files.wordpress.com/2020/01/hmc-01.jpg"
         res.status(200).setHeader("Content-Type", "application/json").send(result);
     } catch(err) {
         next(err);
     }
 });
+router.get("/trailer/:file_name", (req, res, next) => {
+    console.log(req.path);
+    const {file_name} = req.params;
+    var range = req.headers.range // bytes=0-1
+    const file_path = path.join(__dirname, "..", "resources", "trailers", file_name);
+    const data = fs.readFileSync(file_path);
+    if (!range) {
+        res.writeHead(200, {
+            "Content-Type": "application/x-mpegURL",
+            "X-UA-Compatible": "IE=edge;chrome=1",
+            'Content-Length': data.length
+        });
+        res.end(data)
+    } else {
+        var total = data.length,
+            split = range.split(/[-=]/),
+            ini = +split[1],
+            end = split[2]?+split[2]:total-1,
+            chunkSize = end - ini + 1
+        res.writeHead(206, { 
+            "Content-Range": "bytes " + ini + "-" + end + "/" + total, 
+            "Accept-Ranges": "bytes",
+            "Content-Length": chunkSize,
+            "Content-Type": "application/x-mpegURL",
+        })
+        res.end(data.slice(ini, chunkSize+ini))
+    }
+});
+// router.get("/trailer/:file_name", (req, res, next) => {
+//     const {file_name} = req.params;
+//     console.log(file_name);
+//     const file_path = path.join("resources", "trailers", file_name);
+//     if (fs.existsSync(file_path)) {
+//         MovieController.stream(file_path, res);
+//     } else {
+//         res.status(404).send("File not found");
+//     }
+// });
 
 module.exports = router;

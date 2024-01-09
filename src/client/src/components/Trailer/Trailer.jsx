@@ -12,6 +12,7 @@ function Trailer({ setOpenModal = () => {}, setPopupMovie = () => {} }) {
     useEffect(() => {
         request.get("movie/daily-movie", res => {
             setMovie(res.data);
+            console.log(res.data);
         });
     }, []);
     const [showVideo, setShowVideo] = useState(false);
@@ -23,6 +24,7 @@ function Trailer({ setOpenModal = () => {}, setPopupMovie = () => {} }) {
     }
 
     function handleMouseEnterImageThumb() {
+        if (!movie?.trailer) return;
         let timeVideo = setTimeout(autoStart, 2000);
     }
 
@@ -61,7 +63,7 @@ function Trailer({ setOpenModal = () => {}, setPopupMovie = () => {} }) {
                         ref={video}
                         onMouseOut={handleMouseLeaveVideo}
                         className={styles.video}
-                        src="./trailer.mp4"
+                        src={movie.trailer}
                         autoPlay
                         muted
                     ></video>
@@ -73,7 +75,7 @@ function Trailer({ setOpenModal = () => {}, setPopupMovie = () => {} }) {
                             className={styles.movieThumb}>
                             {movie.title}
                         </h1>
-k                       <p className={styles.trailerDesc}>
+                        <p className={styles.trailerDesc}>
                             {movie.summary}
                         </p>
                     </div>

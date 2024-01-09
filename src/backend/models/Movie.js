@@ -6,7 +6,6 @@ module.exports = {
     MOVIES_FOLDER,
     MovieInfo: class {
         constructor(obj) {
-            if (obj.id !== undefined) throw new Error(`MovieInfo: ${obj.id} is not a valid id`);
             this.id = obj.id;
             this.title = obj.title || "";
             this.release = obj.release;
@@ -19,6 +18,8 @@ module.exports = {
             this.length = obj.length;
             this.restrict_age = obj.restrict_age;
             this.year = obj.year;
+            this.thumbnail = obj.thumbnail;
+            this.trailer = obj.trailer;
         }
     },
     get_folder(id) {
@@ -39,15 +40,17 @@ module.exports = {
 
     async get(id) {
         const result = await db.get("Movie", `id = ${id}`);
-        result.genres = await this.list_genres(result.id);
-        return result;
+        if (result == null) return null;
+        const movie = new this.MovieInfo(result);
+        movie.genres = await this.list_genres(result.id);
+        return movie;
     },
 
     // NOTE: type and genre are optional
     async list_movie_append_genres(condition) {
         let result = (await db.find("Movie", condition)).map(async mv => {
             return {
-                ...mv,
+                ...new this.MovieInfo(mv),
                 genres: (await this.list_genres(mv.id)),
             };
         });
@@ -81,7 +84,7 @@ SELECT mv.*
 FROM "Movie" mv JOIN "MovieSimilar" mvs ON mvs.similar_id = mv.id
 WHERE mvs.mv_id = ${mv_id}`)).map(async mv => {
                 return {
-                    ...mv,
+                    ...new this.MovieInfo(mv),
                     genres: (await this.list_genres(mv.id)),
                 };
             });
@@ -152,8 +155,10 @@ WHERE mvg.mv_id = ${mv_id}
     },
     async get_first() {
         const result = await db.proc("one", `SELECT * FROM "Movie" ORDER BY id ASC LIMIT 1`);
-        result.genres = await this.list_genres(result.id);
-        return result;
+        if (result == null) return null;
+        const mv = new this.MovieInfo(result);
+        mv.genres = await this.list_genres(result.id);
+        return mv;
     }
 }
 

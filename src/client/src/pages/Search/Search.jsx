@@ -2,11 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import request from "../../modules/request";
 import { ListMovie } from "../../components/ListMovie/ListMovie";
 import { useLocation } from "react-router-dom";
-import ActionButton from "../../components/ActionButton/ActionButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faDotCircle
-} from "@fortawesome/free-solid-svg-icons";
 import styles from "./Search.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 import Loading from "../../components/Loading";
