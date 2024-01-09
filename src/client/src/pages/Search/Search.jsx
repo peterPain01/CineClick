@@ -10,9 +10,6 @@ import {
 import styles from "./Search.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 import Loading from "../../components/Loading";
-import ActionButton from "../../components/ActionButton/ActionButton";
-import { faDotCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Search() {
     const pattern = new URLSearchParams(useLocation().search).get("pattern");

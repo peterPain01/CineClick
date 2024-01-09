@@ -142,3 +142,14 @@ INSERT INTO avatar (src) VALUES
     ('https://source.boringavatars.com/beam/160/Phillis%20Wheatley'),
     ('https://source.boringavatars.com/beam/160/Carrie%20Chapman'),
     ('https://source.boringavatars.com/beam/160/Grace%20Hopper');
+
+
+-- review table 
+CREATE TABLE IF NOT EXISTS reviewmovie (
+    email varchar(512) not null,
+    mv_id bigint not null,
+    review varchar(1014) not null,
+    stars int ,
+    foreign key(email) references "UserInfo"(email),
+    foreign key(mv_id) references "Movie"(id)
+);
