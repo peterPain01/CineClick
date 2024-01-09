@@ -3,18 +3,18 @@ const bcrypt = require("bcrypt");
 const UserModel = require("../models/User");
 const saltround = 10;
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+
 const dotenv = require("dotenv");
-const fs = require("fs");
-const path = require("path");
+
 dotenv.config();
+
 const Utils = require("./Utils.js");
 var jwt = require("jwt-simple");
 
 module.exports = {
     async create(req, res, next) {
         const { email, password } = req.body;
-        console.log(`[INFO] Register api call with for, email`);
+        console.log("[INFO] Register api call with for, email");
         try {
             if (!email || !password) {
                 res.status(400).send("Missing one of password/email");
@@ -32,6 +32,7 @@ module.exports = {
                 await UserModel.insert(
                     new UserModel.UserInfo(email, null, null)
                 );
+                // payment
                 res.status(200).send("OK");
             }
         } catch (err) {
@@ -39,43 +40,17 @@ module.exports = {
         }
     },
 
-    async sendMailActive(req, res, next) {
-        const { email } = req.body;
-
+    async getAllAvatar(req, res, next) {
         try {
-            const acc = await AccountModel.get(email);
-            if (acc) {
-                var payload = {
-                    email: email,
-                };
-                var secret = acc.password + "-" + acc.email;
-                var token = jwt.encode(payload, secret);
-
-                const encodedEmail = encodeURIComponent(email);
-                const encodedToken = encodeURIComponent(token);
-                let resetPasswordLink =  `http://127.0.0.1:5173/reset-password/${encodedEmail}/${encodedToken}`
-                const shortenLink = await Utils.shortenLink(
-                    resetPasswordLink,
-                    process.env.BITLY
-                )
-                resetPasswordLink = shortenLink
-                // TODO change hard url to .env
-                const info = await sendEmail(
-                    email,
-                    "Reset Password",
-                    resetPasswordLink
-                );
-                res.status(200).send(
-                    "Check your email for instructions to reset your password."
-                );
-            } else {
-                res.status(404).send("Email not found");
+            const data = await UserModel.getAllAvatar();
+            if (!data) {
+                res.status(500).send("Internal Server, please try again");
             }
+            res.status(200).send(data);
         } catch (err) {
             next(err);
         }
     },
-
     async resetPassword(req, res, next) {
         const { email, token, password } = req.body;
         if (!password || typeof password !== "string") {
@@ -108,39 +83,103 @@ module.exports = {
             next(err);
         }
     },
-};
 
-async function sendEmail(to, subject, resetPasswordLink) {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
-    let htmlTemplate = "";
-    const filePath = path.join(__dirname, "../views/recoverMail.html");
-    try {
-        htmlTemplate = fs.readFileSync(filePath, "utf8");
-    } catch (err) {
-        console.error("Read html err:", err.message);
-    }
-
-    const formattedHTML = htmlTemplate.replace(
-        /{resetPasswordLink}/g,
-        resetPasswordLink
-    );
-    const mailOptions = {
-        from: process.env.EMAIL_USERNAME,
-        to: to,
-        subject: subject,
-        html: formattedHTML,
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            throw error;
-        } else {
-            return info.response;
+    async getUserInfo(req, res, next) {
+        const email = req.user.email;
+        try {
+            if (!email) {
+                res.status(400).send(
+                    "Can't detect your email, please try again"
+                );
+            } else {
+                const userInfo = await UserModel.get(email);
+                if (!userInfo)
+                    res.status(400).send("User not found in Database");
+                else {
+                    res.status(200).send(
+                        new UserModel.UserInfo(
+                            userInfo.email,
+                            userInfo.name,
+                            userInfo.avatar
+                        )
+                    );
+                }
+            }
+        } catch (err) {
+            next(err);
         }
-    });
-}
+    },
+
+    async getAccountInfo(req, res, next) {
+        const email = req.user.email;
+        try {
+            if (!email) {
+                res.status(400).send(
+                    "Can't detect your email, please try again"
+                );
+            } else {
+                const info = await AccountModel.get(email);
+                if (!info) res.status(400).send("Email not found in Database");
+                else {
+                    const type = info.type;
+                    res.status(200).send({ email, type });
+                }
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async changeUserInfo(req, res, next) {
+        const email = req.user.email;
+        const { name, avatar } = req.body;
+        if(!email){
+            res.status(400).send("Not Found your email, Please try again")
+        }
+        try {
+            const data = await UserModel.changeUserInfo(email, name, avatar);
+            if(!data){
+                res.status(500).send("Internal Server, Please try again")
+            }
+            res.status(200).send("Change Your Info Successful")
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async sendMailActive(req, res, next) {
+        const { email } = req.body;
+
+        try {
+            const acc = await AccountModel.get(email);
+            if (acc) {
+                var payload = {
+                    email: email,
+                };
+                var secret = acc.password + "-" + acc.email;
+                var token = jwt.encode(payload, secret);
+
+                const encodedEmail = btoa(email);
+                const encodedToken = btoa(token);
+                let resetPasswordLink = `http://localhost:5173/reset-password/${encodedEmail}/${encodedToken}`
+                // const shortenLink = await Utils.shortenLink(
+                //     resetPasswordLink,
+                //     process.env.BITLY
+                // )
+                // resetPasswordLink = shortenLink
+                const info = await Utils.sendEmail(
+                    email,
+                    "Reset Password",
+                    resetPasswordLink
+                );
+                res.status(200).send(
+                    "Check your email for instructions to reset your password."
+                );
+            } else {
+                res.status(404).send("Email not found");
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+};

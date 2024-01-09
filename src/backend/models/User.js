@@ -1,4 +1,5 @@
 const db = require("../modules/Database");
+const MovieModel = require("../models/Movie");
 module.exports = {
     UserInfo: class {
         constructor(email, name, avatar) {
@@ -19,4 +20,49 @@ module.exports = {
         }
         await db.helper_insert("UserInfo", user_info);
     },
+    async is_fav(email, movie) {
+        const res = await db.get("MovieFavorite", `email = '${email}' AND movie = ${movie}`);
+        return res != null;
+    },
+    async set_fav(email, movie, fav) {
+        if (fav.toLowerCase() === "true") {
+            if (!(await this.is_fav(email, movie))) {
+                await db.helper_insert("MovieFavorite", {email, movie});
+            }
+        } else await db.exec(`DELETE FROM "MovieFavorite" WHERE email = '${email}' AND movie = ${movie}`);
+    },
+    async list_fav(email) {
+       try{
+        const result = await db.exec(`SELECT mv.* FROM "MovieFavorite" mf JOIN "Movie" mv ON mf.movie = mv.id WHERE mf.email = '${email}'`);
+        const promises = result.map(async x => {
+            return {...x, genres: await MovieModel.list_genres(x.id)};
+        });
+        const temp = await Promise.all(promises);
+        return temp;
+       }
+       catch(err){
+        throw err
+       }
+    },
+
+    async getAllAvatar(){
+        try{
+            const res = await db.all("avatar")
+            return res
+        }
+        catch(err)
+        {
+            throw(err)
+        }
+    },
+
+    async changeUserInfo(email, name, avatar){
+        try{ 
+            const data = await db.update("UserInfo",`email = '${email}'`, `avatar = '${avatar}', name = '${name}'`)
+            return data
+        }
+        catch(err){
+            throw err
+        }
+    }
 };
