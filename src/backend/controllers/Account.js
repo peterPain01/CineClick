@@ -4,9 +4,11 @@ const UserModel = require("../models/User");
 const saltround = 10;
 const crypto = require("crypto");
 
+
 const dotenv = require("dotenv");
 
 dotenv.config();
+
 
 const Utils = require("./Utils.js");
 var jwt = require("jwt-simple");
@@ -14,7 +16,7 @@ var jwt = require("jwt-simple");
 module.exports = {
     async create(req, res, next) {
         const { email, password } = req.body;
-        console.log(`[INFO] Register api call with for, email`);
+        console.log("[INFO] Register api call with for, email");
         try {
             if (!email || !password) {
                 res.status(400).send("Missing one of password/email");
