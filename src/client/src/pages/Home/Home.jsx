@@ -109,7 +109,7 @@ export function Home() {
         <>
             <Navbar logoOnly={false} avatar_src={info.avatar}></Navbar>
             <div ref={homeDiv} className={styles.home}>
-                <Trailer setOpenModal={setOpenModal} />
+                <Trailer setOpenModal={setOpenModal} setPopupMovie={setPopupMovie} />
                 {shouldRenderChild ? (
                     <DetailPopup
                         style={openModal ? mountedStyle : unmountedStyle}
@@ -121,23 +121,20 @@ export function Home() {
                 ) : (
                     ""
                 )}
-                {genres.map((item, index) => {
-                    return (
-                        <MovieCarousel
-                            key={index}
-                            carouselClass={"carousel-" + item.toLowerCase()}
-                            wrapperClass={"wrapper-" + item.toLowerCase()}
-                            heading={item}
-                            marginTop={index === 0 ? -50 : 50}
-                            items={genreList[item].data}
-                            openMovieBox={openMovieBox}
-                            setMovieCard={setMovieCard}
-                            setOpenModal={setOpenModal}
-                            setPopupMovie={setPopupMovie}
-                        />
-                    );
-                })}
-
+                {genres.map((item, index) =>
+                    <MovieCarousel
+                    key={index}
+                    carouselClass={"carousel-" + item.toLowerCase()}
+                    wrapperClass={"wrapper-" + item.toLowerCase()}
+                    heading={item}
+                    marginTop={index === 0 ? -50 : 50}
+                    items={genreList[item].data}
+                    openMovieBox={openMovieBox}
+                    setMovieCard={setMovieCard}
+                    setOpenModal={setOpenModal}
+                    setPopupMovie={setPopupMovie}
+                    />
+                )}
                 <div
                     ref={openMovieBox}
                     className={styles.boxMovieHover}

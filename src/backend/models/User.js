@@ -61,7 +61,7 @@ module.exports = {
         catch(err){
             throw err
         }
-    }
+    },
     async list_users_with_type() {
         const promises = (await db.all("UserInfo")).map(async x => {
             return {

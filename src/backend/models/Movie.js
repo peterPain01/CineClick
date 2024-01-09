@@ -39,7 +39,7 @@ module.exports = {
 
     async get(id) {
         const result = await db.get("Movie", `id = ${id}`);
-        if (result == null) return null;
+        result.genres = await this.list_genres(result.id);
         return result;
     },
 
@@ -148,6 +148,11 @@ WHERE mvg.mv_id = ${mv_id}
                 });
             }
         }
+        return result;
+    },
+    async get_first() {
+        const result = await db.proc("one", `SELECT * FROM "Movie" ORDER BY id ASC LIMIT 1`);
+        result.genres = await this.list_genres(result.id);
         return result;
     }
 }
