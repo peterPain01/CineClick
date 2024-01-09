@@ -32,12 +32,16 @@ module.exports = {
         } else await db.exec(`DELETE FROM "MovieFavorite" WHERE email = '${email}' AND movie = ${movie}`);
     },
     async list_fav(email) {
+       try{
         const result = await db.exec(`SELECT mv.* FROM "MovieFavorite" mf JOIN "Movie" mv ON mf.movie = mv.id WHERE mf.email = '${email}'`);
         const promises = result.map(async x => {
             return {...x, genres: await MovieModel.list_genres(x.id)};
         });
         const temp = await Promise.all(promises);
-        console.log(temp[0].genres);
         return temp;
+       }
+       catch(err){
+        throw err
+       }
     },
 };

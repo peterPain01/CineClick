@@ -61,7 +61,7 @@ export function Home() {
         genres.forEach((genre) => {
             url.search = new URLSearchParams({ genres: genre, length: 20 });
             request
-                .get(url, res =>  {
+                .get("movie/list-all", res =>  {
                     if (res.status === 200) {
                         genreList[genre].set(res.data);
                         setIsLoading(false);
