@@ -143,7 +143,8 @@ export function Account() {
                                                     onChange={(e) => {
                                                         set_valid_password(PWD_REGEX.test(e.currentTarget.value.trim()));
                                                     }}
-                                                    type="password"/>
+                                                    type="password"
+                                                    name="password"/>
                                 }</span>
                                 {valid_password ? "" :
                                     <span style={{color: "red", marginTop: "-20px", paddingTop: "0px"}}>

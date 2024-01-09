@@ -3,7 +3,9 @@ import styles from "./Watch.module.css";
 import { useEffect, useRef, useState } from "react";
 import request from "../../modules/request";
 import { useCookies } from "react-cookie";
-
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong, faStar } from "@fortawesome/free-solid-svg-icons";
 const play = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon-nfplayerPause ltr-4z3qvp e1svuwfo1" data-name="Pause" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 3C4.22386 3 4 3.22386 4 3.5V20.5C4 20.7761 4.22386 21 4.5 21H9.5C9.77614 21 10 20.7761 10 20.5V3.5C10 3.22386 9.77614 3 9.5 3H4.5ZM14.5 3C14.2239 3 14 3.22386 14 3.5V20.5C14 20.7761 14.2239 21 14.5 21H19.5C19.7761 21 20 20.7761 20 20.5V3.5C20 3.22386 19.7761 3 19.5 3H14.5Z" fill="#fff"></path></svg>`;
 const pause = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon-nfplayerPlay ltr-4z3qvp e1svuwfo1" data-name="Play" aria-hidden="true"> <path d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z" fill="#fff" ></path></svg>`;
 const sound = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,9 +26,10 @@ const forwardIcon =
 // TODO Active playBackRate
 
 export default function Watch() {
+    const navigate = useNavigate()
     //TODO Use movie id get from url that to fetch video from server
     const { id, name: movieName } = useParams();
-    const [activeRate, setActiveRate] = useState('1.0')
+    const [activeRate, setActiveRate] = useState("1.0");
     const [isFullScreen, setFullScreen] = useState(false);
     const [showControl, setShowControl] = useState(true);
     const controlTimeout = useRef(null);
@@ -45,7 +48,8 @@ export default function Watch() {
     const [can_watch, set_can_watch] = useState(false);
     useEffect(() => {
         if (playButton.current) playButton.current.innerHTML = play;
-        if (soundButton.current) soundButton.current.innerHTML = video.current.muted ? mute : sound;
+        if (soundButton.current)
+            soundButton.current.innerHTML = video.current.muted ? mute : sound;
         if (speedButton.current) speedButton.current.innerHTML = speed;
         if (backward.current) backward.current.innerHTML = backwardIcon;
         if (forward.current) forward.current.innerHTML = forwardIcon;
@@ -53,7 +57,7 @@ export default function Watch() {
 
     useEffect(() => {
         // Call API here /watch/idMovie
-        request.get(`viewer/can-watch?mv_id=${id}`, res => {
+        request.get(`viewer/can-watch?mv_id=${id}`, (res) => {
             set_can_watch(res.data);
         });
     }, []);
@@ -65,7 +69,9 @@ export default function Watch() {
             },
         });
         try {
-            hls.loadSource(`http://localhost:13123/viewer/watch/${id}/part.m3u8`);
+            hls.loadSource(
+                `http://localhost:13123/viewer/watch/${id}/part.m3u8`
+            );
             hls.on(Hls.Events.ERROR, function (event, data) {
                 var errorType = data.type;
                 var errorDetails = data.details;
@@ -73,7 +79,8 @@ export default function Watch() {
                 switch (errorType) {
                     case Hls.ErrorTypes.NETWORK_ERROR:
                         if (data?.response?.code === 401) {
-                            const [cookies, setCookie, removeCookie] = useCookies(['login']);
+                            const [cookies, setCookie, removeCookie] =
+                                useCookies(["login"]);
                             removeCookie("login");
                             window.open("/login", "_self");
                         }
@@ -87,10 +94,10 @@ export default function Watch() {
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
                 video.current.play();
             });
-        } catch(err) {
+        } catch (err) {
             console.log(err);
         }
-    }, [can_watch, video.current])
+    }, [can_watch, video.current]);
 
     function handlePlayBtn() {
         if (video.current.paused) {
@@ -187,166 +194,236 @@ export default function Watch() {
         }
     }
 
+    function handleBacktoHomePage(){
+        navigate('/')
+    }
     return (
-        <>{ can_watch ?
-        <div
-            onMouseEnter={() => {
-                if (controlContainer.current) controlContainer.current.style.opacity = 1;
-            }}
-            className={styles.videoPlayer}
-            ref={videoContainer}
-        >
-            { !isFullScreen || showControl ? <span
-                style={{
-                    position: "absolute",
-                    bottom: "10px",
-                    fontSize: "20px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    color: "#f00",
-                }}
-            >
-                {movieName}
-            </span> : null}
-            <video
-                style={isFullScreen && !showControl ? {cursor: "none"} : {}}
-                onMouseMove={handleVideoMouseMove}
-                onTimeUpdate={handleTimeUpdate}
-                ref={video}
-                src="/testing.mp4"
-                className={styles.video}
-                muted
-                onEnded={handleVidEnded}
-            ></video>
-            { !isFullScreen || showControl ?
-            <div className={styles.controls} ref={controlContainer}>
-                <button
-                    ref={playButton}
-                    onClick={() => handlePlayBtn()}
-                    className={styles.playButton + " " + styles.controlButton}
-                ></button>
-                <button
-                    className={
-                        styles.controlButton + " " + styles.backwardButton
-                    }
-                    ref={backward}
-                    onClick={handleBackward}
+        <>
+            {can_watch ? (
+                <div
+                    onMouseEnter={() => {
+                        if (controlContainer.current)
+                            controlContainer.current.style.opacity = 1;
+                    }}
+                    className={styles.videoPlayer}
+                    ref={videoContainer}
                 >
-                    Backward
-                </button>
-                <button
-                    className={
-                        styles.controlButton + " " + styles.forwardButton
-                    }
-                    ref={forward}
-                    onClick={handleForward}
-                >
-                    Forward
-                </button>
-                <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    ref={timeline}
-                    style={{cursor: "pointer"}}
-                    className={styles.timeline}
-                    value={"0"}
-                    onChange={handleChangeTimeLine}
-                />
-                <div className={styles.speedContainer}>
-                    <div className={styles.speedOption}>
-                        <div
-                            className={styles.OptionItem + (activeRate === "0.25" ? " " + styles.OptionItemActive : "")}
-                            onClick={(e) => handlePlayBackRate(e)}
-                            id="0.25"
+                    {!isFullScreen || showControl ? (
+                        <span
+                            style={{
+                                position: "absolute",
+                                bottom: "10px",
+                                fontSize: "20px",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                color: "#f00",
+                            }}
                         >
-                            <span>0.25x</span>
-                            <button></button>
-                        </div>
-                        <div
-                            className={styles.OptionItem + (activeRate === "0.5" ? " " + styles.OptionItemActive : "")}
-                            id="0.5"
-                            onClick={(e) => handlePlayBackRate(e)}
-                        >
-                            <span>0.5x</span>
-                            <button></button>
-                        </div>
-                        <div
-                            className={styles.OptionItem + (activeRate === "1.0" ? " " + styles.OptionItemActive : "")}
-                            id="1.0"
-                            onClick={(e) => handlePlayBackRate(e)}
-                        >
-                            <span>1x</span>
-                            <button></button>
-                        </div>
-                        <div
-                            className={styles.OptionItem + (activeRate === "1.25" ? " " + styles.OptionItemActive : "")}
-                            id="1.25"
-                            onClick={(e) => handlePlayBackRate(e)}
-                        >
-                            <span>1.25x</span>
-                            <button></button>
-                        </div>
-                        <div
-                            className={styles.OptionItem + (activeRate === "1.5" ? " " + styles.OptionItemActive : "")}
-                            id="1.5"
-                            onClick={(e) => handlePlayBackRate(e)}
-                        >
-                            <span>1.5x</span>
-                            <button></button>
-                        </div>
-                        <div
-                            className={styles.OptionItem + (activeRate === "1.75" ? " " + styles.OptionItemActive : "")}
-                            id="1.75"
-                            onClick={(e) => handlePlayBackRate(e)}
-                        >
-                            <span>1.75x</span>
-                            <button></button>
-                        </div>
+                            {movieName}
+                        </span>
+                    ) : null}
+                     {!isFullScreen || showControl ? (
+                    <div className={styles.headControl}>
+                        <FontAwesomeIcon icon={faArrowLeftLong} size="2xl" className={styles.headControl_back} onClick={handleBacktoHomePage}/>
+                        <FontAwesomeIcon icon={faStar} size="2xl" className={styles.headControl_flag}/>
                     </div>
-                    <button
-                        className={
-                            styles.controlButton + " " + styles.speedButton
+                      ) : null}
+                    <video
+                        style={
+                            isFullScreen && !showControl
+                                ? { cursor: "none" }
+                                : {}
                         }
-                        ref={speedButton}
-                    ></button>
+                        onMouseMove={handleVideoMouseMove}
+                        onTimeUpdate={handleTimeUpdate}
+                        ref={video}
+                        src="/testing.mp4"
+                        className={styles.video}
+                        muted
+                        onEnded={handleVidEnded}
+                    ></video>
+                    {!isFullScreen || showControl ? (
+                        <div className={styles.controls} ref={controlContainer}>
+                            <button
+                                ref={playButton}
+                                onClick={() => handlePlayBtn()}
+                                className={
+                                    styles.playButton +
+                                    " " +
+                                    styles.controlButton
+                                }
+                            ></button>
+                            <button
+                                className={
+                                    styles.controlButton +
+                                    " " +
+                                    styles.backwardButton
+                                }
+                                ref={backward}
+                                onClick={handleBackward}
+                            >
+                                Backward
+                            </button>
+                            <button
+                                className={
+                                    styles.controlButton +
+                                    " " +
+                                    styles.forwardButton
+                                }
+                                ref={forward}
+                                onClick={handleForward}
+                            >
+                                Forward
+                            </button>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                ref={timeline}
+                                style={{ cursor: "pointer" }}
+                                className={styles.timeline}
+                                value={"0"}
+                                onChange={handleChangeTimeLine}
+                            />
+                            <div className={styles.speedContainer}>
+                                <div className={styles.speedOption}>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "0.25"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                        id="0.25"
+                                    >
+                                        <span>0.25x</span>
+                                        <button></button>
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "0.5"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        id="0.5"
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                    >
+                                        <span>0.5x</span>
+                                        <button></button>
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "1.0"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        id="1.0"
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                    >
+                                        <span>1x</span>
+                                        <button></button>
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "1.25"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        id="1.25"
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                    >
+                                        <span>1.25x</span>
+                                        <button></button>
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "1.5"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        id="1.5"
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                    >
+                                        <span>1.5x</span>
+                                        <button></button>
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.OptionItem +
+                                            (activeRate === "1.75"
+                                                ? " " + styles.OptionItemActive
+                                                : "")
+                                        }
+                                        id="1.75"
+                                        onClick={(e) => handlePlayBackRate(e)}
+                                    >
+                                        <span>1.75x</span>
+                                        <button></button>
+                                    </div>
+                                </div>
+                                <button
+                                    className={
+                                        styles.controlButton +
+                                        " " +
+                                        styles.speedButton
+                                    }
+                                    ref={speedButton}
+                                ></button>
+                            </div>
+                            <button
+                                ref={soundButton}
+                                onClick={handleClickSoundButton}
+                                className={
+                                    styles.soundButton +
+                                    " " +
+                                    styles.controlButton
+                                }
+                            ></button>
+                            <button
+                                ref={fullscreenButton}
+                                onClick={handleClickFullScreen}
+                                className={
+                                    styles.controlButton +
+                                    " " +
+                                    styles.fullscreenButton
+                                }
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    ) : null}
                 </div>
-                <button
-                    ref={soundButton}
-                    onClick={handleClickSoundButton}
-                    className={styles.soundButton + " " + styles.controlButton}
-                ></button>
-                <button
-                    ref={fullscreenButton}
-                    onClick={handleClickFullScreen}
-                    className={
-                        styles.controlButton + " " + styles.fullscreenButton
-                    }
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+            ) : (
+                <div className={styles.upgrade_box}>
+                    <h1 style={{ marginBottom: "50px" }}>
+                        To watch this movie, please upgrade to premium
+                    </h1>
+                    <Link
+                        style={{ color: "white", textDecoration: "underline" }}
+                        to="/UpgradePlan"
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                        />
-                    </svg>
-                </button>
-            </div> :
-            null}
-        </div>
-            :
-        <div className={styles.upgrade_box}>
-            <h1 style={{marginBottom: "50px"}}>To watch this movie, please upgrade to premium</h1>
-            <Link style={{color: "white", textDecoration: "underline"}} to="/UpgradePlan">Go to upgrade</Link>
-        </div>
-        }
+                        Go to upgrade
+                    </Link>
+                </div>
+            )}
         </>
     );
 }

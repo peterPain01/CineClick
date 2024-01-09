@@ -10,13 +10,42 @@
     object-fit: cover;
 }
 
-.controls {
-    padding: 0px 30px;
+.headControl{ 
     display: flex;
     position: absolute;
     width: 100%;
-    bottom: 30px;
-    /* background: linear-gradient(to bottom, transparent, #000); */
+    top: 0px;
+    background: linear-gradient(to top, transparent, #00000056);
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 40px;
+}
+
+.headControl_back,.headControl_flag { 
+    cursor: pointer;
+    scale: 1;
+    transition: scale 0.3s, color 0.3s;
+    color: #ddd8d8;
+}
+
+.headControl_back:hover{ 
+    scale: 1.2;
+    color: #fff;
+}
+
+.headControl_flag:hover{ 
+    scale: 1.2;
+    color: #f00;
+}
+
+.controls {
+    padding: 30px 30px;
+    display: flex;
+    position: absolute;
+    width: 100%;
+    /* bottom: 30px; */
+    bottom: 0px;
+    background: linear-gradient(to bottom, transparent, #000);
     align-items: center;
     justify-content: space-between;
     gap: 20px;
@@ -90,7 +119,7 @@
 }
 
 .speedOption {
-    padding: 30px;
+    padding: 32px;
     border-radius: 12px;
     padding-top: 40px;
     gap: 60px;
