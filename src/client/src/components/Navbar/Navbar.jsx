@@ -278,7 +278,7 @@ function Navbar({ logoOnly = false, avatar_src= "" }) {
                                     className={styles.avatar}
                                     src={
                                         avatar_src ||
-                                        "https://source.boringavatars.com/beam/30/Mother%20Frances?square"
+                                        "/defaultAvt.svg"
                                     }
                                     alt=""
                                 />

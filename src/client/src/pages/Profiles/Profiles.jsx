@@ -70,7 +70,7 @@ export function Profiles() {
                         <img
                             src={
                                 info.avatar ||
-                                "https://source.boringavatars.com/beam/160/Mother%20Frances?square"
+                                "/defaultAvt.svg"
                             }
                             alt=""
                         />

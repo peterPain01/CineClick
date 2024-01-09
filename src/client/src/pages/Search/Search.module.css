@@ -11,6 +11,15 @@
     padding-top: 200px;
     min-width: 180px;
 }
+
+.filter_list {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.filter_list::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
 .filter_item {
     display: flex;
 }
