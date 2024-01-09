@@ -66,4 +66,8 @@ router.post("/change-pass", async (req, res, next) => {
 // Plan: premium or free 
 // các gói chia theo đăng ký dài hạn (càng lâu càng rẻ)
 router.get("/profile", AccountController.getAccountInfo)
+router.get("/userInfo", AccountController.getUserInfo)
+router.get("/allAvatar", AccountController.getAllAvatar)
+// update UserInfo (name, avatar)
+router.post('/userInfo', AccountController.changeUserInfo);
 module.exports = router;

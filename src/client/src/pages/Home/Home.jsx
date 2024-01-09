@@ -4,11 +4,10 @@ import styles from "./Home.module.css";
 import MovieCarousel from "../../components/MovieCarousel/MovieCarousel";
 import { useEffect, useRef, useState } from "react";
 import MovieCard from "../../components/MovieCard/MovieCard";
-import { useCookies } from "react-cookie"; 
+import { useCookies } from "react-cookie";
 import request from "../../modules/request";
-
-import Loading from "../../components/Loading"; 
-
+import Navbar from "../../components/Navbar/Navbar";
+import Loading from "../../components/Loading";
 
 function useDelayUnmount(isMounted, delayTime) {
     const [shouldRender, setShouldRender] = useState(false);
@@ -46,9 +45,40 @@ export function Home() {
             : "hidden";
     }, [openModal]);
 
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const url = new URL("http://localhost:13123/movie/list-all");
+        genres.forEach((genre) => {
+            url.search = new URLSearchParams({ genres: genre, length: 20 });
+            request.get(url, (res) => {
+                if (res.status === 200) {
+                    shuffleArray(res.data);
+                    genreList[genre].set(res.data);
+                    setIsLoading(false);
+                }
+            });
+        });
+    }, []);
+
+    const [info, setInfo] = useState({
+        name: "",
+        avatar: "",
+    });
+
+    useEffect(() => {
+        request.get(
+            "/viewer/userInfo",
+            (res) => {
+                setInfo((prevInfo) => ({ ...prevInfo, ...res.data }));
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    }, []);
+
     const genres = ["Action", "Comedy", "Drama"];
     let genreList = {};
-    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
     genres.forEach((genre) => {
         const [data, set] = useState([]);
         genreList[genre] = { data, set };
@@ -61,21 +91,6 @@ export function Home() {
             array[j] = temp;
         }
     }
-    const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
-        const url = new URL("http://localhost:13123/movie/list-all");
-        genres.forEach((genre) => {
-            url.search = new URLSearchParams({ genres: genre, length: 20 });
-            request
-                .get("movie/list-all", res =>  {
-                    if (res.status === 200) {
-                        shuffleArray(res.data);
-                        genreList[genre].set(res.data);
-                        setIsLoading(false);
-                    } 
-                })
-        });
-    }, []);
 
     const openMovieBox = useRef(null);
     const homeDiv = useRef(null);
@@ -86,53 +101,56 @@ export function Home() {
         openMovieBox.current.style.scale = 0;
     }
 
-    if (isLoading == true) {
+    if (isLoading) {
         return <Loading />;
     }
 
     return (
-        <div ref={homeDiv} className={styles.home}>
-            <Trailer setOpenModal={setOpenModal} />
-            {shouldRenderChild ? (
-                <DetailPopup
-                    style={openModal ? mountedStyle : unmountedStyle}
-                    setOpenModal={setOpenModal}
-                    openModal={openModal}
-                    info={popupMovie}
-                    setPopupMovie={setPopupMovie}
-                />
-            ) : (
-                ""
-            )}
-            {genres.map((item, index) => {
-                return (
-                    <MovieCarousel
-                        key={index}
-                        carouselClass={"carousel-" + item.toLowerCase()}
-                        wrapperClass={"wrapper-" + item.toLowerCase()}
-                        heading={item}
-                        marginTop={index === 0 ? -50 : 50}
-                        items={genreList[item].data}
-                        openMovieBox={openMovieBox}
-                        setMovieCard={setMovieCard}
+        <>
+            <Navbar logoOnly={false} avatar_src={info.avatar}></Navbar>
+            <div ref={homeDiv} className={styles.home}>
+                <Trailer setOpenModal={setOpenModal} />
+                {shouldRenderChild ? (
+                    <DetailPopup
+                        style={openModal ? mountedStyle : unmountedStyle}
                         setOpenModal={setOpenModal}
+                        openModal={openModal}
+                        info={popupMovie}
                         setPopupMovie={setPopupMovie}
                     />
-                );
-            })}
+                ) : (
+                    ""
+                )}
+                {genres.map((item, index) => {
+                    return (
+                        <MovieCarousel
+                            key={index}
+                            carouselClass={"carousel-" + item.toLowerCase()}
+                            wrapperClass={"wrapper-" + item.toLowerCase()}
+                            heading={item}
+                            marginTop={index === 0 ? -50 : 50}
+                            items={genreList[item].data}
+                            openMovieBox={openMovieBox}
+                            setMovieCard={setMovieCard}
+                            setOpenModal={setOpenModal}
+                            setPopupMovie={setPopupMovie}
+                        />
+                    );
+                })}
 
-            <div
-                ref={openMovieBox}
-                className={styles.boxMovieHover}
-                onMouseLeave={(e) => openMovieBoxLeave(e)}
-            >
-                <MovieCard
-                    movie={movieCard}
-                    addBtn={false}
-                    setPopupMovie={setPopupMovie}
-                    setOpenModal={setOpenModal}
-                />
+                <div
+                    ref={openMovieBox}
+                    className={styles.boxMovieHover}
+                    onMouseLeave={(e) => openMovieBoxLeave(e)}
+                >
+                    <MovieCard
+                        movie={movieCard}
+                        addBtn={false}
+                        setPopupMovie={setPopupMovie}
+                        setOpenModal={setOpenModal}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
 }

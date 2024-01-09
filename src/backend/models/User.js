@@ -44,4 +44,25 @@ module.exports = {
         throw err
        }
     },
+
+    async getAllAvatar(){
+        try{
+            const res = await db.all("avatar")
+            return res
+        }
+        catch(err)
+        {
+            throw(err)
+        }
+    },
+
+    async changeUserInfo(email, name, avatar){
+        try{ 
+            const data = await db.update("UserInfo",`email = '${email}'`, `avatar = '${avatar}', name = '${name}'`)
+            return data
+        }
+        catch(err){
+            throw err
+        }
+    }
 };

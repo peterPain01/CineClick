@@ -2,28 +2,36 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./Profiles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faCaretUp } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import AvatarPage from "../Avatar/AvatarPage";
 import DropDown from "../../components/DropDown/DropDown";
 import Loading from "../../components/Loading";
+import request from "../../modules/request";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export function Profiles() {
-    
-    const [name, setName] = useState("Pham Hoang Gia Huy");
+    const navigate = useNavigate();
+    const [info, setInfo] = useState({
+        name: "",
+        avatar: "",
+    });
     const [showLanguage, isShowLanguage] = useState(false);
     const [selectedLanguage, setSelectedLannguage] = useState("");
 
     const languageDropDown = useRef(null);
-    const [isLoading, setIsLoading] = useState(true)
-    
-    // Get name and avatar 
-    useEffect(() => { 
-        
-    }, [])
-    setTimeout(() => { 
-        setIsLoading(false)
-    }, 100)
+    const [isLoading, setIsLoading] = useState(true);
+    const [isChoosingAvt, setIsChoosingAvt] = useState(false)
+    // Get name and avatar
+    useEffect(() => {
+        request.get("/viewer/userInfo", (res) => {
+            setInfo((prevInfo) => ({ ...prevInfo, ...res.data }));
+            setIsLoading(false);
+        });
+    }, []);
+
     if (isLoading) {
-        return <Loading/>
+        return <Loading />;
     }
     function showLanguageBox() {
         isShowLanguage(!showLanguage);
@@ -34,14 +42,42 @@ export function Profiles() {
     function handleSelectedLanguage(e) {
         setSelectedLannguage(e.target.innerHTML);
     }
+    function handleCancel() {
+        navigate("/");
+    }
+    function handleChangeValue(e) {
+        setInfo({ ...info, [e.target.name]: e.target.value });
+    }
+    function handleSave() {
+        setIsLoading(true)
+        request.post('/viewer/userInfo', info)
+        .then(res => { 
+            toast.success(res.data)
+            setIsLoading(false)
+        })
+        .catch(err => { 
+            toast.err(err.data)
+            setIsLoading(false)
+        })
+    }
     return (
-        <div className={styles.centeredDiv}>
+       <>
+        {isChoosingAvt ? <AvatarPage setIsChoosingAvt={setIsChoosingAvt} setInfo={setInfo}/>:  <div className={styles.centeredDiv}>
             <div className={styles.profileMain}>
                 <h1>Edit Profiles</h1>
                 <div className={styles.profileEntry}>
                     <div className={styles.profileAvatar}>
-                        <img src="/img/avatar.jpg" alt="" />
-                        <button className={styles.editButton}>
+                        <img
+                            src={
+                                info.avatar ||
+                                "https://source.boringavatars.com/beam/160/Mother%20Frances?square"
+                            }
+                            alt=""
+                        />
+                        <button
+                            onClick={() => setIsChoosingAvt(true)}
+                            className={styles.editButton}
+                        >
                             <i>
                                 <FontAwesomeIcon
                                     className={styles.searchIconField}
@@ -56,8 +92,10 @@ export function Profiles() {
                         <div className={styles.editForm}>
                             <input
                                 type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                name="name"
+                                id="name"
+                                value={info.name || "You have not set a username"}
+                                onChange={(e) => handleChangeValue(e)}
                             />
                         </div>
                         <div className={styles.language}>
@@ -89,10 +127,22 @@ export function Profiles() {
                     </div>
                 </div>
                 <div className={styles.boxButton}>
-                    <button className={styles.saveButton}>Save</button>
-                    <button className={styles.cancelButton}>Cancel</button>
+                    <button
+                        className={styles.saveButton}
+                        onClick={handleSave}
+                    >
+                        Save
+                    </button>
+                    <button
+                        className={styles.cancelButton}
+                        onClick={handleCancel}
+                    >
+                        Cancel
+                    </button>
                 </div>
             </div>
-        </div>
+        </div>}
+        <ToastContainer/>
+       </>
     );
 }

@@ -123,3 +123,21 @@ VALUES
     ('3 months', '8', 'phone, tablet, computer, TV', 0, 'Good', '720p',3),
     ('6 months', '15', 'phone, tablet, computer, TV', 0, 'Better', '1080p',6),
     ('1 year', '28', 'phone, tablet, computer, TV', 0, 'Best', '4k+HDR',12);
+
+
+-- Avatar Db 
+CREATE TABLE IF NOT EXISTS avatar (
+    avatar_id SERIAL PRIMARY KEY,
+    src VARCHAR(255) NOT NULL
+);
+-- Insert avatar URLs into the table
+INSERT INTO avatar (src) VALUES
+    ('https://source.boringavatars.com/beam/160/Queen%20Lili'),
+    ('https://source.boringavatars.com/beam/160/Mother%20Frances'),
+    ('https://source.boringavatars.com/beam/160/Elizabeth%20Blackwell'),
+    ('https://source.boringavatars.com/beam/160/Amelia%20Earhart'),
+    ('https://source.boringavatars.com/beam/160/Ellen%20Swallow'),
+    ('https://source.boringavatars.com/beam/160/Margaret%20Brent'),
+    ('https://source.boringavatars.com/beam/160/Phillis%20Wheatley'),
+    ('https://source.boringavatars.com/beam/160/Carrie%20Chapman'),
+    ('https://source.boringavatars.com/beam/160/Grace%20Hopper');

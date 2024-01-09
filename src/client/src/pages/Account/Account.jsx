@@ -154,7 +154,7 @@ export function Account() {
                             </div>
                             <div className={styles.accountInfoAction}>
                                 <span className={styles.accountInfoActionText}>
-                                    Change Email
+                                    <br />
                                 </span>
                                 <span
                                     onClick={() => {

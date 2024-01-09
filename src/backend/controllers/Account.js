@@ -32,7 +32,7 @@ module.exports = {
                 await UserModel.insert(
                     new UserModel.UserInfo(email, null, null)
                 );
-                // payment 
+                // payment
                 res.status(200).send("OK");
             }
         } catch (err) {
@@ -40,6 +40,17 @@ module.exports = {
         }
     },
 
+    async getAllAvatar(req, res, next) {
+        try {
+            const data = await UserModel.getAllAvatar();
+            if (!data) {
+                res.status(500).send("Internal Server, please try again");
+            }
+            res.status(200).send(data);
+        } catch (err) {
+            next(err);
+        }
+    },
     async resetPassword(req, res, next) {
         const { email, token, password } = req.body;
         if (!password || typeof password !== "string") {
@@ -73,22 +84,67 @@ module.exports = {
         }
     },
 
+    async getUserInfo(req, res, next) {
+        const email = req.user.email;
+        console.log(email);
+        try {
+            if (!email) {
+                res.status(400).send(
+                    "Can't detect your email, please try again"
+                );
+            } else {
+                const userInfo = await UserModel.get(email);
+                if (!userInfo)
+                    res.status(400).send("User not found in Database");
+                else {
+                    res.status(200).send(
+                        new UserModel.UserInfo(
+                            userInfo.email,
+                            userInfo.name,
+                            userInfo.avatar
+                        )
+                    );
+                }
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     async getAccountInfo(req, res, next) {
         const email = req.user.email;
-        try{
+        try {
             if (!email) {
-                res.status(400).send("Can't detect your email, please try again");
+                res.status(400).send(
+                    "Can't detect your email, please try again"
+                );
             } else {
                 const info = await AccountModel.get(email);
                 if (!info) res.status(400).send("Email not found in Database");
                 else {
-                    const type = info.type
-                    res.status(200).send({email, type})
+                    const type = info.type;
+                    res.status(200).send({ email, type });
                 }
             }
+        } catch (err) {
+            next(err);
         }
-        catch(err){
-            next(err)
+    },
+
+    async changeUserInfo(req, res, next) {
+        const email = req.user.email;
+        const { name, avatar } = req.body;
+        if(!email){
+            res.status(400).send("Not Found your email, Please try again")
+        }
+        try {
+            const data = await UserModel.changeUserInfo(email, name, avatar);
+            if(!data){
+                res.status(500).send("Internal Server, Please try again")
+            }
+            res.status(200).send("Change Your Info Successful")
+        } catch (err) {
+            next(err);
         }
     },
 
@@ -104,7 +160,7 @@ module.exports = {
                 var secret = acc.password + "-" + acc.email;
                 var token = jwt.encode(payload, secret);
 
-                const encodedEmail = btoa(email); 
+                const encodedEmail = btoa(email);
                 const encodedToken = btoa(token);
                 let resetPasswordLink = `http://localhost:5173/reset-password/${encodedEmail}/${encodedToken}`;
                 // const shortenLink = await Utils.shortenLink(

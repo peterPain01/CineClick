@@ -6,12 +6,14 @@ import request from "../../modules/request";
 import {Link} from 'react-router-dom'
 export function Auth() {
     const [cookies, setCookie, removeCookie] = useCookies(['login']);
-
+    const [validUserName, setValidUserName] = useState(false);
+    const [validPwd, setValidPwd] = useState(false);
     const [account, setAccount] = useState({ username: "", password: "" });
 
     const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     const PHONE_REGEGX = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
     const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    
     useEffect(() => {
         setValidUserName(EMAIL_REGEX.test(account.username));
     }, [account.username]);
@@ -28,9 +30,6 @@ export function Auth() {
     useEffect(() => {
         setValidPwd(true);
     }, []);
-
-    const [validUserName, setValidUserName] = useState(false);
-    const [validPwd, setValidPwd] = useState(false);
 
     const logInForm = useRef(null);
 

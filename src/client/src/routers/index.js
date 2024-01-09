@@ -25,6 +25,7 @@ import Plan from "@/pages/Admin/Plan";
 import Watch from "@/pages/Watch/Watch";
 import PaymentConfirm from "../pages/PaymentConfirm/PaymentConfirm";
 import PaymentSuccess from "../pages/PaymentConfirm/PaymentSuccess";
+import AvatarPage from "../pages/Avatar/AvatarPage";
 //Public routes payment_success
 const viewerRoutes = [
     { path: "/register", component: Register },
@@ -33,8 +34,9 @@ const viewerRoutes = [
     { path: "/checkout/:p_id", component: PaymentConfirm, layout: null },
     { path: "/profiles", component: Profiles },
     { path: "/YourAccount", component: Account },
+    { path: "/changeAvatar", component: AvatarPage },
 
-    { path: "/", component: Home, layout: FullyNavLayout },
+    { path: "/", component: Home, layout: null },
     { path: "/tvshow", component: TVShow, layout: FullyNavLayout },
     { path: "/cart", component: Cart },
     { path: "/payment_success", component: PaymentSuccess, layout: null },

@@ -11,13 +11,12 @@ import {
     faQuestion,
     faList,
 } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { logout } from "../../modules/logout";
-import axios from "axios";
-import { counter } from "@fortawesome/fontawesome-svg-core";
+import request from "../../modules/request";
 
-function Navbar({ logoOnly = false }) {
+function Navbar({ logoOnly = false, avatar_src= "" }) {
     const [search, isSearch] = useState(false);
     const [searchValue, setSearchvalue] = useState("");
     const [fix, setFix] = useState(false);
@@ -28,6 +27,8 @@ function Navbar({ logoOnly = false }) {
     const navigateLink = useRef(null);
     const search_link = useRef(null);
     const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+
+   
 
     function handleSearch() {
         isSearch(true);
@@ -56,7 +57,7 @@ function Navbar({ logoOnly = false }) {
             dropDown.current.style.position = "relative";
             navigateLink.current.style.display = "none";
         } else {
-            if(dropDown.current != null){
+            if (dropDown.current != null) {
                 dropDown.current.style.display = "none";
                 navigateLink.current.style.display = "flex";
             }
@@ -275,7 +276,10 @@ function Navbar({ logoOnly = false }) {
                             >
                                 <img
                                     className={styles.avatar}
-                                    src="./img/avatar.jpg"
+                                    src={
+                                        avatar_src ||
+                                        "https://source.boringavatars.com/beam/30/Mother%20Frances?square"
+                                    }
                                     alt=""
                                 />
 
@@ -314,10 +318,13 @@ function Navbar({ logoOnly = false }) {
                                         Help Center
                                     </Link>
                                     <p className={styles.breakLine}></p>
-                                    <Link to="/login" onClick={async () => {
-                                        await logout();
-                                        removeCookie("login");
-                                    }}>
+                                    <Link
+                                        to="/login"
+                                        onClick={async () => {
+                                            await logout();
+                                            removeCookie("login");
+                                        }}
+                                    >
                                         Sign out of NetFlix
                                     </Link>
                                 </div>
