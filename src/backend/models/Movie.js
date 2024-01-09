@@ -77,14 +77,20 @@ module.exports = {
         return result;
     },
     async all_genres() {
-        return (await db.all("Genre")).map(x => x.genre);
+        return (await db.exec(`SELECT * FROM "Genre" ORDER BY genre ASC`)).map(x => x.genre);
     },
     async list_similars(mv_id) {
-        return await db.exec(`
+        let result = (await db.exec(`
 SELECT mv.*
 FROM "Movie" mv JOIN "MovieSimilar" mvs ON mvs.similar_id = mv.id
-WHERE mvs.mv_id = ${mv_id}
-`);
+WHERE mvs.mv_id = ${mv_id}`)).map(async mv => {
+                return {
+                    ...mv,
+                    genres: (await this.list_genres(mv.id)),
+                };
+            });
+        result = await Promise.all(result);
+        return result;
     },
     async list_genres(mv_id) {
         return (await db.exec(`
@@ -110,22 +116,13 @@ WHERE mvg.mv_id = ${mv_id}
         await db.conn_execute(async (conn) => {
             await conn.tx(async t => {
                 await t.none(`DELETE FROM "MovieFavorite" WHERE movie = ${id}`);
-                await t.none(`DELETE FROM "BoughtMovie" WHERE mv_id = ${id}`);
-                await t.none(`DELETE FROM "PaidMovie" WHERE id = ${id}`);
                 await t.none(`DELETE FROM "MovieGenre" WHERE mv_id = ${id}`);
                 await t.none(`DELETE FROM "MovieSimilar" WHERE similar_id = ${id} OR mv_id = ${id}`);
                 await t.none(`DELETE FROM "Movie" WHERE id = ${id}`);
             });
         });
     },
-    async can_watch_paid_movie(email, id) {
-        if (!id && !email) {
-            throw new Error("'ID' and 'email' are required");
-        }
-        const result = await db.exec(`SELECT * FROM "BoughtMovie" WHERE email = '${email}' AND id = ${id}`);
-        return result.length != 0;
-    },
-    async search(pattern, genres, sort_by, order) {
+    async search(pattern, include_genres, exclude_genres, sort_by, order) {
         const all_posible_sort = ["title", "imdb", "release"];
         let condition = `LOWER(title) LIKE LOWER('%${pattern.trim()}%')`;
         if (sort_by !== undefined && all_posible_sort.includes(sort_by.toLowerCase())) {
@@ -133,14 +130,25 @@ WHERE mvg.mv_id = ${mv_id}
         }
         let result = await this.list_movie_append_genres(condition);
         result = await Promise.all(result);
-        if (genres !== undefined) {
-            if (isArray(genres) && genres.length >= 1) {
+        if (include_genres !== undefined) {
+            if (isArray(include_genres) && include_genres.length >= 1) {
                 result = result.filter(mv => {
-                    return genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                    return include_genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
                 });
-            } else if (typeof genres == "string") {
+            } else if (typeof include_genres == "string") {
                 result = result.filter(mv => {
-                    return mv.genres.includes(genres.toLowerCase());
+                    return mv.genres.includes(include_genres.toLowerCase());
+                });
+            }
+        }
+        if (exclude_genres !== undefined) {
+            if (isArray(exclude_genres) && exclude_genres.length >= 1) {
+                result = result.filter(mv => {
+                    return exclude_genres.find(g => mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                });
+            } else if (typeof exclude_genres == "string") {
+                result = result.filter(mv => {
+                    return !mv.genres.includes(exclude_genres.toLowerCase());
                 });
             }
         }

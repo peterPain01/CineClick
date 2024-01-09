@@ -53,9 +53,15 @@ export function Home() {
         const [data, set] = useState([]);
         genreList[genre] = { data, set };
     });
-
+    function shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
     const [isLoading, setIsLoading] = useState(true);
-    
     useEffect(() => {
         const url = new URL("http://localhost:13123/movie/list-all");
         genres.forEach((genre) => {
@@ -63,6 +69,7 @@ export function Home() {
             request
                 .get("movie/list-all", res =>  {
                     if (res.status === 200) {
+                        shuffleArray(res.data);
                         genreList[genre].set(res.data);
                         setIsLoading(false);
                     } 

@@ -1,5 +1,5 @@
 **/node_modules
 **/package-lock.json
 **/videos
-backend/raw-movies
+backend/raw-files
 **/.env

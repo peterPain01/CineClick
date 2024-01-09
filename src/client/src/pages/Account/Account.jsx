@@ -9,7 +9,7 @@ import {
     faLock,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import request from "../../modules/request.js";
 import Loading from "../../components/Loading";
 
@@ -27,7 +27,6 @@ export function Account() {
             setUserInfo((userInfo) => ({ ...userInfo, ...res.data }));
             setIsLoading(false);
         });
-
         // TODO 1: Lay ngay het han
         if (userInfo.type === "free-viewer") {
             set_expired_day("");
@@ -36,7 +35,14 @@ export function Account() {
         }
     }, []);
 
-    function handleChangePassword() {}
+    const [on_change_pass, set_on_change_pass] = useState(false);
+    const PWD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const [valid_password, set_valid_password] = useState(true);
+    function handleChangePassword(new_pass){
+        request.post("viewer/change-pass", {new_pass})
+            .then(res => set_on_change_pass(false))
+            .catch(err => console.log(err));
+    }
 
     function handleChangeEmail() {}
 
@@ -121,14 +127,40 @@ export function Account() {
                             <div className={styles.accountInfoContent}>
                                 {/* hard Code */}
                                 <span>{userInfo.email}</span>
-                                <span>Password: ********</span>
+                                <span>Password: {!on_change_pass ? "********" :
+                                                <input
+                                                    autoFocus
+                                                    onKeyUp={(e) => {
+                                                        if (e.key === 'Enter' || e.keyCode === 13) {
+                                                            handleChangePassword(e.currentTarget.value.trim());
+                                                        }
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.currentTarget.value = "";
+                                                        set_valid_password(true);
+                                                        set_on_change_pass(false);
+                                                    }}
+                                                    onChange={(e) => {
+                                                        set_valid_password(PWD_REGEX.test(e.currentTarget.value.trim()));
+                                                    }}
+                                                    type="password"/>
+                                }</span>
+                                {valid_password ? "" :
+                                    <span style={{color: "red", marginTop: "-20px", paddingTop: "0px"}}>
+                                        *Minimum 8 characters, at least 1 letter and 1 number
+                                    </span>
+                                }
                                 <span>Phone Number: 0772538679</span>
                             </div>
                             <div className={styles.accountInfoAction}>
                                 <span className={styles.accountInfoActionText}>
                                     Change Email
                                 </span>
-                                <span className={styles.accountInfoActionText}>
+                                <span
+                                    onClick={() => {
+                                        set_on_change_pass(true)
+                                    }}
+                                    className={styles.accountInfoActionText}>
                                     Change Password
                                 </span>
                                 {/* Hard code */}

@@ -16,10 +16,6 @@ const services = [
         value: "free",
         label: "free",
     },
-    {
-        value: "movie",
-        label: "paid",
-    },
 ];
 function MovieUpload() {
     const [message, setMessage] = useState(null);

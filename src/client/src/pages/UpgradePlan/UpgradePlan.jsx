@@ -129,24 +129,22 @@ export function UpgradePlan() {
                         <div className={styles.paymentHeader}>
                             {plans.map((plan) => {
                                 return (
-                                    <>
-                                        <label
-                                            className={styles.label}
-                                            onClick={(e) =>
-                                                handleSelectedPlan(e)
-                                            }
-                                            key={plan.plan_id}
-                                            id={plan.plan_id}
-                                        >
-                                            <input type="radio" />
-                                            <span className={styles.planOption}>
-                                                {plan.name}
-                                            </span>
-                                            <span
-                                                className={styles.labelAfter}
-                                            ></span>
-                                        </label>
-                                    </>
+                                    <label
+                                        className={styles.label}
+                                        onClick={(e) =>
+                                            handleSelectedPlan(e)
+                                        }
+                                        key={plan.plan_id}
+                                        id={plan.plan_id}
+                                    >
+                                        <input type="radio" />
+                                        <span className={styles.planOption}>
+                                            {plan.name}
+                                        </span>
+                                        <span
+                                            className={styles.labelAfter}
+                                        ></span>
+                                    </label>
                                 );
                             })}
                         </div>

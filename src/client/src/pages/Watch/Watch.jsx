@@ -1,6 +1,8 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "./Watch.module.css";
 import { useEffect, useRef, useState } from "react";
+import request from "../../modules/request";
+import { useCookies } from "react-cookie";
 
 const play = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon-nfplayerPause ltr-4z3qvp e1svuwfo1" data-name="Pause" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 3C4.22386 3 4 3.22386 4 3.5V20.5C4 20.7761 4.22386 21 4.5 21H9.5C9.77614 21 10 20.7761 10 20.5V3.5C10 3.22386 9.77614 3 9.5 3H4.5ZM14.5 3C14.2239 3 14 3.22386 14 3.5V20.5C14 20.7761 14.2239 21 14.5 21H19.5C19.7761 21 20 20.7761 20 20.5V3.5C20 3.22386 19.7761 3 19.5 3H14.5Z" fill="#fff"></path></svg>`;
 const pause = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon-nfplayerPlay ltr-4z3qvp e1svuwfo1" data-name="Play" aria-hidden="true"> <path d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z" fill="#fff" ></path></svg>`;
@@ -24,7 +26,6 @@ const forwardIcon =
 export default function Watch() {
     //TODO Use movie id get from url that to fetch video from server
     const { id, name: movieName } = useParams();
-
     const [activeRate, setActiveRate] = useState('1.0')
     const [isFullScreen, setFullScreen] = useState(false);
     const [showControl, setShowControl] = useState(true);
@@ -41,15 +42,23 @@ export default function Watch() {
     let forward = useRef(null);
     let backward = useRef(null);
 
+    const [can_watch, set_can_watch] = useState(false);
     useEffect(() => {
         if (playButton.current) playButton.current.innerHTML = play;
         if (soundButton.current) soundButton.current.innerHTML = video.current.muted ? mute : sound;
         if (speedButton.current) speedButton.current.innerHTML = speed;
         if (backward.current) backward.current.innerHTML = backwardIcon;
         if (forward.current) forward.current.innerHTML = forwardIcon;
-    }, [showControl]);
+    }, [showControl, can_watch]);
+
     useEffect(() => {
         // Call API here /watch/idMovie
+        request.get(`viewer/can-watch?mv_id=${id}`, res => {
+            set_can_watch(res.data);
+        });
+    }, []);
+    useEffect(() => {
+        if (!can_watch) return;
         var hls = new Hls({
             xhrSetup: function (xhr, url) {
                 xhr.withCredentials = true; // do send cookies
@@ -64,7 +73,9 @@ export default function Watch() {
                 switch (errorType) {
                     case Hls.ErrorTypes.NETWORK_ERROR:
                         if (data?.response?.code === 401) {
-                         alert(data?.response?.text);
+                            const [cookies, setCookie, removeCookie] = useCookies(['login']);
+                            removeCookie("login");
+                            window.open("/login", "_self");
                         }
                         break;
                     default:
@@ -79,7 +90,7 @@ export default function Watch() {
         } catch(err) {
             console.log(err);
         }
-    }, []);
+    }, [can_watch, video.current])
 
     function handlePlayBtn() {
         if (video.current.paused) {
@@ -177,6 +188,7 @@ export default function Watch() {
     }
 
     return (
+        <>{ can_watch ?
         <div
             onMouseEnter={() => {
                 if (controlContainer.current) controlContainer.current.style.opacity = 1;
@@ -329,5 +341,12 @@ export default function Watch() {
             </div> :
             null}
         </div>
+            :
+        <div className={styles.upgrade_box}>
+            <h1 style={{marginBottom: "50px"}}>To watch this movie, please upgrade to premium</h1>
+            <Link style={{color: "white", textDecoration: "underline"}} to="/UpgradePlan">Go to upgrade</Link>
+        </div>
+        }
+        </>
     );
 }
