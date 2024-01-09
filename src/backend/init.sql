@@ -37,6 +37,8 @@ create table "Movie"(
     summary varchar(1024),
     image varchar(2048),
     length varchar(20),
+    trailer varchar(512),
+    thumbnail varchar(512),
     type varchar(10) not null check( type = 'premium' or type = 'free'), -- free, premium
     primary key(id)
 );

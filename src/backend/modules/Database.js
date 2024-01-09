@@ -55,6 +55,8 @@ module.exports = {
                             type: rand > 0.5 ? "free" : "premium",
                             restrict_age: rand <= 1/3 ? "18+" : rand <= 2/3 ? "13+" : "9+",
                             year: mv.year || "",
+                            thumbnail: mv.thumbnail,
+                            trailer: mv.trailer,
                         };
                         const sql = pgp.helpers.insert(movie, null, "Movie") + " RETURNING id"
                         const id = await t.one(sql, null, c => +c.id);
