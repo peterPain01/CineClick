@@ -29,7 +29,7 @@ const forwardIcon =
 import ReviewForm from "../../components/ReviewForm/ReviewForm";
 
 export default function Watch() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     //TODO Use movie id get from url that to fetch video from server
     const { id, name: movieName } = useParams();
     const [activeRate, setActiveRate] = useState("1.0");
@@ -48,7 +48,7 @@ export default function Watch() {
     let speedButton = useRef(null);
     let forward = useRef(null);
     let backward = useRef(null);
-    const [isReview, setIsReview] = useState(false)
+    const [isReview, setIsReview] = useState(false);
     const [can_watch, set_can_watch] = useState(false);
     useEffect(() => {
         if (playButton.current) playButton.current.innerHTML = play;
@@ -63,7 +63,7 @@ export default function Watch() {
         // Call API here /watch/idMovie
         request.get(`viewer/can-watch?mv_id=${id}`, (res) => {
             window.setTimeout(() => {
-                setIsLoading(false)
+                setIsLoading(false);
                 set_can_watch(res.data);
             }, 500);
         });
@@ -203,14 +203,16 @@ export default function Watch() {
         }
     }
 
-    function handleBacktoHomePage(){
-        navigate('/')
+    function handleBacktoHomePage() {
+        navigate("/");
     }
 
-    function handleReview(){
-        setIsReview(true)
+    function handleReview() {
+        setIsReview(true);
+    }
+
     if (isLoading) {
-        return <Loading />; 
+        return <Loading />;
     }
     return (
         <>
@@ -223,7 +225,13 @@ export default function Watch() {
                     className={styles.videoPlayer}
                     ref={videoContainer}
                 >
-                    {isReview && <ReviewForm setIsReview={setIsReview} mv_id={id} name={movieName}/>}
+                    {isReview && (
+                        <ReviewForm
+                            setIsReview={setIsReview}
+                            mv_id={id}
+                            name={movieName}
+                        />
+                    )}
                     {!isFullScreen || showControl ? (
                         <span
                             style={{
@@ -238,12 +246,22 @@ export default function Watch() {
                             {movieName}
                         </span>
                     ) : null}
-                     {!isFullScreen || showControl ? (
-                    <div className={styles.headControl}>
-                        <FontAwesomeIcon icon={faArrowLeftLong} size="2xl" className={styles.headControl_back} onClick={handleBacktoHomePage}/>
-                        <FontAwesomeIcon icon={faStar} size="2xl" className={styles.headControl_flag} onClick={handleReview}/>
-                    </div>
-                      ) : null}
+                    {!isFullScreen || showControl ? (
+                        <div className={styles.headControl}>
+                            <FontAwesomeIcon
+                                icon={faArrowLeftLong}
+                                size="2xl"
+                                className={styles.headControl_back}
+                                onClick={handleBacktoHomePage}
+                            />
+                            <FontAwesomeIcon
+                                icon={faStar}
+                                size="2xl"
+                                className={styles.headControl_flag}
+                                onClick={handleReview}
+                            />
+                        </div>
+                    ) : null}
                     <video
                         style={
                             isFullScreen && !showControl

@@ -5,17 +5,22 @@ import { useLocation } from "react-router-dom";
 import styles from "./Search.module.css";
 import DropDown from "../../components/DropDown/DropDown";
 import Loading from "../../components/Loading";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faDotCircle
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Search() {
     const pattern = new URLSearchParams(useLocation().search).get("pattern");
     const [rerender, toggle_to_rerender] = useState(false);
-    const PER_ROW = 6;
+    const PER_ROW = 3;
     const params = useRef({
         pattern: pattern,
         sort_by: "title",
         page: 1,
         order: "asc",
-        per_page: PER_ROW*2,
+        per_page: PER_ROW*3,
     });
     const [data, set_data] = useState({movies: [], total_page: 1});
     const genres = [];
@@ -93,7 +98,7 @@ export function Search() {
                         className={styles.filter_button}>Filter</button>
             </div>
             <div>
-                <div>
+                <div style={{marginLeft: "200px"}}>
                     <div style={{padding: "90px 60px 0px 60px", marginBottom: "-100px"}}>
                         <DropDown on_selected_choice={(sort_by) => {
                             if (sort_by.toLowerCase() === params.current.sort_by.toLowerCase()) return;

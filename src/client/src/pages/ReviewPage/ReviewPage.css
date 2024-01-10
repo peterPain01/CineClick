@@ -1,0 +1,38 @@
+.review-page{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.review-content{ 
+    margin-top: 26px;
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  max-height: 500px;
+}
+
+.review-card {
+    border-bottom: 1px solid rgba(77, 72, 72, 0.89);
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.review-email {
+    color: #fff;
+    padding: 4px 0px;
+}
+
+.review-stars {
+    color: #ffcc00; /* You can use different colors based on your design */
+    font-size: 16px;
+    padding: 4px 0px;
+}
+
+.review-desc {
+    margin-top: 10px;
+    color: #fff;
+    padding: 4px 0px;
+}

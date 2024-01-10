@@ -7,6 +7,10 @@
     flex-direction: column;
 }
 
+.avatar-content{ 
+    width: 400px;
+    height: 400px;
+}
 .avatar-heading {
     color: aliceblue;
     font-size: calc(22px + 0.3vw);
@@ -22,6 +26,7 @@
 
 .avatar-grid img {
     scale: 1;
+    width: calc(100px + 0.3vw);
     cursor: pointer;
     transition: scale 0.3s;
 }
@@ -36,11 +41,10 @@
     color: #808080;
     cursor: pointer;
     font-weight: 600;
-    margin-top: 0;
     margin-right: 20px;
-    min-width: 120px;
+    min-width: 140px;
     height: 40px;
-    margin-top: 20px;
+    margin-top: 34px;
 }
 
 .avatar-cancel:hover {

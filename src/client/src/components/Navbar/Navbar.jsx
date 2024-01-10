@@ -11,6 +11,7 @@ import {
     faQuestion,
     faList,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { useRef, useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { logout } from "../../modules/logout";
@@ -297,7 +298,7 @@ function Navbar({ logoOnly = false, avatar_src= "" }) {
                                                 style={{ color: "#ffffff" }}
                                             />
                                         </i>
-                                        Mange Profiles
+                                        Manage Profiles
                                     </Link>
                                     <Link to="/YourAccount">
                                         <i>
@@ -325,7 +326,7 @@ function Navbar({ logoOnly = false, avatar_src= "" }) {
                                             removeCookie("login");
                                         }}
                                     >
-                                        Sign out of NetFlix
+                                        Sign out of CineClick
                                     </Link>
                                 </div>
                             </div>

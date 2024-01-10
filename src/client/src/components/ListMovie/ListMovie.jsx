@@ -8,6 +8,7 @@ export function ListMovie({
     item_space = "1fr",
     per_row = 6,
     on_change_page = (page) => {},
+    marginL = "200px"
 }) {
     function useDelayUnmount(isMounted, delayTime) {
         const [shouldRender, setShouldRender] = useState(false);
@@ -54,7 +55,7 @@ export function ListMovie({
                 <header className={styles.headerWrapper}>
                     <h1 className={styles.headerText}>{header}</h1>
                 </header>
-                <div style={{gridTemplateColumns: `repeat(${per_row}, ${item_space})`}} className={styles.MovieGrid}>
+                <div style={{marginLeft: marginL, gridTemplateColumns: `repeat(${per_row}, ${item_space})`}} className={styles.MovieGrid}>
                     {
                         movies.map((mv, index) =>
                             <img onClick={() => {

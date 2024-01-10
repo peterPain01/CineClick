@@ -19,7 +19,7 @@
     width: 42vw;
     max-width: 600px; 
     position: absolute;
-    top: 20%;
+    bottom: 40%;
     left: 60px;
     gap: 10px;
 }

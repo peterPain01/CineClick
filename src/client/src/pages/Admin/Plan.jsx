@@ -43,42 +43,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-//TODO Fetch this from Server
-const plans = [
-    {
-        name: "Mobile",
-        price: "70000",
-        devices: "phone, tablet",
-        registered: 1000,
-        videoQuality: "Good",
-        Resolution: "480p",
-    },
-    {
-        name: "Basic",
-        price: "108.000",
-        devices: "phone, tablet, computer, TV",
-        registered: 2000,
-        videoQuality: "Good",
-        Resolution: "720p",
-    },
-    {
-        name: "Standard",
-        price: "220.000",
-        devices: "phone, tablet, computer, TV",
-        registered: 1000,
-        videoQuality: "Better",
-        Resolution: "1080p",
-    },
-    {
-        name: "Premium",
-        price: "260.000",
-        devices: "phone, tablet, computer, TV",
-        registered: 12330,
-        videoQuality: "Best",
-        Resolution: "4k+HDR",
-    },
-];
-
 const box_width = 500;
 const box_height = 400;
 // Title's Columns that you want to display
@@ -96,7 +60,7 @@ export default function Plan() {
     useEffect(() => {
         // TODO Change api
         request.get("/plan", res => {
-            setPlans(response.data)
+            setPlans(res.data)
         });
     }, []);
 
@@ -137,8 +101,6 @@ export default function Plan() {
                                         {title}
                                     </StyledTableCell>
                                 ))}
-                                <StyledTableCell></StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -161,22 +123,6 @@ export default function Plan() {
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         {plan.resolution}
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row">
-                                        <Button
-                                            variant="contained"
-                                            color="success"
-                                        >
-                                            Edit
-                                        </Button>
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row">
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                        >
-                                            Delete
-                                        </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))}
