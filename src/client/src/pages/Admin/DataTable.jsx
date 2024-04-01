@@ -6,7 +6,8 @@ import Stack from "@mui/material/Stack";
 import UploadIcon from "@mui/icons-material/Upload";
 import Box from "@mui/material/Box";
 import SearchCustom from "./SearchCustom";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 // Table Component
 import Table from "@mui/material/Table";
@@ -20,10 +21,14 @@ import ImageIcon from "@mui/icons-material/Image";
 import IconButton from "@mui/material/IconButton";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { getCoords } from "@/modules/getCoords";
-import axios from 'axios'
+import axios from "axios";
 import { useState } from "react";
-import request from "../../modules/request";
+import request, { deleteMovie, getMovies } from "../../modules/request";
 import { useCookies } from "react-cookie";
+
+import { PAGE_SIZE } from "./constant";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,16 +62,26 @@ const TableHeadTitles = [
 ];
 
 export default function DataTable() {
-    const per_page = 10;
-    const [data, set_data] = useState({movies: [], total_page: 1});
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
-    React.useEffect(() => {
-        // TODO Change api
-        request.get(`movie/list?page=1&per_page=${per_page}`, response => {
-            set_data(response.data || {movies: [], total_page: 1});
-        })
-    }, []);
+    const per_page = PAGE_SIZE;
+    const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const queryClient = useQueryClient();
 
+    const page = searchParams.get("page") || 1;
+    const { data, isLoading } = useQuery({
+        queryKey: ["movies", page],
+        queryFn: async () => getMovies(page, per_page),
+        staleTime: 60 * 1000,
+    });
+    const { mutate } = useMutation({
+        mutationFn: (id) => {
+            deleteMovie(id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["movies", page] });
+            queryClient.invalidateQueries({ queryKey: ["movies", page + 1] });
+        },
+    });
     const imgPreview = React.useRef(null);
     const previewImageBox = React.useRef(null);
     const vidPreviewBox = React.useRef(null);
@@ -79,21 +94,25 @@ export default function DataTable() {
     const [srcVid, setSrcVid] = React.useState("");
 
     React.useEffect(() => {
-        if (openImgBox) {
+        if (openImgBox && imgPreview && previewImageBox) {
             imgPreview.current.src = srcImage;
             (previewImageBox.current.style.opacity = 1),
                 (previewImageBox.current.style.visibility = "visible");
         } else {
-            (previewImageBox.current.style.opacity = 0),
-                (previewImageBox.current.style.visibility = "hidden");
+            if (previewImageBox?.current) {
+                (previewImageBox.current.style.opacity = 0),
+                    (previewImageBox.current.style.visibility = "hidden");
+            }
         }
     }, [openImgBox]);
 
     React.useEffect(() => {
-        if (openVidBox) {
+        if (openVidBox && vidPreviewBox) {
             vidPreviewBox.current.style.display = "block";
         } else {
-            vidPreviewBox.current.style.display = "none";
+            vidPreview?.current
+                ? (vidPreviewBox.current.style.display = "none")
+                : null;
         }
     }, [openVidBox]);
 
@@ -101,10 +120,12 @@ export default function DataTable() {
         const { top, left } = getCoords(e.target);
         const x = left + e.target.offsetWidth / 2 - 1.1 * box_width;
         const y = top + e.target.offsetHeight / 2 - box_height / 2;
-        previewImageBox.current.style.left = `${x}px`;
-        previewImageBox.current.style.top = `${y}px`;
-        setOpenImgBox(true);
-        setSrcImg(src);
+        if (previewImageBox) {
+            previewImageBox.current.style.left = `${x}px`;
+            previewImageBox.current.style.top = `${y}px`;
+            setOpenImgBox(true);
+            setSrcImg(src);
+        }
     }
 
     function handleCloseImage() {
@@ -112,10 +133,7 @@ export default function DataTable() {
     }
 
     function handleDeleteMovie(id) {
-        request.get(`admin/delete-movie?id=${id}`, res => {
-            data.movies.splice(data.movies.findIndex(x => x.id === id), 1);
-            set_data({...data});
-        });
+        mutate(id);
     }
 
     function handleOpenVideo(e, src) {
@@ -127,15 +145,15 @@ export default function DataTable() {
         setOpenVidBox(!openVidBox);
         setSrcVid(src);
     }
-    function handleMovePage(e, page){ 
-        request.get(`movie/list?page=${page}&per_page=${per_page}`, response => { 
-            set_data(response.data || {movies: [], total_page: 1});
-        })
-        // Fetch api with page 
+
+    function handleMovePage(e, page) {
+        searchParams.set("page", page);
+        setSearchParams(searchParams);
     }
+
+    if (isLoading) return <Loading />;
     return (
         <>
-            {/* TODO vide instead of iframe */}
             <div
                 ref={vidPreviewBox}
                 style={{
@@ -227,8 +245,12 @@ export default function DataTable() {
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <IconButton
-                                            onClick={(e) =>
-                                                handleOpenVideo(e, movie.video) // TODO:
+                                            onClick={
+                                                (e) =>
+                                                    handleOpenVideo(
+                                                        e,
+                                                        movie.video
+                                                    ) // TODO:
                                             }
                                         >
                                             <OndemandVideoIcon />
@@ -244,7 +266,9 @@ export default function DataTable() {
                                     </StyledTableCell>
                                     <StyledTableCell component="th" scope="row">
                                         <Button
-                                            onClick={() => handleDeleteMovie(movie.id)}
+                                            onClick={() =>
+                                                handleDeleteMovie(movie.id)
+                                            }
                                             variant="contained"
                                             color="error"
                                         >
@@ -257,7 +281,11 @@ export default function DataTable() {
                     </Table>
                 </TableContainer>
                 <Stack spacing={2}>
-                    <Pagination count={data.total_page} color="primary" onChange={handleMovePage}/>
+                    <Pagination
+                        count={data.total_page}
+                        color={"primary"}
+                        onChange={handleMovePage}
+                    />
                 </Stack>
                 <div style={{ marginTop: "40px" }}>
                     <Link to="/admin/movie/upload">

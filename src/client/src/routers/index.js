@@ -54,12 +54,13 @@ const viewerRoutes = [
 const adminRoutes = [
     { path: "/", component: Dashboard, layout: AdminLayout },
     { path: "/admin", component: Dashboard, layout: AdminLayout },
-    { path: "/admin/movie", component: DataTable, layout: AdminLayout },
+    { path: "/admin/movie/", component: DataTable, layout: AdminLayout },
     {
         path: "/admin/movie/upload",
         component: MovieUpload,
         layout: AdminLayout,
     },
+
     { path: "/admin/customer", component: Customer, layout: AdminLayout },
     { path: "/admin/plan", component: Plan, layout: AdminLayout },
     { path: "/register", component: Register },
@@ -68,5 +69,4 @@ const adminRoutes = [
 ];
 
 export { viewerRoutes, adminRoutes };
-
 //~
