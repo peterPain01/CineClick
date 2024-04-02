@@ -10,6 +10,7 @@ module.exports = {
         console.log(movie_info.id);
         const mv_path = MovieModel.get_file(movie_info.id);
         if (raw_image_path !== undefined) {
+            console.log(raw_image_path);
             fs.mkdirSync(path.join("resources", "images"), {recursive: true});
             movie_info.image = "http://localhost:13123/resources/images/" + movie_info.id;
             fs.copyFileSync(raw_image_path, path.join("resources", "images", movie_info.id.toString()));

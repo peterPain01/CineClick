@@ -4,8 +4,10 @@ import { Typography, Alert } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import request from "../../modules/request";
-
+import request, { addMovie } from "../../modules/request";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 // TODO Fetch this from Server
 const services = [
     {
@@ -29,7 +31,16 @@ function MovieUpload() {
         img: "",
         video: "",
     });
-
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const { mutate: AddMovieMutate } = useMutation({
+        mutationFn: (data) => addMovie(data),
+        onSuccess: (data) => {
+            toast.success("Movie successfully added");
+            queryClient.invalidateQueries(["movies"]);
+            navigate(-1);
+        },
+    });
     const [imgName, setImgName] = useState("");
     const [videoname, setVideoName] = useState("");
     const [openImg, setOpenImg] = useState(false);
@@ -110,19 +121,16 @@ function MovieUpload() {
     function handleInputForm(e) {
         setMovie({ ...movie, [event.target.name]: event.target.value });
     }
+
     function handleSubmit(event) {
         event.preventDefault();
         let data = new FormData(event.target);
-        request
-            .post("admin/upload-movie", data)
-            .then((res) => {
-                setMessage("Upload successfully");
-            })
-            .catch((err) => {
-                if (res?.response?.status === 401) {
-                    window.open("/", "_self");
-                }
-            });
+        for (const entry of data) {
+            const [name, value] = entry;
+            console.log(name, value);
+        }
+        console.log(data.get("picture").path);
+        AddMovieMutate(data);
     }
 
     return (

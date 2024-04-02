@@ -48,10 +48,10 @@ module.exports = {
 
     // NOTE: type and genre are optional
     async list_movie_append_genres(condition) {
-        let result = (await db.find("Movie", condition)).map(async mv => {
+        let result = (await db.find("Movie", condition)).map(async (mv) => {
             return {
                 ...new this.MovieInfo(mv),
-                genres: (await this.list_genres(mv.id)),
+                genres: await this.list_genres(mv.id),
             };
         });
         result = await Promise.all(result);
@@ -64,11 +64,15 @@ module.exports = {
         let result = await this.list_movie_append_genres(condition);
         if (genres !== undefined) {
             if (isArray(genres) && genres.length >= 1) {
-                result = result.filter(mv => {
-                    return genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                result = result.filter((mv) => {
+                    return (
+                        genres.find(
+                            (g) => !mv.genres.includes(g.trim().toLowerCase())
+                        ) === undefined
+                    );
                 });
             } else if (typeof genres == "string") {
-                result = result.filter(mv => {
+                result = result.filter((mv) => {
                     return mv.genres.includes(genres.toLowerCase());
                 });
             }
@@ -76,77 +80,111 @@ module.exports = {
         return result;
     },
     async all_genres() {
-        return (await db.exec(`SELECT * FROM "Genre" ORDER BY genre ASC`)).map(x => x.genre);
+        return (await db.exec(`SELECT * FROM "Genre" ORDER BY genre ASC`)).map(
+            (x) => x.genre
+        );
     },
     async list_similars(mv_id) {
-        let result = (await db.exec(`
+        let result = (
+            await db.exec(`
 SELECT mv.*
 FROM "Movie" mv JOIN "MovieSimilar" mvs ON mvs.similar_id = mv.id
-WHERE mvs.mv_id = ${mv_id}`)).map(async mv => {
-                return {
-                    ...new this.MovieInfo(mv),
-                    genres: (await this.list_genres(mv.id)),
-                };
-            });
+WHERE mvs.mv_id = ${mv_id}`)
+        ).map(async (mv) => {
+            return {
+                ...new this.MovieInfo(mv),
+                genres: await this.list_genres(mv.id),
+            };
+        });
         result = await Promise.all(result);
         return result;
     },
     async list_genres(mv_id) {
-        return (await db.exec(`
+        return (
+            await db.exec(`
 SELECT genre
 FROM "Genre" g JOIN "MovieGenre" mvg ON g.id = mvg.genre_id
 WHERE mvg.mv_id = ${mv_id}
-`)).map(x => x.genre);
+`)
+        ).map((x) => x.genre);
     },
     async add(movie_info, genres) {
         if (!(movie_info instanceof this.MovieInfo)) {
-            throw new Error("Can't insert object of different type than MovieInfo to 'Movie' table");
+            throw new Error(
+                "Can't insert object of different type than MovieInfo to 'Movie' table"
+            );
         }
         await db.helper_insert("Movie", movie_info);
         await this.add_genres(movie_info.id, genres);
     },
     async add_genres(mv_id, genres) {
         for (const g of genres || []) {
-            await db.proc('add_genre', [mv_id, g.trim().toLowerCase()]);
+            await db.proc("add_genre", [mv_id, g.trim().toLowerCase()]);
         }
     },
     async remove(id) {
         console.log("OK");
-        await db.conn_execute(async (conn) => {
-            await conn.tx(async t => {
-                await t.none(`DELETE FROM "MovieFavorite" WHERE movie = ${id}`);
-                await t.none(`DELETE FROM "MovieGenre" WHERE mv_id = ${id}`);
-                await t.none(`DELETE FROM "MovieSimilar" WHERE similar_id = ${id} OR mv_id = ${id}`);
-                await t.none(`DELETE FROM "Movie" WHERE id = ${id}`);
+        try {
+            await db.conn_execute(async (conn) => {
+                await conn.tx(async (t) => {
+                    await t.none(
+                        `DELETE FROM "reviewmovie" WHERE mv_id = ${id}`
+                    );
+                    await t.none(
+                        `DELETE FROM "MovieFavorite" WHERE movie = ${id}`
+                    );
+                    await t.none(
+                        `DELETE FROM "MovieGenre" WHERE mv_id = ${id}`
+                    );
+                    await t.none(
+                        `DELETE FROM "MovieSimilar" WHERE similar_id = ${id} OR mv_id = ${id}`
+                    );
+                    await t.none(`DELETE FROM "Movie" WHERE id = ${id}`);
+                });
             });
-        });
+        } catch (error) {
+            console.log(error, "Error occurred while deleting movie");
+        }
     },
     async search(pattern, include_genres, exclude_genres, sort_by, order) {
         const all_posible_sort = ["title", "imdb", "release"];
         let condition = `LOWER(title) LIKE LOWER('%${pattern.trim()}%')`;
-        if (sort_by !== undefined && all_posible_sort.includes(sort_by.toLowerCase())) {
-            condition += ` ORDER BY ${sort_by.toLowerCase()} ${["asc", "desc"].includes(order.toLowerCase()) ? order : "asc"}`;
+        if (
+            sort_by !== undefined &&
+            all_posible_sort.includes(sort_by.toLowerCase())
+        ) {
+            condition += ` ORDER BY ${sort_by.toLowerCase()} ${
+                ["asc", "desc"].includes(order.toLowerCase()) ? order : "asc"
+            }`;
         }
         let result = await this.list_movie_append_genres(condition);
         result = await Promise.all(result);
         if (include_genres !== undefined) {
             if (isArray(include_genres) && include_genres.length >= 1) {
-                result = result.filter(mv => {
-                    return include_genres.find(g => !mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                result = result.filter((mv) => {
+                    return (
+                        include_genres.find(
+                            (g) => !mv.genres.includes(g.trim().toLowerCase())
+                        ) === undefined
+                    );
                 });
             } else if (typeof include_genres == "string") {
-                result = result.filter(mv => {
+                result = result.filter((mv) => {
                     return mv.genres.includes(include_genres.toLowerCase());
                 });
             }
         }
         if (exclude_genres !== undefined) {
             if (isArray(exclude_genres) && exclude_genres.length >= 1) {
-                result = result.filter(mv => {
-                    return exclude_genres.find(g => mv.genres.includes(g.trim().toLowerCase())) === undefined;
+                result = result.filter((mv) => {
+                    return (
+                        exclude_genres.find((g) =>
+                            mv.genres.includes(g.trim().toLowerCase())
+                        ) === undefined
+                    );
                 });
             } else if (typeof exclude_genres == "string") {
-                result = result.filter(mv => {
+                result = result.filter((mv) => {
                     return !mv.genres.includes(exclude_genres.toLowerCase());
                 });
             }
@@ -154,11 +192,13 @@ WHERE mvg.mv_id = ${mv_id}
         return result;
     },
     async get_first() {
-        const result = await db.proc("one", `SELECT * FROM "Movie" ORDER BY id ASC LIMIT 1`);
+        const result = await db.proc(
+            "one",
+            `SELECT * FROM "Movie" ORDER BY id ASC LIMIT 1`
+        );
         if (result == null) return null;
         const mv = new this.MovieInfo(result);
         mv.genres = await this.list_genres(result.id);
         return mv;
-    }
-}
-
+    },
+};

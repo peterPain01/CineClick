@@ -14,8 +14,9 @@ import { useCookies } from "react-cookie";
 import { Auth } from "./pages/Auth/Auth";
 import { Register } from "./pages/Register/Register";
 import Recover from "./pages/Recover/Recover";
-import ResetPassword from "./pages/ResetPassword/ResetPassword"; 
-
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
     const titles = {
         "/": "Home",
@@ -60,8 +61,15 @@ function App() {
                                         path={route.path}
                                         element={
                                             <Layout>
-                                                <Page key={window.location.pathname === "/search" ? // HACK: fix reload when search on search page
-                                                            Math.random() : 0}/>
+                                                <Page
+                                                    key={
+                                                        window.location
+                                                            .pathname ===
+                                                        "/search" // HACK: fix reload when search on search page
+                                                            ? Math.random()
+                                                            : 0
+                                                    }
+                                                />
                                             </Layout>
                                         }
                                     />
@@ -129,6 +137,7 @@ function App() {
                     ></Route>
                 </Routes>
             )}
+            <ToastContainer />
         </>
     );
 }

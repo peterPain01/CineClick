@@ -34,7 +34,17 @@ export async function getMovies(page, per_page) {
     return data;
 }
 
-export function deleteMovie(id) {
-    request.get(`admin/delete-movie?id=${id}`);
+export async function deleteMovie(id) {
+    const response = await base.get(`admin/delete-movie?id=${id}`);
+    return response;
+}
+
+export async function addMovie(movie) {
+    const response = await base.post('admin/upload-movie', movie);
+    return response;
+}
+
+export async function updateMovie(movie){ 
+    
 }
 export default request;

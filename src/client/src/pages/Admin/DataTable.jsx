@@ -28,6 +28,7 @@ import { useCookies } from "react-cookie";
 
 import { PAGE_SIZE } from "./constant";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 // Table Style
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -73,15 +74,16 @@ export default function DataTable() {
         queryFn: async () => getMovies(page, per_page),
         staleTime: 60 * 1000,
     });
+
     const { mutate } = useMutation({
-        mutationFn: (id) => {
-            deleteMovie(id);
-        },
-        onSuccess: () => {
+        mutationFn: (id) => deleteMovie(id),
+        onSuccess: (data) => {
+            console.log(data);
+            toast.success(data?.data);
             queryClient.invalidateQueries({ queryKey: ["movies", page] });
-            queryClient.invalidateQueries({ queryKey: ["movies", page + 1] });
         },
     });
+
     const imgPreview = React.useRef(null);
     const previewImageBox = React.useRef(null);
     const vidPreviewBox = React.useRef(null);
@@ -284,7 +286,7 @@ export default function DataTable() {
                     <Pagination
                         count={data.total_page}
                         color={"primary"}
-                        onChange={handleMovePage}
+                        onChange={(e, page) => handleMovePage(e, page)}
                     />
                 </Stack>
                 <div style={{ marginTop: "40px" }}>
